@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://cdr11lplnlww1"]
+
+[ext_resource type="Script" path="res://scripts/soot_player.gd" id="1_kcn6q"]
+[ext_resource type="Texture2D" uid="uid://ldylj57gbkk1" path="res://images/soot_head.png" id="1_ngoyr"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ynix1"]
+radius = 25.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_m5cr2"]
+font_size = 14
+font_color = Color(0, 0, 0, 1)
+outline_size = 5
+
+[node name="SootPlayer" type="CharacterBody2D"]
+script = ExtResource("1_kcn6q")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.15, 0.15)
+texture = ExtResource("1_ngoyr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 0)
+shape = SubResource("CircleShape2D_ynix1")
+
+[node name="NameLabel" type="Label" parent="."]
+offset_left = -65.0
+offset_top = 35.0
+offset_right = 69.0
+offset_bottom = 63.0
+text = "Soot ONE"
+label_settings = SubResource("LabelSettings_m5cr2")
+horizontal_alignment = 1

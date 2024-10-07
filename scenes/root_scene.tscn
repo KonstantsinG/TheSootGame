@@ -1,0 +1,19 @@
+[gd_scene load_steps=5 format=3 uid="uid://dq8dhhtc57qh0"]
+
+[ext_resource type="Script" path="res://scripts/root_scene.gd" id="1_k65b2"]
+[ext_resource type="Script" path="res://scripts/WebSocketClient.gd" id="1_luc42"]
+[ext_resource type="PackedScene" uid="uid://d32v2svs1qaob" path="res://scenes/gui.tscn" id="3_aka27"]
+[ext_resource type="Script" path="res://scripts/WebServer.gd" id="3_ebd46"]
+
+[node name="RootScene" type="Node2D"]
+script = ExtResource("1_k65b2")
+
+[node name="WebSocketClient" type="Node" parent="."]
+script = ExtResource("1_luc42")
+
+[node name="WebServer" type="Node" parent="."]
+script = ExtResource("3_ebd46")
+
+[node name="Content" type="Node2D" parent="."]
+
+[node name="GUI" parent="Content" instance=ExtResource("3_aka27")]
