@@ -71,6 +71,7 @@ func _client_message_recieved(message) -> void:
 				gui.set_players_count(message["value"])
 			"log":
 				print_log(message["value"])
+			
 			"add_player":
 				game_scene.create_net_player(message["name"], message["id"])
 			"player_moved":
@@ -86,13 +87,15 @@ func _client_message_recieved(message) -> void:
 				client.send(msg)
 			"start_game":
 				_load_game()
+			"spawn_players":
+				game_scene.spawn_players()
 
 
 func _load_game():
 	game_scene = preload("res://scenes/game_scene.tscn").instantiate()
 	$Content.remove_child(gui)
 	$Content.add_child(game_scene)
-	game_scene.set_main_player_name(client.client_name)
+	#game_scene.set_main_player_name(client.client_name)
 	
 	game_scene.main_player_moved.connect(_player_moved)
 

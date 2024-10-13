@@ -87,14 +87,17 @@ func start_game():
 func _send_players_data():
 	for c1 in clients_data:
 		for c2 in clients_data:
-			if c1 == c2: continue
-			
 			var msg = {
 				"head" : "add_player",
 				"name" : c2.client_name,
 				"id" : c2.id
 			}
+			if c1 == c2: msg["id"] = -1
+			
 			send(c1.id, msg)
+		
+		var msg2 = "spawn_players"
+		send(c1.id, msg2)
 
 
 func _notify_player_moved(peer_id : int, message) -> void:

@@ -1,0 +1,138 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1v8f6pfwoeyv"]
+
+[ext_resource type="PackedScene" uid="uid://dc3cbutqlvadm" path="res://singleplayer_prototype/scenes/soot.tscn" id="2_6845h"]
+[ext_resource type="Texture2D" uid="uid://cqhfunqutv6i" path="res://singleplayer_prototype/sprites/BoilerRoomAtlas.png" id="2_eagmd"]
+
+[node name="BoilerRoom" type="Node2D"]
+
+[node name="FurnaceBg" type="StaticBody2D" parent="."]
+position = Vector2(-732, 172)
+
+[node name="Sprite2D" type="Sprite2D" parent="FurnaceBg"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(34, 27, 897, 971)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FurnaceBg"]
+visible = false
+polygon = PackedVector2Array(3, 476, 72, 375, 206, 223, -23, 222, -50, 220, -69, 214, -79, 207, -83, 198, -77, 189, -65, 181, -47, 175, -23, 170, 24, 167, 256, 167, 256, 128, -121, 127, -127, 476)
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(-896, 174)
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(956, 28, 575, 980)
+metadata/_edit_lock_ = true
+
+[node name="Trampoline" type="Node2D" parent="."]
+position = Vector2(-619, 367)
+
+[node name="Sprite2D2" type="Sprite2D" parent="Trampoline"]
+position = Vector2(-42, 36)
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(605, 895, 300, 70)
+metadata/_edit_lock_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Trampoline"]
+position = Vector2(-4, 0)
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(1533, 932, 384, 57)
+metadata/_edit_lock_ = true
+
+[node name="RightWall" type="Node2D" parent="."]
+position = Vector2(980, 146)
+
+[node name="Sprite2D" type="Sprite2D" parent="RightWall"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(1544, 25, 504, 968)
+metadata/_edit_lock_ = true
+
+[node name="BackWall" type="Node2D" parent="."]
+position = Vector2(234, -92)
+
+[node name="Sprite2D" type="Sprite2D" parent="BackWall"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(416, 1039, 1045, 438)
+metadata/_edit_lock_ = true
+
+[node name="RightHoles" type="StaticBody2D" parent="."]
+position = Vector2(977, 362)
+
+[node name="Sprite2D" type="Sprite2D" parent="RightHoles"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(53, 1028, 350, 370)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RightHoles"]
+visible = false
+polygon = PackedVector2Array(101, 184, 174, 183, -167, -181, -167, -129)
+
+[node name="Ground" type="Node2D" parent="."]
+position = Vector2(208, 390)
+
+[node name="Sprite2D" type="Sprite2D" parent="Ground"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(70, 1763, 1737, 319)
+metadata/_edit_lock_ = true
+
+[node name="BackFloor" type="StaticBody2D" parent="."]
+position = Vector2(432, 157)
+
+[node name="Sprite2D" type="Sprite2D" parent="BackFloor"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(36, 1404, 755, 153)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="BackFloor"]
+visible = false
+polygon = PackedVector2Array(377, 74, 377, 23, -376, 23, -376, 74)
+
+[node name="AdminPost" type="StaticBody2D" parent="."]
+position = Vector2(-193, 164)
+
+[node name="Sprite2D" type="Sprite2D" parent="AdminPost"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(1499, 1029, 564, 352)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AdminPost"]
+visible = false
+polygon = PackedVector2Array(202, 111, 250, 69, 250, 10, -281, 9, -281, 174, -238, 175, -184, 112)
+
+[node name="Soot" parent="." instance=ExtResource("2_6845h")]
+position = Vector2(858, 339)
+wall_min_slide_angle = 0.0
+
+[node name="Camera2D2" type="Camera2D" parent="Soot"]
+zoom = Vector2(1.5, 1.5)
+limit_left = -1170
+limit_top = -40
+limit_right = 1220
+limit_bottom = 630
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="FrontFloor" type="StaticBody2D" parent="."]
+position = Vector2(249, 597)
+
+[node name="Sprite2D" type="Sprite2D" parent="FrontFloor"]
+texture = ExtResource("2_eagmd")
+region_enabled = true
+region_rect = Rect2(35, 1599, 1962, 103)
+metadata/_edit_lock_ = true
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FrontFloor"]
+visible = false
+polygon = PackedVector2Array(-908, -50, -978, 48, 977, 49, 977, 24, 903, -50)

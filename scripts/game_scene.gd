@@ -2,27 +2,31 @@ extends Node2D
 
 signal main_player_moved(new_pos : Vector2)
 
-@onready var main_player = $MainPlayer
-
 var net_players : Dictionary = {}
+var spawn_points : Array[Vector2] = []
+var available_spawn_point = 0
 
 
 func _ready() -> void:
-	main_player.player_moved.connect(_main_player_moved)
-
-
-func set_main_player_name(player_name : String) -> void:
-	main_player.set_player_name(player_name)
+	for c in $PlayersSpawn.get_children():
+		spawn_points.append(c.position)
 
 
 func create_net_player(pl_name : String, pl_id : int):
 	var net_player = preload("res://scenes/soot_player.tscn").instantiate()
-	add_child(net_player)
 	net_player.set_player_name(pl_name)
-	net_player.controlable = false
-	net_player.position = Vector2(randi_range(0, 1100), randi_range(0, 650))
+	net_player.position = spawn_points[available_spawn_point]
+	available_spawn_point += 1
+	if pl_id != -1: net_player.controlable = false
 	
 	net_players[pl_id] = net_player
+
+
+func spawn_players():
+	net_players[-1].player_moved.connect(_main_player_moved)
+	
+	for p in net_players.values():
+		add_child(p)
 
 
 func _main_player_moved(new_pos : Vector2) -> void:

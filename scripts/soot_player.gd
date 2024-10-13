@@ -18,11 +18,21 @@ func get_input(delta : float):
 func _physics_process(delta : float) -> void:
 	if controlable:
 		get_input(delta)
-	
-	old_pos = position
-	move_and_slide()
-	
-	if position != old_pos: player_moved.emit(position)
+		
+		old_pos = position
+		move_and_slide()
+		
+		for i in get_slide_collision_count():
+			var c = get_slide_collision(i)
+			if c.get_collider() is RigidBody2D:
+				c.get_collider().apply_central_force(-c.get_normal() * 10_000)
+			elif c.get_collider() is CharacterBody2D:
+				c.get_collider().velocity = -c.get_normal() * 150
+		
+		if position != old_pos: player_moved.emit(position)
+	else:
+		velocity = velocity.move_toward(Vector2.ZERO, 3)
+		move_and_slide()
 
 
 func set_player_name(player_name : String) -> void:
