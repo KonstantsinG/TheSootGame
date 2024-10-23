@@ -6,17 +6,22 @@ signal client_ready
 signal host_rollback
 signal client_rollback
 
-@onready var menu = $MultiplayerMenu
+@onready var multiplayer_menu = $MultiplayerMenu
 @onready var waiting_room = $WaitingRoom
+@onready var playmode_menu = $PlaymodeMenu
 
 var able_to_start_game = true
 
 
 func _ready() -> void:
 	remove_child(waiting_room)
+	remove_child(multiplayer_menu)
 	
-	menu.host_pressed.connect(_on_host_pressed)
-	menu.join_pressed.connect(_on_join_pressed)
+	playmode_menu.singleplayer_pressed.connect(_on_singleplayer_pressed)
+	playmode_menu.multiplayer_pressed.connect(_on_multiplayer_pressed)
+	
+	multiplayer_menu.host_pressed.connect(_on_host_pressed)
+	multiplayer_menu.join_pressed.connect(_on_join_pressed)
 	
 	waiting_room.back_pressed.connect(_on_back_to_menu_pressed)
 	waiting_room.start_game_pressed.connect(_on_start_game_pressed)
@@ -30,25 +35,33 @@ func add_log_line(line : String) -> void:
 	waiting_room.add_log_line(line)
 
 
+func _on_singleplayer_pressed() -> void:
+	pass
+
+
+func _on_multiplayer_pressed() -> void:
+	pass
+
+
 func _on_host_pressed() -> void:
-	remove_child(menu)
+	remove_child(multiplayer_menu)
 	add_child(waiting_room)
 	waiting_room.toggle_start_game_button(true)
 	host_ready.emit()
 
 
 func _on_join_pressed() -> void:
-	remove_child(menu)
+	remove_child(multiplayer_menu)
 	add_child(waiting_room)
 	waiting_room.toggle_start_game_button(false)
 	client_ready.emit()
 
 
 func back_to_menu() -> void:
-	if not menu.is_inside_tree():
+	if not multiplayer_menu.is_inside_tree():
 		reset_data()
 		remove_child(waiting_room)
-		add_child(menu)
+		add_child(multiplayer_menu)
 
 
 func _on_back_to_menu_pressed(is_host : bool) -> void:

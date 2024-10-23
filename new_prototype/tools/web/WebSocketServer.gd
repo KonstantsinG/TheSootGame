@@ -1,10 +1,12 @@
 extends Node
 class_name WebSocketServer
 
+# server signals
 signal message_received(peer_id : int, message)
 signal client_connected(peer_id : int)
 signal client_disconnected(peer_id : int)
 
+# class representing a client peer
 class PendingPeer:
 	var connect_time : int
 	var tcp : StreamPeerTCP
@@ -16,6 +18,12 @@ class PendingPeer:
 		connection = p_tcp
 		connect_time = Time.get_ticks_msec()
 
+# UDP server for broadcast TCP server address
+var udp_broadcasting := false
+var udp_server : UDPServer
+var udp_peers = []
+
+# TCP server and clients
 var handshake_timeout := 3000
 var tcp_server := TCPServer.new()
 var pending_peers : Array[PendingPeer] = []
@@ -24,6 +32,62 @@ var peers : Dictionary = {}
 
 func _ready() -> void:
 	set_process(false)
+
+
+func is_running() -> bool:
+	return tcp_server.is_listening()
+
+
+# run UDP server and listen for client requests for TCP server address
+func listen_udp_broadcast(port : int) -> void:
+	udp_server = UDPServer.new()
+	udp_server.listen(port)
+	udp_broadcasting = true
+	set_process(true)
+
+
+# process incoming UDP requests and send them the TCP server address
+func poll_udp() -> void:
+	udp_server.poll()
+	
+	if udp_server.is_connection_available():
+		var peer: PacketPeerUDP = udp_server.take_connection()
+		udp_peers.append(peer)
+		var packet = peer.get_packet()
+		var data = bytes_to_var(packet)
+		
+		if data == "REQUEST_SERVER_IP":
+			var ip = get_ip()
+			var msg = {
+				"head" : "RESPONSE_SERVER_IP",
+				"value" : ip
+			}
+			peer.put_packet(var_to_bytes(msg))
+
+
+# get server LAN IP
+func get_ip() -> String:
+	IP.clear_cache()
+	return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),1)
+
+
+func _broadcast_closing_notification() -> void:
+	var msg = {
+		"head" : "SERVER_CLOSE_NOTIFICATION",
+		"value" : get_ip()
+	}
+	
+	for p in udp_peers:
+		p.put_packet(var_to_bytes(msg))
+
+
+# stop listening for clients requests for TCP server address
+func stop_udp_broadcasting() -> void:
+	if udp_server.is_listening():
+		_broadcast_closing_notification()
+		
+		udp_broadcasting = false
+		udp_server.stop()
 
 
 func get_connections_count() -> int:
@@ -142,4 +206,6 @@ func poll() -> void:
 
 
 func _process(_delta: float) -> void:
+	if udp_broadcasting: poll_udp()
+	
 	poll()

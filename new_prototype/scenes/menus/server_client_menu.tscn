@@ -1,0 +1,66 @@
+[gd_scene load_steps=3 format=3 uid="uid://cq4uc4ou80e11"]
+
+[ext_resource type="Script" path="res://new_prototype/scripts/menus/server_client_menu.gd" id="1_45k3q"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_32dch"]
+
+[node name="ServerClientMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_45k3q")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14902, 0.141176, 0.168627, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -31.0
+offset_right = 105.0
+grow_vertical = 0
+theme_override_constants/separation = 15
+
+[node name="RunServerButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/focus = SubResource("StyleBoxEmpty_32dch")
+text = "Run Server"
+flat = true
+alignment = 0
+
+[node name="ConnectButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/focus = SubResource("StyleBoxEmpty_32dch")
+text = "Connect to Server"
+flat = true
+alignment = 0
+
+[node name="BackButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+theme_override_styles/focus = SubResource("StyleBoxEmpty_32dch")
+text = "Back to main menu"
+flat = true
+alignment = 0
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[connection signal="button_down" from="VBoxContainer/RunServerButton" to="." method="_on_run_server_button_down"]
+[connection signal="button_down" from="VBoxContainer/ConnectButton" to="." method="_on_connect_button_down"]
+[connection signal="button_down" from="VBoxContainer/BackButton" to="." method="_on_back_button_down"]

@@ -1,18 +1,44 @@
 extends Node
 class_name WebSocketClient
 
-signal connected_to_server()
-signal connection_closed()
+signal connected_to_server
+signal connection_closed
 signal message_recieved(message)
 
 var socket = WebSocketPeer.new()
 var last_state = WebSocketPeer.STATE_CLOSED
+
+var udp_broadcasting := false
+var udp_peer : PacketPeerUDP
 
 var client_name : String
 
 
 func _ready() -> void:
 	set_process(false)
+
+
+# send a UDP broadcast request for a TCP server address
+func run_udp_broadcast(port : int) -> void:
+	udp_peer = PacketPeerUDP.new()
+	udp_peer.set_broadcast_enabled(true)
+	udp_peer.bind(port)
+	udp_peer.set_dest_address("255.255.255.255", port)
+	udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_IP"))
+	udp_broadcasting = true
+	set_process(true)
+
+
+func poll_udp() -> void:
+	if udp_peer.get_available_packet_count() > 0:
+		var data = bytes_to_var(udp_peer.get_packet())
+		message_recieved.emit(data)
+
+
+func close_udp() -> void:
+	if udp_peer.is_bound():
+		udp_peer.close()
+		udp_broadcasting = false
 
 
 func connect_to_url(url : String, _client_name : String) -> Error:
@@ -42,8 +68,7 @@ func get_message() -> Variant:
 
 func close(code := 1000, reason = "") -> void:
 	socket.close(code, reason)
-	last_state = socket.get_ready_state()
-	set_process(false)
+	last_state = socket.STATE_CLOSING
 
 
 func clear() -> void:
@@ -56,8 +81,8 @@ func get_socket() -> WebSocketPeer:
 
 
 func poll() -> void:
-	if socket.get_ready_state() != socket.STATE_CLOSED:
-		socket.poll()
+	#if socket.get_ready_state() != socket.STATE_CLOSED:
+	socket.poll()
 	
 	var state = socket.get_ready_state()
 	if last_state != state:
@@ -66,6 +91,7 @@ func poll() -> void:
 			connected_to_server.emit()
 		elif state == socket.STATE_CLOSED:
 			connection_closed.emit()
+			set_process(false)
 	
 	while socket.get_ready_state() == WebSocketPeer.STATE_OPEN and socket.get_available_packet_count():
 		var message = get_message()
@@ -73,4 +99,6 @@ func poll() -> void:
 
 
 func _process(_delta: float) -> void:
+	if udp_broadcasting: poll_udp()
+	
 	poll()
