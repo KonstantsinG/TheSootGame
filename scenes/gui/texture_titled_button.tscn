@@ -1,0 +1,60 @@
+[gd_scene load_steps=5 format=3 uid="uid://c4rtdx1qo3lke"]
+
+[ext_resource type="Shader" path="res://resources/shaders/texture_button.gdshader" id="1_0hxiy"]
+[ext_resource type="Script" path="res://scripts/gui/texture_titled_button.gd" id="2_hg1in"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lgx0f"]
+resource_local_to_scene = true
+shader = ExtResource("1_0hxiy")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_flvcm"]
+
+[node name="TextureTitledButton" type="Control"]
+material = SubResource("ShaderMaterial_lgx0f")
+custom_minimum_size = Vector2(450, 350)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -142.5
+offset_top = -142.5
+offset_right = 142.5
+offset_bottom = 142.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_hg1in")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+use_parent_material = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="BaseTexture" type="TextureRect" parent="VBoxContainer"]
+use_parent_material = true
+layout_mode = 2
+size_flags_vertical = 3
+texture = SubResource("PlaceholderTexture2D_flvcm")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleTexture" type="TextureRect" parent="VBoxContainer"]
+use_parent_material = true
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.55
+texture = SubResource("PlaceholderTexture2D_flvcm")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

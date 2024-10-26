@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3levs03bk6ni"]
+
+[ext_resource type="Script" path="res://old_junk/new_prototype/scripts/old/menu_interface.gd" id="1_y60js"]
+
+[node name="MenuInterface" type="CanvasLayer"]
+script = ExtResource("1_y60js")
+
+[node name="Menus" type="Node" parent="."]
+
+[node name="Popups" type="Node" parent="."]

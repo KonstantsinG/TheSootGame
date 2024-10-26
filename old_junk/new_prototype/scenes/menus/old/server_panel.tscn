@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://fq4uvepet08w"]
+
+[ext_resource type="Script" path="res://old_junk/new_prototype/scripts/menus/old/server_panel.gd" id="1_agwur"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_b7y5h"]
+
+[node name="ServerPanel" type="Control"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 3
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_agwur")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="NameLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 6
+text = "Server name"
+
+[node name="JoinButton" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 6
+theme_override_styles/focus = SubResource("StyleBoxEmpty_b7y5h")
+text = "Join"
+
+[connection signal="button_down" from="HBoxContainer/JoinButton" to="." method="_on_join_button_down"]

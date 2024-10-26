@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://fgk7bxgo7ngp"]
+
+[ext_resource type="Script" path="res://scripts/core/menus_interface.gd" id="1_5eke5"]
+[ext_resource type="PackedScene" uid="uid://ukppr5xc35jk" path="res://scenes/menus/gamemode_menu.tscn" id="1_7n8gt"]
+[ext_resource type="PackedScene" uid="uid://b34p52n0dghbe" path="res://scenes/menus/menus_base.tscn" id="2_kiwvj"]
+
+[node name="MenusInterface" type="CanvasLayer"]
+script = ExtResource("1_5eke5")
+
+[node name="Menus" type="Node" parent="."]
+
+[node name="MenusBase" parent="Menus" instance=ExtResource("2_kiwvj")]
+
+[node name="GamemodeMenu" parent="Menus" instance=ExtResource("1_7n8gt")]
+
+[node name="Popups" type="Node" parent="."]

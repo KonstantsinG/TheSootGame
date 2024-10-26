@@ -1,0 +1,71 @@
+[gd_scene load_steps=6 format=3 uid="uid://jsg3njon7m1i"]
+
+[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="1_ntnxq"]
+[ext_resource type="Script" path="res://scripts/gui/text_button.gd" id="2_q2wet"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_na2ad"]
+resource_local_to_scene = true
+shader = ExtResource("1_ntnxq")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_krttc"]
+bg_color = Color(0.890196, 0.854902, 0.737255, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.290196, 0.270588, 0.211765, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_p5k1v"]
+font_size = 30
+font_color = Color(0.290196, 0.270588, 0.211765, 1)
+
+[node name="TextButton" type="Control"]
+material = SubResource("ShaderMaterial_na2ad")
+custom_minimum_size = Vector2(300, 70)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_q2wet")
+
+[node name="Panel" type="Panel" parent="."]
+use_parent_material = true
+custom_minimum_size = Vector2(300, 70)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_krttc")
+
+[node name="Label" type="Label" parent="Panel"]
+use_parent_material = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -15.0
+offset_top = -11.5
+offset_right = 15.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Button"
+label_settings = SubResource("LabelSettings_p5k1v")
+
+[connection signal="gui_input" from="Panel" to="." method="_on_panel_gui_input"]
+[connection signal="mouse_entered" from="Panel" to="." method="_on_panel_mouse_entered"]
+[connection signal="mouse_exited" from="Panel" to="." method="_on_panel_mouse_exited"]

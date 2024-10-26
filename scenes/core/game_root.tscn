@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://dnnqg48yhdgj2"]
+
+[ext_resource type="Script" path="res://scripts/tools/web/WebSocketClient.gd" id="1_wurte"]
+[ext_resource type="Script" path="res://scripts/tools/web/WebSocketServerWrapper.gd" id="2_xy65d"]
+[ext_resource type="PackedScene" uid="uid://fgk7bxgo7ngp" path="res://scenes/core/menus_interface.tscn" id="3_8gkxl"]
+
+[node name="GameRoot" type="Node"]
+
+[node name="WebSocketClient" type="Node" parent="."]
+script = ExtResource("1_wurte")
+
+[node name="WebSocketServerWrapper" type="Node" parent="."]
+script = ExtResource("2_xy65d")
+
+[node name="Content" type="Node" parent="."]
+
+[node name="MenusInterface" parent="Content" instance=ExtResource("3_8gkxl")]

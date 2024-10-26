@@ -1,0 +1,161 @@
+[gd_scene load_steps=18 format=3 uid="uid://ukppr5xc35jk"]
+
+[ext_resource type="Script" path="res://scripts/menus/gamemode_menu.gd" id="1_1w63f"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="4_o6fw6"]
+[ext_resource type="PackedScene" uid="uid://c4rtdx1qo3lke" path="res://scenes/gui/texture_titled_button.tscn" id="5_tc3ix"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4hu00"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(6, 290, 797, 152)
+
+[sub_resource type="Shader" id="Shader_12iw5"]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform bool highlighted = false;
+uniform float brightness : hint_range(0.0, 2.0, 0.1) = 0.6;
+
+void fragment() {
+	if (highlighted){
+		COLOR.rgb = texture(TEXTURE, UV).rgb * brightness;
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d86dj"]
+resource_local_to_scene = true
+shader = SubResource("Shader_12iw5")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.75
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4ga3"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(5, 5, 176, 176)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_go3mp"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(753, 8, 240, 96)
+
+[sub_resource type="Shader" id="Shader_x6dya"]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform bool highlighted = false;
+uniform float brightness : hint_range(0.0, 2.0, 0.1) = 0.6;
+
+void fragment() {
+	if (highlighted){
+		COLOR.rgb = texture(TEXTURE, UV).rgb * brightness;
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rw050"]
+resource_local_to_scene = true
+shader = SubResource("Shader_x6dya")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.75
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qkovs"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(188, 4, 176, 176)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5lsvs"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(10, 189, 277, 96)
+
+[sub_resource type="Shader" id="Shader_ewnsw"]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform bool highlighted = false;
+uniform float brightness : hint_range(0.0, 2.0, 0.1) = 0.6;
+
+void fragment() {
+	if (highlighted){
+		COLOR.rgb = texture(TEXTURE, UV).rgb * brightness;
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wf0ju"]
+resource_local_to_scene = true
+shader = SubResource("Shader_ewnsw")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.75
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jwa1q"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(370, 4, 176, 176)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cbcx3"]
+atlas = ExtResource("4_o6fw6")
+region = Rect2(296, 188, 315, 96)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b0nk5"]
+bg_color = Color(0.290196, 0.270588, 0.211765, 1)
+
+[node name="GamemodeMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_1w63f")
+
+[node name="TtileTexture" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(1000, 200)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -398.5
+offset_top = 70.0
+offset_right = 398.5
+offset_bottom = 152.0
+grow_horizontal = 2
+texture = SubResource("AtlasTexture_4hu00")
+stretch_mode = 5
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_top = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="PlayLocallyTextureTitledButton" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
+material = SubResource("ShaderMaterial_d86dj")
+layout_mode = 2
+base_texture = SubResource("AtlasTexture_q4ga3")
+title_texture = SubResource("AtlasTexture_go3mp")
+
+[node name="OfflineModeTextureTitledButton2" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
+material = SubResource("ShaderMaterial_rw050")
+layout_mode = 2
+base_texture = SubResource("AtlasTexture_qkovs")
+title_texture = SubResource("AtlasTexture_5lsvs")
+
+[node name="GamesBrowserTextureTitledButton3" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
+material = SubResource("ShaderMaterial_wf0ju")
+layout_mode = 2
+base_texture = SubResource("AtlasTexture_jwa1q")
+title_texture = SubResource("AtlasTexture_cbcx3")
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_right = 336.0
+offset_bottom = 198.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_b0nk5")
+
+[connection signal="mouse_pressed" from="HBoxContainer/PlayLocallyTextureTitledButton" to="." method="_on_play_locally_texture_titled_button_mouse_pressed"]
+[connection signal="mouse_pressed" from="HBoxContainer/OfflineModeTextureTitledButton2" to="." method="_on_offline_mode_texture_titled_button_2_mouse_pressed"]
+[connection signal="mouse_pressed" from="HBoxContainer/GamesBrowserTextureTitledButton3" to="." method="_on_games_browser_texture_titled_button_3_mouse_pressed"]

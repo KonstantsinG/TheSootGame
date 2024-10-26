@@ -1,0 +1,40 @@
+[gd_scene load_steps=5 format=3 uid="uid://b56dn5dktgpud"]
+
+[ext_resource type="Script" path="res://scripts/gui/texture_button.gd" id="1_vuiap"]
+[ext_resource type="Shader" path="res://resources/shaders/texture_button.gdshader" id="2_qdqcd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rhj22"]
+resource_local_to_scene = true
+shader = ExtResource("2_qdqcd")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6beur"]
+
+[node name="TextureButton" type="Control"]
+custom_minimum_size = Vector2(65, 65)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vuiap")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+material = SubResource("ShaderMaterial_rhj22")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("PlaceholderTexture2D_6beur")
+expand_mode = 1
+stretch_mode = 5
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="TextureRect" to="." method="_on_texture_rect_mouse_entered"]
+[connection signal="mouse_exited" from="TextureRect" to="." method="_on_texture_rect_mouse_exited"]

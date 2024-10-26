@@ -1,0 +1,59 @@
+[gd_scene load_steps=6 format=3 uid="uid://dc3cbutqlvadm"]
+
+[ext_resource type="Script" path="res://old_junk/singleplayer_prototype/scripts/soot.gd" id="1_i4q0f"]
+[ext_resource type="Texture2D" uid="uid://cqhfunqutv6i" path="res://old_junk/singleplayer_prototype/sprites/BoilerRoomAtlas.png" id="2_sdc73"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x61c3"]
+radius = 8.0
+height = 24.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_1g776"]
+font_size = 10
+font_color = Color(0, 0, 0, 1)
+outline_size = 1
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qn3gv"]
+radius = 18.0
+height = 44.0
+
+[node name="Soot" type="CharacterBody2D"]
+y_sort_enabled = true
+scale = Vector2(0.5, 0.5)
+motion_mode = 1
+wall_min_slide_angle = 3.14159
+script = ExtResource("1_i4q0f")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+y_sort_enabled = true
+position = Vector2(4, 0)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_sdc73")
+region_enabled = true
+region_rect = Rect2(1557, 1031, 21, 30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 22)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_x61c3")
+
+[node name="Label" type="Label" parent="."]
+y_sort_enabled = true
+offset_left = -17.0
+offset_top = 22.0
+offset_right = 22.0
+offset_bottom = 36.0
+text = "Mr Soot"
+label_settings = SubResource("LabelSettings_1g776")
+
+[node name="CoalContainer" type="Node2D" parent="."]
+position = Vector2(0, -40)
+
+[node name="PushingArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PushingArea"]
+position = Vector2(0, 20)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_qn3gv")
+
+[connection signal="body_entered" from="PushingArea" to="." method="_on_pushing_area_body_entered"]
+[connection signal="body_exited" from="PushingArea" to="." method="_on_pushing_area_body_exited"]

@@ -1,0 +1,88 @@
+[gd_scene load_steps=3 format=3 uid="uid://yu4m0krcqdow"]
+
+[ext_resource type="Script" path="res://old_junk/first_prototype/scripts/game_scene.gd" id="1_4lgud"]
+[ext_resource type="Texture2D" uid="uid://w6vpysnujhsj" path="res://old_junk/first_prototype/images/wooden_floor_tile.jpg" id="1_q50l7"]
+
+[node name="GameScene" type="Node2D"]
+script = ExtResource("1_4lgud")
+
+[node name="FloorSprites" type="Node2D" parent="."]
+
+[node name="WoodenFloorTile2" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(144, 164.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile3" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(480, 164.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile4" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(816, 164.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile5" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(1152, 164.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile6" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(144, 508.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile7" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(480, 508.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile8" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(816, 508.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="WoodenFloorTile9" type="Sprite2D" parent="FloorSprites"]
+position = Vector2(1152, 508.308)
+scale = Vector2(0.456522, 0.468227)
+texture = ExtResource("1_q50l7")
+metadata/_edit_lock_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+polygon = PackedVector2Array(0, 0, -1, 651, 1153, 648, 1152, 0, -42, 0, -42, -43, 1194, -46, 1201, 689, -39, 691, -42, 0)
+
+[node name="PlayersSpawn" type="Node2D" parent="."]
+
+[node name="Spawn1" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(381, 340)
+
+[node name="Spawn2" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(581, 529)
+
+[node name="Spawn3" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(764, 341)
+
+[node name="Spawn4" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(570, 148)
+
+[node name="Spawn5" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(713, 468)
+
+[node name="Spawn6" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(713, 212)
+
+[node name="Spawn7" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(437, 204)
+
+[node name="Spawn8" type="Marker2D" parent="PlayersSpawn"]
+position = Vector2(429, 465)

@@ -1,0 +1,89 @@
+[gd_scene load_steps=3 format=3 uid="uid://bwkgdq4ajdlcm"]
+
+[ext_resource type="Script" path="res://old_junk/new_prototype/scripts/menus/old/create_room_popup.gd" id="1_4o58a"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_m0w73"]
+font_size = 25
+
+[node name="CreateRoomPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4o58a")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.239763, 0.173926, 0.145701, 1)
+
+[node name="ColorRect2" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.32, 0.23712, 0.2016, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 496.0
+offset_bottom = 296.0
+theme_override_constants/separation = 10
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "New Room"
+label_settings = SubResource("LabelSettings_m0w73")
+horizontal_alignment = 1
+
+[node name="Control2" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+
+[node name="NameTextBox" type="TextEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 35)
+layout_mode = 2
+size_flags_horizontal = 4
+placeholder_text = "Room name"
+
+[node name="PasswordTextBox" type="TextEdit" parent="VBoxContainer"]
+custom_minimum_size = Vector2(300, 35)
+layout_mode = 2
+size_flags_horizontal = 4
+placeholder_text = "Password (if public leave empty)"
+
+[node name="Control3" type="Control" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="CreateButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Create"
+
+[connection signal="button_down" from="VBoxContainer/CreateButton" to="." method="_on_create_button_down"]

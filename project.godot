@@ -12,14 +12,22 @@ config_version=5
 
 config/name="The Soot story"
 config/tags=PackedStringArray("handdrawn", "multiplayer")
-run/main_scene="res://new_prototype/scenes/menus/game_root.tscn"
+run/main_scene="res://scenes/core/game_root.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
-config/icon="res://images/soot_icon.png"
+config/icon="res://sprites/icons/soot_icon.png"
+
+[debug]
+
+file_logging/enable_file_logging=true
 
 [display]
 
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+window/size/window_width_override=1152
+window/size/window_height_override=648
 window/stretch/mode="canvas_items"
-window/stretch/aspect="expand"
+window/stretch/aspect="ignore"
 
 [input]
 
