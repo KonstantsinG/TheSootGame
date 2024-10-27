@@ -11,7 +11,7 @@ uniform float saturation : hint_range(0, 3) = 1.0;
 
 mat4 contrastMatrix( float _contrast ){
 	float t = ( 1.0 - _contrast ) / 2.0;
-	return mat4( 
+	return mat4(
 		vec4(_contrast, 0, 0, 0),
 		vec4(0, _contrast, 0, 0),
 		vec4(0, 0, _contrast, 0),
@@ -28,18 +28,18 @@ mat4 brightnessMatrix( float _brightness ){
 mat4 saturationMatrix( float _saturation ){
 	vec3 luminance = vec3( 0.3086, 0.6094, 0.0820 );
 	float oneMinusSat = 1.0 - _saturation;
-	
+
 	float redVal = 1.0;
 	float greenVal = 1.0;
 	float blueVal = 1.0;
-	
+
 	vec3 red = vec3( luminance.x * oneMinusSat );
 	red+= vec3(_saturation, 0, 0)*redVal;
 	vec3 green = vec3( luminance.y * oneMinusSat );
 	green += vec3( 0,_saturation, 0 )*greenVal;
 	vec3 blue = vec3( luminance.z * oneMinusSat );
 	blue += vec3( 0, 0,_saturation )*blueVal;
-	
+
 	return mat4(vec4(red, 0),vec4(green,0),vec4(blue,0),vec4(0, 0, 0, 1));
 }
 
@@ -61,6 +61,6 @@ void fragment() {
 	vec3 blur_screen = clamp((screen * 0.3) + combine_sample, 0.0, 1.0);
 	//Final COLOR
 	vec3 mix_blur_sharp = mix(screen, blur_screen, blur_sharp);
-	
+
 	COLOR = contrastMatrix(contrast) * brightnessMatrix(brightness) * saturationMatrix(saturation) * vec4(mix_blur_sharp, 1.0);
 }

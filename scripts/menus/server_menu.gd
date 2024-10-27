@@ -5,14 +5,17 @@ signal create_new_pressed
 signal join_pressed(ip : String)
 
 @onready var nothing_found_panel = $Panel/ScrollContainer/ServersVBoxContainer/NothingFoundPanel
-@onready var panels_container = $Panel/ScrollContainer/ServersVBoxContainer
+@onready var panels_container = $Panel/ScrollContainer/ServersVBoxContainer/ServerPanels
 
 
 func get_panels_count() -> int:
-	return panels_container.get_child_count() - 1
+	return panels_container.get_child_count()
 
 
 func add_server_panel(ip : String, server_name : String) -> void:
+	for p in panels_container.get_children():
+		if p.ip == ip: return
+	
 	var panel = preload("res://scenes/menus/server_panel.tscn").instantiate()
 	panel.set_params(ip, server_name)
 	panel.panel_pressed.connect(_on_panel_pressed)

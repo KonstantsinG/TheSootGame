@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ukppr5xc35jk"]
+[gd_scene load_steps=20 format=3 uid="uid://ukppr5xc35jk"]
 
 [ext_resource type="Script" path="res://scripts/menus/gamemode_menu.gd" id="1_1w63f"]
 [ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="4_o6fw6"]
@@ -8,7 +8,7 @@
 atlas = ExtResource("4_o6fw6")
 region = Rect2(6, 290, 797, 152)
 
-[sub_resource type="Shader" id="Shader_12iw5"]
+[sub_resource type="Shader" id="Shader_k3uaf"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -24,7 +24,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d86dj"]
 resource_local_to_scene = true
-shader = SubResource("Shader_12iw5")
+shader = SubResource("Shader_k3uaf")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
@@ -36,7 +36,7 @@ region = Rect2(5, 5, 176, 176)
 atlas = ExtResource("4_o6fw6")
 region = Rect2(753, 8, 240, 96)
 
-[sub_resource type="Shader" id="Shader_x6dya"]
+[sub_resource type="Shader" id="Shader_qkd5j"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -52,7 +52,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rw050"]
 resource_local_to_scene = true
-shader = SubResource("Shader_x6dya")
+shader = SubResource("Shader_qkd5j")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
@@ -64,7 +64,7 @@ region = Rect2(188, 4, 176, 176)
 atlas = ExtResource("4_o6fw6")
 region = Rect2(10, 189, 277, 96)
 
-[sub_resource type="Shader" id="Shader_ewnsw"]
+[sub_resource type="Shader" id="Shader_itrm2"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -80,7 +80,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wf0ju"]
 resource_local_to_scene = true
-shader = SubResource("Shader_ewnsw")
+shader = SubResource("Shader_itrm2")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
@@ -92,8 +92,91 @@ region = Rect2(370, 4, 176, 176)
 atlas = ExtResource("4_o6fw6")
 region = Rect2(296, 188, 315, 96)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_b0nk5"]
-bg_color = Color(0.290196, 0.270588, 0.211765, 1)
+[sub_resource type="Animation" id="Animation_lnwij"]
+resource_name = "moving_up_down"
+length = 5.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HBoxContainer/PlayLocallyTextureTitledButton:custom_minimum_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(1.4985, 1.998, 2.2977),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(450, 350), Vector2(450, 385), Vector2(450, 350)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HBoxContainer/OfflineModeTextureTitledButton2:custom_minimum_size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(1.7982, 2.2977, 2.5974),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(450, 350), Vector2(450, 385), Vector2(450, 350)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HBoxContainer/GamesBrowserTextureTitledButton3:custom_minimum_size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(2.1312, 2.5974, 2.8971),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(450, 350), Vector2(450, 385), Vector2(450, 350)]
+}
+
+[sub_resource type="Animation" id="Animation_oxud7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HBoxContainer/PlayLocallyTextureTitledButton:custom_minimum_size")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(450, 350)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("HBoxContainer/OfflineModeTextureTitledButton2:custom_minimum_size")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(450, 350)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("HBoxContainer/GamesBrowserTextureTitledButton3:custom_minimum_size")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(450, 350)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yql1s"]
+_data = {
+"RESET": SubResource("Animation_oxud7"),
+"moving_up_down": SubResource("Animation_lnwij")
+}
 
 [node name="GamemodeMenu" type="Control"]
 layout_mode = 3
@@ -134,28 +217,31 @@ alignment = 1
 [node name="PlayLocallyTextureTitledButton" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
 material = SubResource("ShaderMaterial_d86dj")
 layout_mode = 2
+size_flags_vertical = 4
 base_texture = SubResource("AtlasTexture_q4ga3")
 title_texture = SubResource("AtlasTexture_go3mp")
 
 [node name="OfflineModeTextureTitledButton2" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
 material = SubResource("ShaderMaterial_rw050")
 layout_mode = 2
+size_flags_vertical = 4
 base_texture = SubResource("AtlasTexture_qkovs")
 title_texture = SubResource("AtlasTexture_5lsvs")
 
 [node name="GamesBrowserTextureTitledButton3" parent="HBoxContainer" instance=ExtResource("5_tc3ix")]
 material = SubResource("ShaderMaterial_wf0ju")
 layout_mode = 2
+size_flags_vertical = 4
 base_texture = SubResource("AtlasTexture_jwa1q")
 title_texture = SubResource("AtlasTexture_cbcx3")
 
-[node name="Panel" type="Panel" parent="."]
-visible = false
-layout_mode = 0
-offset_right = 336.0
-offset_bottom = 198.0
-theme_override_styles/panel = SubResource("StyleBoxFlat_b0nk5")
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_yql1s")
+}
 
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
+[connection signal="tree_exited" from="." to="." method="_on_tree_exited"]
 [connection signal="mouse_pressed" from="HBoxContainer/PlayLocallyTextureTitledButton" to="." method="_on_play_locally_texture_titled_button_mouse_pressed"]
 [connection signal="mouse_pressed" from="HBoxContainer/OfflineModeTextureTitledButton2" to="." method="_on_offline_mode_texture_titled_button_2_mouse_pressed"]
 [connection signal="mouse_pressed" from="HBoxContainer/GamesBrowserTextureTitledButton3" to="." method="_on_games_browser_texture_titled_button_3_mouse_pressed"]

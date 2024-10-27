@@ -5,6 +5,14 @@ signal connected_to_server
 signal connection_closed
 signal message_recieved(message)
 
+class ClientData:
+	var ip : String
+	var client_name : String
+	
+	func _init(_ip : String, _client_name : String) -> void:
+		ip = _ip
+		client_name = _client_name
+
 # TCP socket and state
 var socket = WebSocketPeer.new()
 var last_state = WebSocketPeer.STATE_CLOSED
@@ -13,22 +21,40 @@ var last_state = WebSocketPeer.STATE_CLOSED
 var udp_broadcasting := false
 var udp_peer : PacketPeerUDP
 
-var client_name : String
+var client_data: ClientData = null
 
 
 func _ready() -> void:
 	set_process(false)
 
 
+func get_ip() -> String:
+	IP.clear_cache()
+	return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4)
+
+
+func get_client_data() -> ClientData:
+	if client_data == null:
+		client_data = ClientData.new(get_ip(), str(OS.get_environment("COMPUTERNAME")))
+	
+	return client_data
+
+
 # send a UDP broadcast request for a TCP server address
-func run_udp_broadcast(port : int) -> void:
+func run_udp_broadcast(port : int) -> Error:
 	udp_peer = PacketPeerUDP.new()
 	udp_peer.set_broadcast_enabled(true)
-	udp_peer.bind(port)
-	udp_peer.set_dest_address("255.255.255.255", port)
-	udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_IP"))
+	#udp_peer.bind(0)
+	
+	var err = udp_peer.set_dest_address("255.255.255.255", port)
+	if err != OK: return err
+	
+	err = udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_IP"))
+	if err != OK: return err
+	
 	udp_broadcasting = true
 	set_process(true)
+	return OK
 
 
 # poll UDP socket and check for incoming messages
@@ -46,8 +72,7 @@ func close_udp() -> void:
 
 
 # connect TCP peer by URL
-func connect_to_url(url : String, _client_name : String) -> Error:
-	client_name = _client_name
+func connect_to_url(url : String) -> Error:
 	var err = socket.connect_to_url(url)
 	if err != OK: return err
 	last_state = socket.get_ready_state()

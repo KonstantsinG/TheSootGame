@@ -51,8 +51,7 @@ func _ready() -> void:
 #region additional functions
 # where the Server is running - on a localhost or in a LAN
 func get_server_net_type() -> ServerNetTypes:
-	IP.clear_cache()
-	var ip = IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),1)
+	var ip = get_ip()
 	var ip_data = ip.split(".")
 	
 	# check for private ip ranges

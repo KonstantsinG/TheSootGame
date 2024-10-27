@@ -18,3 +18,11 @@ func _on_panel_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 			panel_pressed.emit(self)
+
+
+func _on_panel_mouse_entered() -> void:
+	material.set_shader_parameter("highlighted", true)
+
+
+func _on_panel_mouse_exited() -> void:
+	material.set_shader_parameter("highlighted", false)

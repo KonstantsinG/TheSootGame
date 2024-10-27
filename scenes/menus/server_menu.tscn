@@ -135,6 +135,10 @@ text = "Nothing found..."
 label_settings = SubResource("LabelSettings_h0fwc")
 horizontal_alignment = 1
 
+[node name="ServerPanels" type="VBoxContainer" parent="Panel/ScrollContainer/ServersVBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
 [node name="HeadPanel" type="Panel" parent="."]
 custom_minimum_size = Vector2(0, 110)
 layout_mode = 1

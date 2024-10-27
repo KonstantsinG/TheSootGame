@@ -16,3 +16,11 @@ func _on_offline_mode_texture_titled_button_2_mouse_pressed() -> void:
 
 func _on_games_browser_texture_titled_button_3_mouse_pressed() -> void:
 	games_browser_pressed.emit()
+
+
+func _on_tree_entered() -> void:
+	$AnimationPlayer.play("moving_up_down")
+
+
+func _on_tree_exited() -> void:
+	$AnimationPlayer.stop()

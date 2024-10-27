@@ -20,6 +20,15 @@ class PendingPeer:
 		tcp = p_tcp
 		connection = p_tcp
 		connect_time = Time.get_ticks_msec()
+
+
+class ServerData:
+	var ip : String
+	var server_name : String
+	
+	func _init(_ip : String, _server_name : String) -> void:
+		ip = _ip
+		server_name = _server_name
 #endregion
 
 #region variables
@@ -33,6 +42,8 @@ var handshake_timeout := 3000
 var tcp_server := TCPServer.new()
 var pending_peers : Array[PendingPeer] = []
 var peers : Dictionary = {}
+
+var server_data : ServerData = null
 #endregion
 
 
@@ -51,11 +62,15 @@ func _process(_delta: float) -> void:
 #region UDP Server
 # run UDP Server and listen for Client requests for TCP Server address
 # this allows Clients to find the TCP Server address on the LAN
-func listen_udp_broadcast(port : int) -> void:
+func listen_udp_broadcast(port : int) -> Error:
 	udp_server = UDPServer.new()
-	udp_server.listen(port)
-	udp_broadcasting = true
-	set_process(true)
+	var err = udp_server.listen(port)
+	
+	if err == OK:
+		udp_broadcasting = true
+		set_process(true)
+	
+	return err
 
 
 # process incoming UDP requests and send them the TCP server address
@@ -69,10 +84,11 @@ func poll_udp() -> void:
 		var data = bytes_to_var(packet)
 		
 		if data == "REQUEST_SERVER_IP":
-			var ip = get_ip()
+			var serv_data = get_server_data()
 			var msg = {
 				"head" : "RESPONSE_SERVER_IP",
-				"value" : ip
+				"ip" : serv_data.ip,
+				"server_name" : serv_data.server_name
 			}
 			peer.put_packet(var_to_bytes(msg))
 
@@ -103,10 +119,17 @@ func _broadcast_closing_notification() -> void:
 # get server LAN IP
 func get_ip() -> String:
 	IP.clear_cache()
-	return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")),1)
+	return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4)
 
 
-func is_running() -> bool:
+func get_server_data() -> ServerData:
+	if server_data == null:
+		server_data = ServerData.new(get_ip(), str(OS.get_environment("COMPUTERNAME")))
+	
+	return server_data
+
+
+func is_listening() -> bool:
 	return tcp_server.is_listening()
 
 
@@ -119,8 +142,10 @@ func get_connections_count() -> int:
 # run the TCP Server on specified port
 func listen(port : int) -> Error:
 	assert(not tcp_server.is_listening())
-	set_process(true)
-	return tcp_server.listen(port)
+	var err = tcp_server.listen(port)
+	if err == OK: set_process(true)
+	
+	return err
 
 
 # shutdown the TCP Server
@@ -128,6 +153,7 @@ func stop() -> void:
 	tcp_server.stop()
 	pending_peers.clear()
 	peers.clear()
+	server_data = null
 	set_process(false)
 
 

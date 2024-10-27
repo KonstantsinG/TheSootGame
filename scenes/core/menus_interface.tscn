@@ -14,3 +14,5 @@ script = ExtResource("1_5eke5")
 [node name="GamemodeMenu" parent="Menus" instance=ExtResource("1_7n8gt")]
 
 [node name="Popups" type="Node" parent="."]
+
+[node name="ServersSearchingTimer" type="Timer" parent="."]

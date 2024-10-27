@@ -1,18 +1,27 @@
-[gd_scene load_steps=10 format=3 uid="uid://b34p52n0dghbe"]
+[gd_scene load_steps=12 format=3 uid="uid://b34p52n0dghbe"]
 
 [ext_resource type="Shader" path="res://resources/shaders/gamemode_menu_bg_blur.gdshader" id="1_huiex"]
 [ext_resource type="Script" path="res://scripts/menus/menus_base.gd" id="1_nq62s"]
 [ext_resource type="Texture2D" uid="uid://lthqstnqu8qg" path="res://sprites/gui/FeedingBg.png" id="2_64xx7"]
+[ext_resource type="VideoStream" path="res://resources/videos/SpiritedAwayBgFeeding.ogv" id="2_u6iin"]
 [ext_resource type="PackedScene" uid="uid://b56dn5dktgpud" path="res://scenes/gui/texture_button.tscn" id="3_rat4o"]
 [ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="4_8rw2g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a00gk"]
+shader = ExtResource("1_huiex")
+shader_parameter/blur_sharp = 1.3
+shader_parameter/pixel = 4.0
+shader_parameter/brightness = 0.0
+shader_parameter/contrast = 1.01
+shader_parameter/saturation = 0.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1k8cb"]
 shader = ExtResource("1_huiex")
 shader_parameter/blur_sharp = 1.3
 shader_parameter/pixel = 4.0
 shader_parameter/brightness = 4.75e-08
-shader_parameter/contrast = 1.032
-shader_parameter/saturation = 0.458
+shader_parameter/contrast = 1.096
+shader_parameter/saturation = 0.49
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_llasw"]
 atlas = ExtResource("4_8rw2g")
@@ -44,7 +53,25 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.16, 0.154773, 0.1376, 1)
 
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+material = SubResource("ShaderMaterial_a00gk")
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+stream = ExtResource("2_u6iin")
+autoplay = true
+expand = true
+loop = true
+
 [node name="BgTexture" type="TextureRect" parent="."]
+visible = false
 material = SubResource("ShaderMaterial_1k8cb")
 layout_mode = 1
 anchors_preset = -1
@@ -100,7 +127,8 @@ offset_top = -23.0
 offset_right = 281.0
 offset_bottom = -20.0
 grow_vertical = 0
-text = "© 2001 Studio Ghibli:  Spirited Away"
+text = "Inspired by: 
+© 2001 Studio Ghibli: Spirited Away"
 label_settings = SubResource("LabelSettings_p7yup")
 
 [connection signal="mouse_pressed" from="ShutdownTextureButton" to="." method="_on_shutdown_texture_button_mouse_pressed"]
