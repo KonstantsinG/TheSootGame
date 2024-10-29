@@ -6,6 +6,7 @@ class_name WebSocketServer # low-level web socket Server
 signal message_received(peer_id : int, message)
 signal client_connected(peer_id : int)
 signal client_disconnected(peer_id : int)
+signal server_shutting_down(reason : String)
 #endregion
 
 #region classes
@@ -83,10 +84,10 @@ func poll_udp() -> void:
 		var packet = peer.get_packet()
 		var data = bytes_to_var(packet)
 		
-		if data == "REQUEST_SERVER_IP":
+		if data == "REQUEST_SERVER_DATA":
 			var serv_data = get_server_data()
 			var msg = {
-				"head" : "RESPONSE_SERVER_IP",
+				"head" : "RESPONSE_SERVER_DATA",
 				"ip" : serv_data.ip,
 				"server_name" : serv_data.server_name
 			}
@@ -106,8 +107,8 @@ func stop_udp_broadcasting() -> void:
 # because the Servers_browser should remove its panel
 func _broadcast_closing_notification() -> void:
 	var msg = {
-		"head" : "SERVER_CLOSE_NOTIFICATION",
-		"value" : get_ip()
+		"head" : "SERVER_CLOSING_NOTIFICATION",
+		"ip" : get_ip()
 	}
 	
 	for p in udp_peers:
@@ -268,3 +269,9 @@ func poll() -> void:
 		peers.erase(r)
 	to_remove.clear()
 #endregion
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		server_shutting_down.emit("WM_CLOSE_REQUEST")
+		_broadcast_closing_notification()
+		get_tree().quit()

@@ -24,7 +24,7 @@ corner_radius_bottom_left = 15
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rqm3t"]
 atlas = ExtResource("1_cly4a")
-region = Rect2(615, 106, 127, 128)
+region = Rect2(616, 110, 125, 127)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_serdi"]
 bg_color = Color(0.89, 0.854697, 0.7387, 1)

@@ -1,0 +1,272 @@
+[gd_scene load_steps=10 format=3 uid="uid://bp7ldny30vjw1"]
+
+[ext_resource type="PackedScene" uid="uid://cxpyh8ma0r26y" path="res://scenes/menus/player_panel.tscn" id="1_nyjph"]
+[ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="2_ea6y8"]
+[ext_resource type="PackedScene" uid="uid://c3y2hj0rrsknf" path="res://scenes/menus/guest_panel.tscn" id="2_ohho4"]
+[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="3_fip8q"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2pe0"]
+bg_color = Color(0.48, 0.45984, 0.3936, 0.443137)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.890196, 0.854902, 0.737255, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_2i1xe"]
+font_size = 50
+font_color = Color(0.854456, 0.834864, 0.775295, 1)
+outline_size = 30
+outline_color = Color(0.436612, 0.403829, 0.302294, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_js6uk"]
+bg_color = Color(0.803922, 0.772549, 0.666667, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.611765, 0.572549, 0.45098, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_owch1"]
+resource_local_to_scene = true
+shader = ExtResource("3_fip8q")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tsltn"]
+resource_local_to_scene = true
+shader = ExtResource("3_fip8q")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[node name="RoomLobby" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="HeadPanel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_right = 0.95
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_f2pe0")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HeadPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 50.0
+offset_top = 15.0
+offset_right = -50.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="HeadPanel/VBoxContainer"]
+layout_mode = 2
+text = "Capronia Room"
+label_settings = SubResource("LabelSettings_2i1xe")
+horizontal_alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="HeadPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 15
+theme_override_constants/v_separation = 15
+columns = 4
+
+[node name="Panel" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="PlayerPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel" instance=ExtResource("1_nyjph")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel2" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel2" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel3" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel3" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel4" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel4" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel5" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel5" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel6" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel6" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel7" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel7" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Panel8" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
+
+[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel8" instance=ExtResource("2_ohho4")]
+layout_mode = 1
+anchors_preset = 15
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HeadPanel/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+theme_override_constants/separation = 30
+
+[node name="TextButton" parent="HeadPanel/VBoxContainer/HBoxContainer" instance=ExtResource("2_ea6y8")]
+material = SubResource("ShaderMaterial_owch1")
+layout_mode = 2
+text = "Close room"
+
+[node name="TextButton2" parent="HeadPanel/VBoxContainer/HBoxContainer" instance=ExtResource("2_ea6y8")]
+material = SubResource("ShaderMaterial_tsltn")
+layout_mode = 2
+text = "Start game"

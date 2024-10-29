@@ -1,0 +1,240 @@
+[gd_scene load_steps=15 format=3 uid="uid://cvabvddv8tgux"]
+
+[ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="1_838ws"]
+[ext_resource type="Script" path="res://scripts/menus/creating_room_popup.gd" id="1_glw3v"]
+[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="2_3i154"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8peu"]
+bg_color = Color(0.89, 0.854697, 0.7387, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.61, 0.569028, 0.4209, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 15
+shadow_offset = Vector2(5, 5)
+
+[sub_resource type="LabelSettings" id="LabelSettings_grjsu"]
+font_size = 40
+font_color = Color(0.226153, 0.20497, 0.131826, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1tqv1"]
+bg_color = Color(0.0383972, 0.0383972, 0.0383971, 1)
+border_width_top = 2
+border_width_bottom = 2
+border_color = Color(0.611765, 0.568627, 0.419608, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_l8f1i"]
+font_size = 20
+font_color = Color(0.227451, 0.203922, 0.133333, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_m6h51"]
+font_size = 25
+font_color = Color(0.786219, 0.156799, 0.217916, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ms8c"]
+resource_local_to_scene = true
+shader = ExtResource("2_3i154")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_xue3j"]
+resource_local_to_scene = true
+shader = ExtResource("2_3i154")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[sub_resource type="Animation" id="Animation_xc2n4"]
+resource_name = "fade_in"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PopupPanel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ih63l"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PopupPanel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_2r27m"]
+resource_name = "fade_out"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PopupPanel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_aer28"]
+_data = {
+"RESET": SubResource("Animation_ih63l"),
+"fade_in": SubResource("Animation_xc2n4"),
+"fade_out": SubResource("Animation_2r27m")
+}
+
+[node name="CreatingRoomPopup" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_glw3v")
+
+[node name="PopupPanel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(600, 450)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_x8peu")
+
+[node name="TitleLabel" type="Label" parent="PopupPanel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -113.5
+offset_right = 113.5
+offset_bottom = 55.0
+grow_horizontal = 2
+text = "Create new room"
+label_settings = SubResource("LabelSettings_grjsu")
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="PopupPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_top = 60.0
+offset_bottom = 4.0
+grow_horizontal = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_1tqv1")
+
+[node name="NameTextEdit" type="TextEdit" parent="PopupPanel"]
+custom_minimum_size = Vector2(400, 40)
+layout_mode = 1
+anchors_preset = -1
+offset_left = 22.0
+offset_top = 123.0
+offset_right = 422.0
+offset_bottom = 163.0
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Room name"
+
+[node name="PassTextEdit" type="TextEdit" parent="PopupPanel"]
+custom_minimum_size = Vector2(400, 40)
+layout_mode = 1
+anchors_preset = -1
+offset_left = 22.0
+offset_top = 189.0
+offset_right = 422.0
+offset_bottom = 229.0
+theme_override_font_sizes/font_size = 20
+placeholder_text = "Password (empty for public)"
+
+[node name="AISpinBox" type="SpinBox" parent="PopupPanel"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 0
+offset_left = 23.0
+offset_top = 255.0
+offset_right = 106.063
+offset_bottom = 295.0
+max_value = 4.0
+
+[node name="Label" type="Label" parent="PopupPanel"]
+layout_mode = 0
+offset_left = 116.0
+offset_top = 261.0
+offset_right = 351.0
+offset_bottom = 289.0
+text = "AI's count for each team"
+label_settings = SubResource("LabelSettings_l8f1i")
+
+[node name="ErrorLabel" type="Label" parent="PopupPanel"]
+visible = false
+layout_mode = 0
+offset_left = 13.0
+offset_top = 333.0
+offset_right = 585.0
+offset_bottom = 368.0
+text = "Error: Wrong room name"
+label_settings = SubResource("LabelSettings_m6h51")
+horizontal_alignment = 1
+
+[node name="CreateButton" parent="PopupPanel" instance=ExtResource("1_838ws")]
+material = SubResource("ShaderMaterial_3ms8c")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 145.0
+offset_right = 30.0
+offset_bottom = 10.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.7, 0.7)
+text = "Create"
+
+[node name="CancelButton" parent="PopupPanel" instance=ExtResource("1_838ws")]
+material = SubResource("ShaderMaterial_xue3j")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 528.0
+offset_top = 400.0
+offset_right = -107.0
+offset_bottom = 450.0
+scale = Vector2(0.7, 0.7)
+text = "Cancel"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_aer28")
+}
+
+[connection signal="tree_entered" from="." to="." method="_on_tree_entered"]
+[connection signal="button_pressed" from="PopupPanel/CreateButton" to="." method="_on_create_button_pressed"]
+[connection signal="button_pressed" from="PopupPanel/CancelButton" to="." method="_on_cancel_button_pressed"]
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

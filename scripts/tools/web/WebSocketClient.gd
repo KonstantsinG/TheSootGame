@@ -49,7 +49,7 @@ func run_udp_broadcast(port : int) -> Error:
 	var err = udp_peer.set_dest_address("255.255.255.255", port)
 	if err != OK: return err
 	
-	err = udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_IP"))
+	err = udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_DATA"))
 	if err != OK: return err
 	
 	udp_broadcasting = true

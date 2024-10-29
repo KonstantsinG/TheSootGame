@@ -81,5 +81,9 @@ func _on_client_message_recieved(message) -> void:
 	if message is Dictionary:
 		match message["head"]:
 			# response from UDP Server with TCP Server information
-			"RESPONSE_SERVER_IP":
+			"RESPONSE_SERVER_DATA":
 				gui.add_found_server(message["ip"], message["server_name"])
+			
+			# let all CLients know that Server is shutting down
+			"SERVER_CLOSING_NOTIFICATION":
+				gui.remove_missing_server(message["ip"])

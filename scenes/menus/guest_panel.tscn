@@ -1,0 +1,241 @@
+[gd_scene load_steps=17 format=3 uid="uid://c3y2hj0rrsknf"]
+
+[ext_resource type="Texture2D" uid="uid://x5o827oam53" path="res://sprites/soot/SootAtlas.png" id="1_bqqof"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="2_mtr17"]
+[ext_resource type="Shader" path="res://resources/shaders/banner_coloring.gdshader" id="3_q5d6g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x855w"]
+atlas = ExtResource("1_bqqof")
+region = Rect2(2, 342, 285, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t5oa0"]
+atlas = ExtResource("1_bqqof")
+region = Rect2(3, 5, 178, 254)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k6q7e"]
+atlas = ExtResource("1_bqqof")
+region = Rect2(6, 275, 75, 57)
+
+[sub_resource type="LabelSettings" id="LabelSettings_xq48r"]
+font_size = 25
+font_color = Color(0.368637, 0.339695, 0.250065, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dvkdq"]
+atlas = ExtResource("2_mtr17")
+region = Rect2(10, 294, 296, 103)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_boonm"]
+resource_local_to_scene = true
+shader = ExtResource("3_q5d6g")
+shader_parameter/red_value = 0.0
+shader_parameter/green_value = -0.65
+shader_parameter/blue_value = -0.5
+shader_parameter/is_pale = false
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uqbuu"]
+atlas = ExtResource("2_mtr17")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0t02h"]
+resource_local_to_scene = true
+shader = ExtResource("3_q5d6g")
+shader_parameter/red_value = -0.65
+shader_parameter/green_value = -0.4
+shader_parameter/blue_value = 0.1
+shader_parameter/is_pale = false
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_st6cm"]
+atlas = ExtResource("2_mtr17")
+region = Rect2(856, 119, 76, 75)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pp8wu"]
+resource_local_to_scene = true
+shader = ExtResource("3_q5d6g")
+shader_parameter/red_value = -0.6
+shader_parameter/green_value = -0.05
+shader_parameter/blue_value = -0.55
+shader_parameter/is_pale = false
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3d6if"]
+atlas = ExtResource("2_mtr17")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d3gh0"]
+resource_local_to_scene = true
+shader = ExtResource("3_q5d6g")
+shader_parameter/red_value = 1.0
+shader_parameter/green_value = 1.49012e-08
+shader_parameter/blue_value = -0.6
+shader_parameter/is_pale = false
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rslo3"]
+atlas = ExtResource("2_mtr17")
+region = Rect2(856, 119, 76, 75)
+
+[node name="GuestPanel" type="Control"]
+custom_minimum_size = Vector2(360, 405)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -202.5
+offset_right = 180.0
+offset_bottom = 202.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="ShadowTextureRect" type="TextureRect" parent="Panel"]
+modulate = Color(0.61, 0.5856, 0.5124, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.849
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -142.5
+offset_top = -62.0
+offset_right = 142.5
+offset_bottom = -3.05176e-05
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_x855w")
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+offset_left = 0.400002
+offset_top = 7.2
+offset_right = 0.600006
+offset_bottom = 19.8
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_t5oa0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CrownTexture" type="TextureRect" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.129
+anchor_right = 0.5
+anchor_bottom = 0.298
+grow_horizontal = 2
+texture = SubResource("AtlasTexture_k6q7e")
+stretch_mode = 5
+
+[node name="NameTextEdit" type="TextEdit" parent="Panel"]
+visible = false
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.21
+anchor_top = 0.892
+anchor_right = 0.774
+anchor_bottom = 0.957
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 15
+placeholder_text = "Soot name"
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 76.0
+offset_top = -52.0
+offset_right = -81.0
+offset_bottom = -17.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Kapron"
+label_settings = SubResource("LabelSettings_xq48r")
+horizontal_alignment = 1
+
+[node name="TeamPanel" type="Control" parent="Panel"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Panel/TeamPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.15
+anchor_right = 0.025
+anchor_bottom = 0.15
+offset_top = 0.5
+offset_right = 106.0
+offset_bottom = 103.5
+scale = Vector2(0.4, 0.4)
+texture = SubResource("AtlasTexture_dvkdq")
+patch_margin_left = 57
+patch_margin_top = 52
+patch_margin_right = 49
+patch_margin_bottom = 51
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/TeamPanel/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="RedBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+visible = false
+material = SubResource("ShaderMaterial_boonm")
+layout_mode = 2
+texture = SubResource("AtlasTexture_uqbuu")
+stretch_mode = 5
+
+[node name="BlueBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+material = SubResource("ShaderMaterial_0t02h")
+layout_mode = 2
+texture = SubResource("AtlasTexture_st6cm")
+stretch_mode = 5
+
+[node name="GreenBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+visible = false
+material = SubResource("ShaderMaterial_pp8wu")
+layout_mode = 2
+texture = SubResource("AtlasTexture_3d6if")
+stretch_mode = 5
+
+[node name="YellowBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+visible = false
+material = SubResource("ShaderMaterial_d3gh0")
+layout_mode = 2
+texture = SubResource("AtlasTexture_rslo3")
+stretch_mode = 5

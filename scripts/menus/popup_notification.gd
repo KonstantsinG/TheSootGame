@@ -1,6 +1,6 @@
 extends Control
 
-signal popup_disappeared(target : Control)
+signal popup_disappeared()
 
 
 func set_data(title : String, message : String) -> void:
@@ -14,7 +14,7 @@ func _on_text_button_pressed() -> void:
 
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 	if anim_name == "fade_out":
-		popup_disappeared.emit(self)
+		popup_disappeared.emit()
 
 
 func _on_tree_entered() -> void:

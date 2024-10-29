@@ -2,7 +2,7 @@ extends CanvasLayer
 
 signal create_new_server_pressed
 signal servers_search_started
-signal shutdown_server(reason: String)
+signal shutdown_server_pressed(reason: String)
 
 @onready var menus = $Menus
 @onready var popups = $Popups
@@ -10,6 +10,7 @@ signal shutdown_server(reason: String)
 @onready var gamemode_menu = $Menus/GamemodeMenu
 
 var server_menu = null
+var room_lobby = null
 
 
 func _ready() -> void:
@@ -25,14 +26,14 @@ func _on_servers_searching_timer_timeout() -> void:
 func show_popup_notification(title : String, message : String) -> void:
 	var popup = preload("res://scenes/menus/popup_notification.tscn").instantiate()
 	popup.set_data(title, message)
-	popup.popup_disappeared.connect(_on_popup_notification_disappeared)
+	popup.popup_disappeared.connect(remove_popup)
 	popups.add_child(popup)
 
 
-func _on_popup_notification_disappeared(target : Control) -> void:
-	if popups.get_children().has(target):
-		popups.remove_child(target)
-		target.queue_free()
+func remove_popup() -> void:
+	var target = popups.get_child(0)
+	popups.remove_child(target)
+	target.queue_free()
 
 
 func add_found_server(ip : String, server_name : String) -> void:
@@ -69,10 +70,41 @@ func _on_server_menu_back_pressed() -> void:
 
 
 func _on_server_menu_join_pressed(ip : String) -> void:
-	pass
+	print("You wanna join the Server <", ip, ">")
+	#NOTIMPLEMENTED
 
 
 func _on_server_menu_create_new_pressed() -> void:
 	create_new_server_pressed.emit()
+	servers_searching_timer.stop()
 	
-	# NOTIMPLEMENTED: open RoomLobby (as owner)
+	#TODO wait for success Server response
+	
+	_show_create_room_popup()
+
+
+func _show_create_room_popup() -> void:
+	var popup = preload("res://scenes/menus/creating_room_popup.tscn").instantiate()
+	popup.create_room_pressed.connect(_on_create_room_popup_create_room_pressed)
+	popup.cancel_pressed.connect(_on_create_room_popup_cancel_pressed)
+	popups.add_child(popup)
+
+
+func _on_create_room_popup_create_room_pressed(room_name : String, room_pass : String, ais_count : int) -> void:
+	print("You wanna create new room")
+	remove_popup()
+	_open_room_lobby()
+	#NOTIMPLEMENTED
+
+
+func _on_create_room_popup_cancel_pressed() -> void:
+	remove_popup()
+
+
+func _open_room_lobby():
+	# INFO: every time creating new instance
+	room_lobby = preload("res://scenes/menus/room_lobby.tscn").instantiate()
+	# TODO signals
+	
+	menus.remove_child(server_menu)
+	menus.add_child(room_lobby)

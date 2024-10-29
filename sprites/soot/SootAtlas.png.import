@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://brs687sqfnu1q"
-path="res://.godot/imported/BoilerRoomAtlas.png-450326db713c9aa273561e370548daeb.ctex"
+uid="uid://x5o827oam53"
+path="res://.godot/imported/SootAtlas.png-b82383abe96ae658cdff343d5a5dfbbb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/atlases/BoilerRoomAtlas.png"
-dest_files=["res://.godot/imported/BoilerRoomAtlas.png-450326db713c9aa273561e370548daeb.ctex"]
+source_file="res://sprites/soot/SootAtlas.png"
+dest_files=["res://.godot/imported/SootAtlas.png-b82383abe96ae658cdff343d5a5dfbbb.ctex"]
 
 [params]
 

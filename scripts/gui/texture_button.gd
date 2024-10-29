@@ -4,6 +4,14 @@ extends Control
 signal mouse_pressed
 
 @export var texture: Texture2D = null
+@export var flip_h: bool = false:
+	set(value):
+		flip_h = value
+		$TextureRect.flip_h = value
+@export var flip_v: bool = false:
+	set(value):
+		flip_v = value
+		$TextureRect.flip_v = value
 
 var default_texture := PlaceholderTexture2D.new()
 

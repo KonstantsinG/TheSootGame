@@ -1,0 +1,268 @@
+[gd_scene load_steps=20 format=3 uid="uid://cxpyh8ma0r26y"]
+
+[ext_resource type="Script" path="res://scripts/menus/player_panel.gd" id="1_dq7x4"]
+[ext_resource type="Texture2D" uid="uid://x5o827oam53" path="res://sprites/soot/SootAtlas.png" id="2_ym3ee"]
+[ext_resource type="PackedScene" uid="uid://b56dn5dktgpud" path="res://scenes/gui/texture_button.tscn" id="3_oae4u"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="4_pec36"]
+[ext_resource type="Shader" path="res://resources/shaders/banner_coloring.gdshader" id="5_m5wsd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ferj6"]
+atlas = ExtResource("2_ym3ee")
+region = Rect2(2, 342, 285, 62)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sdqda"]
+atlas = ExtResource("2_ym3ee")
+region = Rect2(3, 5, 178, 254)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1oijb"]
+atlas = ExtResource("2_ym3ee")
+region = Rect2(6, 275, 75, 57)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iq10e"]
+atlas = ExtResource("4_pec36")
+region = Rect2(747, 109, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lrgbf"]
+atlas = ExtResource("4_pec36")
+region = Rect2(747, 109, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uvb1t"]
+atlas = ExtResource("4_pec36")
+region = Rect2(10, 294, 296, 103)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_yq3bo"]
+resource_local_to_scene = true
+shader = ExtResource("5_m5wsd")
+shader_parameter/red_value = 0.0
+shader_parameter/green_value = -0.65
+shader_parameter/blue_value = -0.5
+shader_parameter/is_pale = false
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bb6di"]
+atlas = ExtResource("4_pec36")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gd7ib"]
+resource_local_to_scene = true
+shader = ExtResource("5_m5wsd")
+shader_parameter/red_value = -0.65
+shader_parameter/green_value = -0.4
+shader_parameter/blue_value = 0.1
+shader_parameter/is_pale = true
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eg2iu"]
+atlas = ExtResource("4_pec36")
+region = Rect2(856, 119, 76, 75)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u5nue"]
+resource_local_to_scene = true
+shader = ExtResource("5_m5wsd")
+shader_parameter/red_value = -0.6
+shader_parameter/green_value = -0.05
+shader_parameter/blue_value = -0.55
+shader_parameter/is_pale = true
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bemx0"]
+atlas = ExtResource("4_pec36")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3ydbx"]
+resource_local_to_scene = true
+shader = ExtResource("5_m5wsd")
+shader_parameter/red_value = 0.05
+shader_parameter/green_value = 0.05
+shader_parameter/blue_value = -0.8
+shader_parameter/is_pale = true
+shader_parameter/is_bright = false
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u1c7b"]
+atlas = ExtResource("4_pec36")
+region = Rect2(856, 119, 76, 75)
+
+[node name="PlayerPanel" type="Control"]
+custom_minimum_size = Vector2(360, 405)
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_dq7x4")
+
+[node name="Panel" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="ShadowTextureRect" type="TextureRect" parent="Panel"]
+modulate = Color(0.61, 0.5856, 0.5124, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.849
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -142.5
+offset_top = -62.0
+offset_right = 142.5
+offset_bottom = -3.05176e-05
+grow_horizontal = 2
+grow_vertical = 0
+texture = SubResource("AtlasTexture_ferj6")
+stretch_mode = 5
+
+[node name="TextureRect" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.2
+anchor_top = 0.2
+anchor_right = 0.8
+anchor_bottom = 0.8
+offset_left = 0.400002
+offset_top = 7.2
+offset_right = 0.600006
+offset_bottom = 19.8
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("AtlasTexture_sdqda")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CrownTexture" type="TextureRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.129
+anchor_right = 0.5
+anchor_bottom = 0.298
+grow_horizontal = 2
+texture = SubResource("AtlasTexture_1oijb")
+stretch_mode = 5
+
+[node name="NameTextEdit" type="TextEdit" parent="Panel"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.21
+anchor_top = 0.892
+anchor_right = 0.774
+anchor_bottom = 0.957
+offset_top = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 15
+placeholder_text = "Soot name"
+
+[node name="LeftTextureButton" parent="Panel" instance=ExtResource("3_oae4u")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.055
+anchor_top = 0.45
+anchor_right = 0.055
+anchor_bottom = 0.45
+offset_top = -32.5
+offset_right = 65.0
+offset_bottom = 32.5
+grow_horizontal = 1
+scale = Vector2(0.7, 0.7)
+texture = SubResource("AtlasTexture_iq10e")
+flip_h = false
+flip_v = false
+
+[node name="RightTextureButton" parent="Panel" instance=ExtResource("3_oae4u")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.945
+anchor_top = 0.45
+anchor_right = 0.945
+anchor_bottom = 0.45
+offset_left = -52.2
+offset_top = -33.75
+offset_right = 12.8
+offset_bottom = 31.25
+grow_horizontal = 0
+scale = Vector2(0.7, 0.7)
+texture = SubResource("AtlasTexture_lrgbf")
+flip_h = true
+flip_v = false
+
+[node name="TeamPanel" type="Control" parent="Panel"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Panel/TeamPanel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.025
+anchor_top = 0.15
+anchor_right = 0.025
+anchor_bottom = 0.15
+offset_right = 372.0
+offset_bottom = 103.0
+scale = Vector2(0.4, 0.4)
+texture = SubResource("AtlasTexture_uvb1t")
+patch_margin_left = 57
+patch_margin_top = 52
+patch_margin_right = 49
+patch_margin_bottom = 51
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel/TeamPanel/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_right = -10.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="RedBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+material = SubResource("ShaderMaterial_yq3bo")
+layout_mode = 2
+texture = SubResource("AtlasTexture_bb6di")
+stretch_mode = 5
+
+[node name="BlueBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+material = SubResource("ShaderMaterial_gd7ib")
+layout_mode = 2
+texture = SubResource("AtlasTexture_eg2iu")
+stretch_mode = 5
+
+[node name="GreenBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+material = SubResource("ShaderMaterial_u5nue")
+layout_mode = 2
+texture = SubResource("AtlasTexture_bemx0")
+stretch_mode = 5
+
+[node name="YellowBanner" type="TextureRect" parent="Panel/TeamPanel/NinePatchRect/HBoxContainer"]
+material = SubResource("ShaderMaterial_3ydbx")
+layout_mode = 2
+texture = SubResource("AtlasTexture_u1c7b")
+stretch_mode = 5
+
+[connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_gui_input"]
+[connection signal="mouse_entered" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_mouse_exited"]
+[connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/BlueBanner" to="." method="_on_blue_banner_gui_input"]
+[connection signal="mouse_entered" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/BlueBanner" to="." method="_on_blue_banner_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/BlueBanner" to="." method="_on_blue_banner_mouse_exited"]
+[connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/GreenBanner" to="." method="_on_green_banner_gui_input"]
+[connection signal="mouse_entered" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/GreenBanner" to="." method="_on_green_banner_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/GreenBanner" to="." method="_on_green_banner_mouse_exited"]
+[connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/YellowBanner" to="." method="_on_yellow_banner_gui_input"]
+[connection signal="mouse_entered" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/YellowBanner" to="." method="_on_yellow_banner_mouse_entered"]
+[connection signal="mouse_exited" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/YellowBanner" to="." method="_on_yellow_banner_mouse_exited"]

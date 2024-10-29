@@ -9,7 +9,7 @@ shader = ExtResource("2_qdqcd")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.6
 
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_6beur"]
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pjxy7"]
 
 [node name="TextureButton" type="Control"]
 custom_minimum_size = Vector2(65, 65)
@@ -22,6 +22,8 @@ anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_vuiap")
+flip_h = null
+flip_v = null
 
 [node name="TextureRect" type="TextureRect" parent="."]
 material = SubResource("ShaderMaterial_rhj22")
@@ -31,7 +33,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = SubResource("PlaceholderTexture2D_6beur")
+texture = SubResource("PlaceholderTexture2D_pjxy7")
 expand_mode = 1
 stretch_mode = 5
 
