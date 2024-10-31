@@ -16,6 +16,10 @@ run/main_scene="res://scenes/core/game_root.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://sprites/icons/soot_icon.png"
 
+[autoload]
+
+GameParams="*res://scripts/tools/global/game_params.gd"
+
 [debug]
 
 file_logging/enable_file_logging=true

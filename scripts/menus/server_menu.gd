@@ -16,7 +16,7 @@ func add_server_panel(ip : String, server_name : String) -> void:
 	for p in panels_container.get_children():
 		if p.ip == ip: return
 	
-	var panel = preload("res://scenes/menus/server_panel.tscn").instantiate()
+	var panel = preload("res://scenes/menus/panels/server_panel.tscn").instantiate()
 	panel.set_params(ip, server_name)
 	panel.panel_pressed.connect(_on_panel_pressed)
 	panels_container.add_child(panel)

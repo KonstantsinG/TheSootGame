@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=3 uid="uid://cxfbnohv0ayde"]
 
-[ext_resource type="Script" path="res://scripts/menus/popup_notification.gd" id="1_c37e1"]
+[ext_resource type="Script" path="res://scripts/menus/popups/popup_notification.gd" id="1_c37e1"]
 [ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="1_tm5o3"]
 [ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="2_u8gn1"]
 

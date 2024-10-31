@@ -1,0 +1,150 @@
+[gd_scene load_steps=9 format=3 uid="uid://l57a0nv8m7na"]
+
+[ext_resource type="Script" path="res://scripts/menus/client_menu.gd" id="1_ds7vx"]
+[ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="2_7us4i"]
+[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="3_clp5p"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_pv700"]
+font_size = 90
+font_color = Color(0.290196, 0.270588, 0.211765, 1)
+outline_size = 50
+outline_color = Color(0.941176, 0.905882, 0.807843, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0404d"]
+bg_color = Color(0.4, 0.3754, 0.364, 0.392157)
+border_width_left = 10
+border_width_top = 10
+border_width_right = 10
+border_width_bottom = 10
+border_color = Color(0.890196, 0.854902, 0.737255, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5gvm7"]
+bg_color = Color(0.76, 0.722, 0.608, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.611765, 0.568627, 0.419608, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_npf3l"]
+font_size = 50
+font_color = Color(0.290196, 0.270588, 0.211765, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_26n5t"]
+resource_local_to_scene = true
+shader = ExtResource("3_clp5p")
+shader_parameter/highlighted = false
+shader_parameter/brightness = 0.6
+
+[node name="ClientMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 168.0
+offset_right = -159.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ds7vx")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -399.5
+offset_top = 16.0
+offset_right = 400.5
+offset_bottom = 140.0
+grow_horizontal = 2
+text = "Rooms     Browser"
+label_settings = SubResource("LabelSettings_pv700")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 155.0
+offset_bottom = -143.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0404d")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = 25.0
+offset_right = -40.0
+offset_bottom = -26.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="RoomssVBoxContainer" type="VBoxContainer" parent="Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="NothingFoundPanel" type="Control" parent="Panel/ScrollContainer/RoomssVBoxContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="Panel" type="Panel" parent="Panel/ScrollContainer/RoomssVBoxContainer/NothingFoundPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_5gvm7")
+
+[node name="Label" type="Label" parent="Panel/ScrollContainer/RoomssVBoxContainer/NothingFoundPanel/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -84.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Nothing found..."
+label_settings = SubResource("LabelSettings_npf3l")
+horizontal_alignment = 1
+
+[node name="RoomsPanels" type="VBoxContainer" parent="Panel/ScrollContainer/RoomssVBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -126.0
+offset_bottom = -56.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 15
+alignment = 2
+
+[node name="BackTextButton" parent="HBoxContainer" instance=ExtResource("2_7us4i")]
+material = SubResource("ShaderMaterial_26n5t")
+layout_mode = 2
+text = "Back"
+
+[connection signal="button_pressed" from="HBoxContainer/BackTextButton" to="." method="_on_back_text_button_pressed"]

@@ -25,26 +25,29 @@ class RoomData:
 	var id : int
 	var room_name : String
 	var password : String
+	
 	var is_public : bool
+	var players_count : int = 1
 	
 	func _init(_room_name : String, _password : String) -> void:
 		id = randi_range(2, 1 << 30)
 		room_name = _room_name
 		password = _password
 		is_public = true if _password == "" else false
+	
+	
+	func serialize() -> Dictionary:
+		var data = {
+			"room_name" : room_name,
+			"password" : password,
+			"players_count" : players_count
+		}
+		return data
 #endregion
 
 #region variables
 var clients_data : Array[ClientData] = []
 var rooms_data : Array[RoomData] = []
-#endregion
-
-
-#region prebuild functions
-func _ready() -> void:
-	message_received.connect(_on_message_recieved)
-	client_connected.connect(_on_client_connected)
-	client_disconnected.connect(_on_client_disconnected)
 #endregion
 
 
@@ -63,109 +66,67 @@ func get_server_net_type() -> ServerNetTypes:
 #endregion
 
 
-# TODO rooms system
-func create_room(room_name : String, password : String) -> void:
-	pass
-
-
-func _on_message_recieved(peer_id : int, message) -> void:
-	process_message(peer_id, message)
-
-
- # FIXME if new Client connected -> request it data
-func _on_client_connected(peer_id : int):
-	var msg = "get_client_data"
-	send(peer_id, msg)
-	_update_clients_count()
-
-
-# FIXME if Client disconnected -> make something with it...
-func _on_client_disconnected(peer_id : int):
-	peers.erase(peer_id)
+func process_udp_request(peer : PacketPeerUDP, message) -> void:
+	if message == "GET_SERVER_DATA":
+		var serv_data = get_server_data()
+		var msg = {
+			"head" : "SET_SERVER_DATA",
+			"ip" : serv_data.ip,
+			"server_name" : serv_data.server_name
+		}
+		peer.put_packet(var_to_bytes(msg))
 	
-	#var msg = {
-	#	"head" : "log",
-	#	"value" : "Client %s disconnected from Server" % [clients_data.filter(func(el) : return el.id == peer_id).front().client_name]
-	#}
-	#send(0, msg)
-	
-	#var peer = clients_data.filter(func(el) : return el.id == peer_id).front()
-	#clients_data.erase(peer)
-	
-	_update_clients_count()
+	elif message == "GET_AVAILABLE_ROOMS":
+		var rooms_arr := []
+		for room in rooms_data:
+			var room_data = room.serialize()
+			room_data["server_ip"]  = get_ip()
+			rooms_arr.append(room_data)
+		
+		var msg = {
+			"head" : "SET_AVAILABLE_ROOMS",
+			"value" : rooms_arr
+		}
+		peer.put_packet(var_to_bytes(msg))
 
- # FIXME (CAPS) process incoming message
+
+# process incoming message
 # Dictionary -> response or notification
 # String -> request
 func process_message(peer_id : int, message) -> void:
 	if typeof(message) == TYPE_DICTIONARY:
 		match message["head"]:
-			# save additional Client data (from Server request)
-			"set_client_data":
-				_client_data_recieved(peer_id, message)
-			# let all clients know that someone is moved
-			"player_moved":
-				_notify_player_moved(peer_id, message)
+			# Client request for new Room creation
+			"CREATE_NEW_ROOM":
+				_create_new_room(message)
+			
+			# close Room and let all CLiemts know about that
+			"CLOSE_ROOM":
+				_close_room(peer_id, message)
 	
 	elif typeof(message) == TYPE_STRING:
 		match message:
-			# update game players count for all Clients
-			"update_clients_count":
-				_update_clients_count()
+			pass
 
 
 
 # --- ACTIONS ---
-
-# DEPRECATED send all Clients message with actual players count
-func _update_clients_count():
-	var msg = {
-		"head" : "update_clients_count",
-		"value" : get_connections_count()
-	}
-	send(0, msg)
+func _create_new_room(message) -> void:
+	var room_name = message["room_name"]
+	var password = message["password"]
+	var room = RoomData.new(room_name, password)
+	rooms_data.append(room)
 
 
-# DEPRECATED idk, its logic is kind of strange...
-func _client_data_recieved(peer_id : int, message):
-	clients_data.append(ClientData.new(peer_id, message["name"]))
-	var msg = {
-		"head" : "log",
-		"value" : "Client %s has successefully connected to the Server" % [message["name"]]
-	}
-	send(0, msg)
-
-
-# NOTIMPLEMENTED
-func start_game():
-	var msg = "start_game"
-	send(0, msg)
+func _close_room(peer_id : int, message) -> void:
+	var room = rooms_data.filter(func(r): return r.room_name == message["room_name"]).front()
 	
-	_send_players_data()
-
-
-# DEPRECATED broadcast players data for all players
-func _send_players_data():
-	for c1 in clients_data:
-		for c2 in clients_data:
-			var msg = {
-				"head" : "add_player",
-				"name" : c2.client_name,
-				"id" : c2.id
-			}
-			if c1 == c2: msg["id"] = -1
-			
-			send(c1.id, msg)
+	if room != null:
+		rooms_data.erase(room)
 		
-		var msg2 = "spawn_players"
-		send(c1.id, msg2)
-
-
-# DEPRECATED you know...
-func _notify_player_moved(peer_id : int, message) -> void:
-	var msg = {
-		"head" : "player_moved",
-		"id" : peer_id,
-		"new_position" : message["new_position"]
-	}
-	send(-peer_id, msg)
+		var msg = {
+			"head" : "NOTIFICATION_ROOM_CLOSED",
+			"room_name" : room.room_name,
+			"server_ip" : get_ip()
+		}
+		send(-peer_id, msg)

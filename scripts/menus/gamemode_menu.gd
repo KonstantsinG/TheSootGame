@@ -1,6 +1,5 @@
 extends Control
 
-
 signal play_locally_pressed
 signal offline_mode_pressed
 signal games_browser_pressed

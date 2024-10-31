@@ -82,16 +82,14 @@ func poll_udp() -> void:
 		var peer: PacketPeerUDP = udp_server.take_connection()
 		udp_peers.append(peer)
 		var packet = peer.get_packet()
-		var data = bytes_to_var(packet)
+		var message = bytes_to_var(packet)
 		
-		if data == "REQUEST_SERVER_DATA":
-			var serv_data = get_server_data()
-			var msg = {
-				"head" : "RESPONSE_SERVER_DATA",
-				"ip" : serv_data.ip,
-				"server_name" : serv_data.server_name
-			}
-			peer.put_packet(var_to_bytes(msg))
+		process_udp_request(peer, message)
+
+
+# INFO override in descendant
+func process_udp_request(_peer : PacketPeerUDP, _message) -> void:
+	pass
 
 
 # stop listening for Clients requests for TCP Server address
@@ -107,7 +105,7 @@ func stop_udp_broadcasting() -> void:
 # because the Servers_browser should remove its panel
 func _broadcast_closing_notification() -> void:
 	var msg = {
-		"head" : "SERVER_CLOSING_NOTIFICATION",
+		"head" : "NOTIFICATION_SERVER_CLOSING",
 		"ip" : get_ip()
 	}
 	
@@ -263,11 +261,17 @@ func poll() -> void:
 		#process incoming messages
 		while p.get_available_packet_count():
 			var message = get_message(id)
+			process_message(id, message)
 			message_received.emit(id, message)
 	
 	for r in to_remove:
 		peers.erase(r)
 	to_remove.clear()
+
+
+# INFO override in descendant
+func process_message(_peer_id : int, _messag):
+	pass
 #endregion
 
 func _notification(what: int) -> void:

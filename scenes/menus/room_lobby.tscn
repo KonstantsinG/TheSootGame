@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://bp7ldny30vjw1"]
+[gd_scene load_steps=9 format=3 uid="uid://bp7ldny30vjw1"]
 
-[ext_resource type="PackedScene" uid="uid://cxpyh8ma0r26y" path="res://scenes/menus/player_panel.tscn" id="1_nyjph"]
+[ext_resource type="Script" path="res://scripts/menus/room_lobby.gd" id="1_7377i"]
 [ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="2_ea6y8"]
-[ext_resource type="PackedScene" uid="uid://c3y2hj0rrsknf" path="res://scenes/menus/guest_panel.tscn" id="2_ohho4"]
 [ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="3_fip8q"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2pe0"]
@@ -59,6 +58,7 @@ offset_bottom = -10.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("1_7377i")
 
 [node name="HeadPanel" type="Panel" parent="."]
 layout_mode = 1
@@ -66,10 +66,10 @@ anchors_preset = -1
 anchor_left = 0.05
 anchor_right = 0.95
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 20.0
+offset_left = 14.0
+offset_top = 17.0
 offset_right = -20.0
-offset_bottom = -20.0
+offset_bottom = -97.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_f2pe0")
@@ -82,14 +82,14 @@ anchor_bottom = 1.0
 offset_left = 50.0
 offset_top = 15.0
 offset_right = -50.0
-offset_bottom = -15.0
+offset_bottom = -28.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 15
 
 [node name="Label" type="Label" parent="HeadPanel/VBoxContainer"]
 layout_mode = 2
-text = "Capronia Room"
+text = "My new Room"
 label_settings = SubResource("LabelSettings_2i1xe")
 horizontal_alignment = 1
 
@@ -106,35 +106,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
-[node name="PlayerPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel" instance=ExtResource("1_nyjph")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Panel2" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
-
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel2" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Panel3" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -142,39 +118,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel3" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Panel4" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
-
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel4" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Panel5" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -182,39 +130,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel5" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Panel6" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
-
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel6" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
 
 [node name="Panel7" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -222,51 +142,30 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel7" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
 [node name="Panel8" type="Panel" parent="HeadPanel/VBoxContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
-[node name="GuestPanel" parent="HeadPanel/VBoxContainer/GridContainer/Panel8" instance=ExtResource("2_ohho4")]
-layout_mode = 1
-anchors_preset = 15
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="HeadPanel/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
+offset_left = 1158.0
+offset_top = 976.0
+offset_right = 1788.0
+offset_bottom = 1046.0
 size_flags_horizontal = 8
 theme_override_constants/separation = 30
 
-[node name="TextButton" parent="HeadPanel/VBoxContainer/HBoxContainer" instance=ExtResource("2_ea6y8")]
+[node name="CloseDisconnectTextButton" parent="HBoxContainer" instance=ExtResource("2_ea6y8")]
 material = SubResource("ShaderMaterial_owch1")
 layout_mode = 2
 text = "Close room"
 
-[node name="TextButton2" parent="HeadPanel/VBoxContainer/HBoxContainer" instance=ExtResource("2_ea6y8")]
+[node name="StartReadyTextButton" parent="HBoxContainer" instance=ExtResource("2_ea6y8")]
 material = SubResource("ShaderMaterial_tsltn")
 layout_mode = 2
 text = "Start game"
+
+[connection signal="button_pressed" from="HBoxContainer/CloseDisconnectTextButton" to="." method="_on_close_disconnect_text_button_pressed"]
+[connection signal="button_pressed" from="HBoxContainer/StartReadyTextButton" to="." method="_on_start_ready_text_button_pressed"]

@@ -41,7 +41,7 @@ func get_client_data() -> ClientData:
 
 
 # send a UDP broadcast request for a TCP server address
-func run_udp_broadcast(port : int) -> Error:
+func run_udp_broadcast(port : int, message) -> Error:
 	udp_peer = PacketPeerUDP.new()
 	udp_peer.set_broadcast_enabled(true)
 	#udp_peer.bind(0)
@@ -49,7 +49,7 @@ func run_udp_broadcast(port : int) -> Error:
 	var err = udp_peer.set_dest_address("255.255.255.255", port)
 	if err != OK: return err
 	
-	err = udp_peer.put_packet(var_to_bytes("REQUEST_SERVER_DATA"))
+	err = udp_peer.put_packet(var_to_bytes(message))
 	if err != OK: return err
 	
 	udp_broadcasting = true
@@ -66,7 +66,7 @@ func poll_udp() -> void:
 
 # close UDP peer
 func close_udp() -> void:
-	if udp_peer.is_bound():
+	if udp_peer != null:
 		udp_peer.close()
 		udp_broadcasting = false
 

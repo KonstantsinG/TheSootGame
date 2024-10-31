@@ -16,3 +16,5 @@ script = ExtResource("1_5eke5")
 [node name="Popups" type="Node" parent="."]
 
 [node name="ServersSearchingTimer" type="Timer" parent="."]
+
+[node name="RoomsSearchingTimer" type="Timer" parent="."]

@@ -1,7 +1,7 @@
-[gd_scene load_steps=15 format=3 uid="uid://cvabvddv8tgux"]
+[gd_scene load_steps=14 format=3 uid="uid://cvabvddv8tgux"]
 
 [ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="1_838ws"]
-[ext_resource type="Script" path="res://scripts/menus/creating_room_popup.gd" id="1_glw3v"]
+[ext_resource type="Script" path="res://scripts/menus/popups/creating_room_popup.gd" id="1_glw3v"]
 [ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="2_3i154"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_x8peu"]
@@ -29,10 +29,6 @@ border_width_top = 2
 border_width_bottom = 2
 border_color = Color(0.611765, 0.568627, 0.419608, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_l8f1i"]
-font_size = 20
-font_color = Color(0.227451, 0.203922, 0.133333, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_m6h51"]
 font_size = 25
 font_color = Color(0.786219, 0.156799, 0.217916, 1)
@@ -49,6 +45,21 @@ shader = ExtResource("2_3i154")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.6
 
+[sub_resource type="Animation" id="Animation_ih63l"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PopupPanel:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_xc2n4"]
 resource_name = "fade_in"
 length = 0.2
@@ -63,21 +74,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
-}
-
-[sub_resource type="Animation" id="Animation_ih63l"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PopupPanel:modulate")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
 }
 
 [sub_resource type="Animation" id="Animation_2r27m"]
@@ -151,41 +147,23 @@ theme_override_styles/separator = SubResource("StyleBoxFlat_1tqv1")
 custom_minimum_size = Vector2(400, 40)
 layout_mode = 1
 anchors_preset = -1
-offset_left = 22.0
-offset_top = 123.0
-offset_right = 422.0
-offset_bottom = 163.0
-theme_override_font_sizes/font_size = 20
+offset_left = 25.0
+offset_top = 135.0
+offset_right = 456.0
+offset_bottom = 185.0
+theme_override_font_sizes/font_size = 25
 placeholder_text = "Room name"
 
 [node name="PassTextEdit" type="TextEdit" parent="PopupPanel"]
 custom_minimum_size = Vector2(400, 40)
 layout_mode = 1
 anchors_preset = -1
-offset_left = 22.0
-offset_top = 189.0
-offset_right = 422.0
-offset_bottom = 229.0
-theme_override_font_sizes/font_size = 20
+offset_left = 24.0
+offset_top = 221.0
+offset_right = 455.0
+offset_bottom = 270.0
+theme_override_font_sizes/font_size = 25
 placeholder_text = "Password (empty for public)"
-
-[node name="AISpinBox" type="SpinBox" parent="PopupPanel"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 0
-offset_left = 23.0
-offset_top = 255.0
-offset_right = 106.063
-offset_bottom = 295.0
-max_value = 4.0
-
-[node name="Label" type="Label" parent="PopupPanel"]
-layout_mode = 0
-offset_left = 116.0
-offset_top = 261.0
-offset_right = 351.0
-offset_bottom = 289.0
-text = "AI's count for each team"
-label_settings = SubResource("LabelSettings_l8f1i")
 
 [node name="ErrorLabel" type="Label" parent="PopupPanel"]
 visible = false

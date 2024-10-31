@@ -1,6 +1,6 @@
 [gd_scene load_steps=20 format=3 uid="uid://cxpyh8ma0r26y"]
 
-[ext_resource type="Script" path="res://scripts/menus/player_panel.gd" id="1_dq7x4"]
+[ext_resource type="Script" path="res://scripts/menus/panels/player_panel.gd" id="1_dq7x4"]
 [ext_resource type="Texture2D" uid="uid://x5o827oam53" path="res://sprites/soot/SootAtlas.png" id="2_ym3ee"]
 [ext_resource type="PackedScene" uid="uid://b56dn5dktgpud" path="res://scenes/gui/texture_button.tscn" id="3_oae4u"]
 [ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="4_pec36"]

@@ -1,16 +1,16 @@
-[gd_scene load_steps=10 format=3 uid="uid://dpu0lumpug4jt"]
+[gd_scene load_steps=12 format=3 uid="uid://bkswaru22swxv"]
 
-[ext_resource type="Script" path="res://scripts/menus/server_panel.gd" id="1_0cppd"]
-[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="1_cly4a"]
-[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="1_e6ux1"]
+[ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="1_dxqxm"]
+[ext_resource type="Script" path="res://scripts/menus/panels/room_panel.gd" id="2_5non7"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="3_s1jbf"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_j0se4"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_8kt3f"]
 resource_local_to_scene = true
-shader = ExtResource("1_e6ux1")
+shader = ExtResource("1_dxqxm")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.6
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4oexk"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hy3ja"]
 bg_color = Color(0.76, 0.722, 0.608, 1)
 border_width_left = 5
 border_width_top = 5
@@ -22,11 +22,15 @@ corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_rqm3t"]
-atlas = ExtResource("1_cly4a")
-region = Rect2(616, 110, 125, 127)
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ods1"]
+atlas = ExtResource("3_s1jbf")
+region = Rect2(311, 290, 114, 114)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_serdi"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_omdqs"]
+atlas = ExtResource("3_s1jbf")
+region = Rect2(429, 290, 114, 114)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o565d"]
 bg_color = Color(0.89, 0.854697, 0.7387, 1)
 border_width_left = 5
 border_width_top = 5
@@ -38,18 +42,22 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjvxv"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ea4ug"]
 border_width_left = 3
 border_width_right = 2
 border_color = Color(0.611765, 0.568627, 0.419608, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_0rxxa"]
+[sub_resource type="LabelSettings" id="LabelSettings_8oc35"]
 font_size = 30
 font_color = Color(0.387523, 0.362785, 0.282746, 1)
 
-[node name="ServerPanel" type="Control"]
-material = SubResource("ShaderMaterial_j0se4")
-custom_minimum_size = Vector2(1000, 120)
+[sub_resource type="LabelSettings" id="LabelSettings_0jaj7"]
+font_size = 30
+font_color = Color(0.388235, 0.360784, 0.282353, 1)
+
+[node name="RoomPanel" type="Control"]
+material = SubResource("ShaderMaterial_8kt3f")
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 3
 anchors_preset = 14
 anchor_top = 0.5
@@ -57,7 +65,7 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_0cppd")
+script = ExtResource("2_5non7")
 
 [node name="Panel" type="Panel" parent="."]
 use_parent_material = true
@@ -67,9 +75,9 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_4oexk")
+theme_override_styles/panel = SubResource("StyleBoxFlat_hy3ja")
 
-[node name="TextureRect" type="TextureRect" parent="Panel"]
+[node name="PrivateTexture" type="TextureRect" parent="Panel"]
 use_parent_material = true
 layout_mode = 1
 anchors_preset = -1
@@ -80,7 +88,23 @@ offset_top = -40.0
 offset_right = 110.0
 offset_bottom = 40.0
 grow_vertical = 2
-texture = SubResource("AtlasTexture_rqm3t")
+texture = SubResource("AtlasTexture_3ods1")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="PublicTexture" type="TextureRect" parent="Panel"]
+visible = false
+use_parent_material = true
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 30.0
+offset_top = -40.0
+offset_right = 110.0
+offset_bottom = 40.0
+grow_vertical = 2
+texture = SubResource("AtlasTexture_omdqs")
 expand_mode = 1
 stretch_mode = 5
 
@@ -97,21 +121,35 @@ offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_serdi")
+theme_override_styles/panel = SubResource("StyleBoxFlat_o565d")
 
 [node name="VSeparator" type="VSeparator" parent="Panel/Panel"]
 use_parent_material = true
 custom_minimum_size = Vector2(5, 0)
 layout_mode = 1
-anchors_preset = 13
-anchor_left = 0.5
-anchor_right = 0.5
+anchors_preset = -1
+anchor_left = 0.339
+anchor_right = 0.339
 anchor_bottom = 1.0
-offset_left = -2.0
-offset_right = 2.0
+offset_left = -30.497
+offset_right = 1.50302
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/separator = SubResource("StyleBoxFlat_rjvxv")
+theme_override_styles/separator = SubResource("StyleBoxFlat_ea4ug")
+
+[node name="VSeparator2" type="VSeparator" parent="Panel/Panel"]
+use_parent_material = true
+custom_minimum_size = Vector2(5, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.65
+anchor_right = 0.65
+anchor_bottom = 1.0
+offset_left = 5.05005
+offset_right = 17.05
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/separator = SubResource("StyleBoxFlat_ea4ug")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/Panel"]
 use_parent_material = true
@@ -128,18 +166,25 @@ use_parent_material = true
 layout_mode = 2
 size_flags_horizontal = 3
 text = "172.20.10.3"
-label_settings = SubResource("LabelSettings_0rxxa")
+label_settings = SubResource("LabelSettings_8oc35")
 horizontal_alignment = 1
 
 [node name="NameLabel" type="Label" parent="Panel/Panel/HBoxContainer"]
 use_parent_material = true
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Galaj_PC"
-label_settings = SubResource("LabelSettings_0rxxa")
+text = "My BIG Room"
+label_settings = SubResource("LabelSettings_8oc35")
 horizontal_alignment = 1
 
-[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[node name="PlayersCountLabel" type="Label" parent="Panel/Panel/HBoxContainer"]
+use_parent_material = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Players count: 4"
+label_settings = SubResource("LabelSettings_0jaj7")
+horizontal_alignment = 1
+
 [connection signal="gui_input" from="Panel" to="." method="_on_panel_gui_input"]
 [connection signal="mouse_entered" from="Panel" to="." method="_on_panel_mouse_entered"]
 [connection signal="mouse_exited" from="Panel" to="." method="_on_panel_mouse_exited"]

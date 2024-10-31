@@ -1,6 +1,7 @@
-[gd_scene load_steps=17 format=3 uid="uid://c3y2hj0rrsknf"]
+[gd_scene load_steps=18 format=3 uid="uid://c3y2hj0rrsknf"]
 
 [ext_resource type="Texture2D" uid="uid://x5o827oam53" path="res://sprites/soot/SootAtlas.png" id="1_bqqof"]
+[ext_resource type="Script" path="res://scripts/menus/panels/guest_panel.gd" id="1_nskv4"]
 [ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="2_mtr17"]
 [ext_resource type="Shader" path="res://resources/shaders/banner_coloring.gdshader" id="3_q5d6g"]
 
@@ -90,6 +91,7 @@ offset_right = 180.0
 offset_bottom = 202.5
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_nskv4")
 
 [node name="Panel" type="Control" parent="."]
 layout_mode = 1
@@ -146,22 +148,7 @@ grow_horizontal = 2
 texture = SubResource("AtlasTexture_k6q7e")
 stretch_mode = 5
 
-[node name="NameTextEdit" type="TextEdit" parent="Panel"]
-visible = false
-custom_minimum_size = Vector2(0, 30)
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.21
-anchor_top = 0.892
-anchor_right = 0.774
-anchor_bottom = 0.957
-offset_top = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_font_sizes/font_size = 15
-placeholder_text = "Soot name"
-
-[node name="Label" type="Label" parent="Panel"]
+[node name="NameLabel" type="Label" parent="Panel"]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
@@ -173,7 +160,7 @@ offset_right = -81.0
 offset_bottom = -17.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Kapron"
+text = "Mr. Soot"
 label_settings = SubResource("LabelSettings_xq48r")
 horizontal_alignment = 1
 

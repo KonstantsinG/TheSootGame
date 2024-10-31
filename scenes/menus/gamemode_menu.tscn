@@ -10,7 +10,7 @@ font_color = Color(0.290196, 0.270588, 0.211765, 1)
 outline_size = 90
 outline_color = Color(0.960784, 0.929412, 0.847059, 1)
 
-[sub_resource type="Shader" id="Shader_lj84q"]
+[sub_resource type="Shader" id="Shader_f1lcy"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -26,7 +26,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d86dj"]
 resource_local_to_scene = true
-shader = SubResource("Shader_lj84q")
+shader = SubResource("Shader_f1lcy")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
@@ -38,7 +38,7 @@ region = Rect2(5, 5, 176, 176)
 atlas = ExtResource("4_o6fw6")
 region = Rect2(753, 8, 240, 96)
 
-[sub_resource type="Shader" id="Shader_m7mvb"]
+[sub_resource type="Shader" id="Shader_g5qkt"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -54,7 +54,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rw050"]
 resource_local_to_scene = true
-shader = SubResource("Shader_m7mvb")
+shader = SubResource("Shader_g5qkt")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
@@ -66,7 +66,7 @@ region = Rect2(188, 4, 176, 176)
 atlas = ExtResource("4_o6fw6")
 region = Rect2(10, 189, 277, 96)
 
-[sub_resource type="Shader" id="Shader_g4y0c"]
+[sub_resource type="Shader" id="Shader_wivgm"]
 resource_local_to_scene = true
 code = "shader_type canvas_item;
 
@@ -82,7 +82,7 @@ void fragment() {
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wf0ju"]
 resource_local_to_scene = true
-shader = SubResource("Shader_g4y0c")
+shader = SubResource("Shader_wivgm")
 shader_parameter/highlighted = false
 shader_parameter/brightness = 0.75
 
