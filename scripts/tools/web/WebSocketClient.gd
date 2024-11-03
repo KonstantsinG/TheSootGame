@@ -44,7 +44,6 @@ func get_client_data() -> ClientData:
 func run_udp_broadcast(port : int, message) -> Error:
 	udp_peer = PacketPeerUDP.new()
 	udp_peer.set_broadcast_enabled(true)
-	#udp_peer.bind(0)
 	
 	var err = udp_peer.set_dest_address("255.255.255.255", port)
 	if err != OK: return err

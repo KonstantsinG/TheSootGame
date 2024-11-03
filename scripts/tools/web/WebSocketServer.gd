@@ -87,7 +87,7 @@ func poll_udp() -> void:
 		process_udp_request(peer, message)
 
 
-# INFO override in descendant
+# INFO: override in descendant
 func process_udp_request(_peer : PacketPeerUDP, _message) -> void:
 	pass
 
@@ -95,15 +95,20 @@ func process_udp_request(_peer : PacketPeerUDP, _message) -> void:
 # stop listening for Clients requests for TCP Server address
 func stop_udp_broadcasting() -> void:
 	if udp_server.is_listening():
-		_broadcast_closing_notification()
-		
 		udp_broadcasting = false
 		udp_server.stop()
+		udp_peers.clear()
+		
+		if not tcp_server.is_listening():
+			set_process(false)
 
 
 # if the Server is shutting down, all Clients should know about it,
 # because the Servers_browser should remove its panel
 func _broadcast_closing_notification() -> void:
+	if udp_server == null: return
+	if not udp_server.is_listening(): return
+	
 	var msg = {
 		"head" : "NOTIFICATION_SERVER_CLOSING",
 		"ip" : get_ip()
@@ -149,11 +154,19 @@ func listen(port : int) -> Error:
 
 # shutdown the TCP Server
 func stop() -> void:
+	finalize()
+	
 	tcp_server.stop()
 	pending_peers.clear()
 	peers.clear()
 	server_data = null
-	set_process(false)
+	
+	if not udp_server.is_listening():
+		set_process(false)
+
+
+func finalize() -> void:
+	_broadcast_closing_notification()
 
 
 # send message to TCP Clients
@@ -269,13 +282,14 @@ func poll() -> void:
 	to_remove.clear()
 
 
-# INFO override in descendant
+# INFO: override in descendant
 func process_message(_peer_id : int, _messag):
 	pass
 #endregion
 
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		server_shutting_down.emit("WM_CLOSE_REQUEST")
-		_broadcast_closing_notification()
+		finalize()
 		get_tree().quit()

@@ -30,17 +30,17 @@ func set_data(_room_name : String, _is_host : bool) -> void:
 	is_host = _is_host
 	room_name = _room_name
 	
-	name_label.text = room_name
-	if is_host:
-		start_ready_button.text = "Start game"
-		close_disconnect_button.text = "Close room"
+	name_label.text = _room_name
+	if _is_host:
+		start_ready_button.change_text("Start game")
+		close_disconnect_button.change_text("Close room")
 	else:
-		start_ready_button.text = "Ready"
-		close_disconnect_button.text = "Disconnect"
+		start_ready_button.change_text("Ready")
+		close_disconnect_button.change_text("Disconnect")
 
 
 func add_player_panel(_is_host : bool) -> Error:
-	var panel_idx = _find_empty_nannel_index()
+	var panel_idx = _find_empty_pannel_index()
 	if panel_idx == -1: return ERR_OUT_OF_MEMORY
 	panels_states[panel_idx] = true
 	var panel = player_panels[panel_idx]
@@ -53,7 +53,7 @@ func add_player_panel(_is_host : bool) -> Error:
 
 
 func add_guest_panel(player_name : String, team : GameParams.TeamTypes, _is_host : bool) -> Error:
-	var panel_idx = _find_empty_nannel_index()
+	var panel_idx = _find_empty_pannel_index()
 	if panel_idx == -1: return ERR_OUT_OF_MEMORY
 	panels_states[panel_idx] = true
 	var panel = player_panels[panel_idx]
@@ -65,7 +65,7 @@ func add_guest_panel(player_name : String, team : GameParams.TeamTypes, _is_host
 	return OK
 
 
-func _find_empty_nannel_index() -> int:
+func _find_empty_pannel_index() -> int:
 	for i in range(player_panels.size()):
 		if not panels_states[i]:
 			return i

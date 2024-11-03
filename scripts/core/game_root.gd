@@ -15,22 +15,12 @@ func _ready() -> void:
 	
 	gui.create_new_server_pressed.connect(_on_create_new_server_pressed)
 	gui.join_server_pressed.connect(_on_join_server_pressed)
-	gui.create_new_room_pressed.connect(_on_create_new_room_peressed)
-	gui.close_room_pressed.connect(_on_close_room_pressed)
 	
 	gui.servers_search_started.connect(_on_servers_search_started)
 	gui.rooms_search_started.connect(_on_rooms_search_started)
 	
 	gui.break_connection_pressed.connect(_on_break_connection_pressed)
-
-
-
-# ALERT WARNING INFO
-# 1. Let all Clientt know about closing room event(maybe UDP from Server)
-# 2. Remove Client recieved messages print
-# 3. Remove or Fix clear_room_panels stuff from gui and client_menu (very bad)
-# INFO WARNING ALERT
-
+	gui.request_sended.connect(_on_request_sended)
 
 
 #region Server functions
@@ -90,29 +80,31 @@ func _on_break_connection_pressed(reason : String) -> void:
 	else:
 		print("Closing connection... Reason: ", reason)
 	
-	client.close()
-	client.close_udp()
-	
 	if server.is_listening():
 		server.stop()
 		server.stop_udp_broadcasting()
+	
+	client.close()
+	client.close_udp()
+#endregion
 
 
-func _on_create_new_room_peressed(room_name : String, password : String):
-	var msg = {
-		"head" : "CREATE_NEW_ROOM",
-		"room_name" : room_name,
-		"password" : password
-	}
-	client.send(msg)
-
-
-func _on_close_room_pressed(room_name : String) -> void:
-	var msg = {
-		"head" : "CLOSE_ROOM",
-		"room_name" : room_name
-	}
-	client.send(msg)
+#region Extra Server fuctionality
+func _on_request_sended(request_type, params : Dictionary) -> void:
+	match request_type:
+		gui.MenuRequests.CREATE_NEW_ROOM:
+			params["head"] = "CREATE_NEW_ROOM"
+		
+		gui.MenuRequests.CLOSE_ROOM:
+			params["head"] = "CLOSE_ROOM"
+		
+		gui.MenuRequests.JOIN_PUBLIC_ROOM:
+			params["head"] = "JOIN_PUBLIC_ROOM"
+		
+		gui.MenuRequests.JOIN_PRIVATE_ROOM:
+			params["head"] = "JOIN_PRIVATE_ROOM"
+	
+	client.send(params)
 #endregion
 
 
@@ -120,16 +112,16 @@ func _on_close_room_pressed(room_name : String) -> void:
 func _on_client_connection_closed() -> void:
 	gui.break_connection()
 
+
 func _on_servers_search_started() -> void:
 	var msg = "GET_SERVER_DATA"
-	var err = client.run_udp_broadcast(udp_server_port, msg)
 	
-	if err != OK:
-		printerr("ERROR<Unable to start UDP Client>: Something went wrong... Error code: ", err)
+	client.run_udp_broadcast(udp_server_port, msg)
 
 
 func _on_rooms_search_started() -> void:
 	var msg = "GET_AVAILABLE_ROOMS"
+	
 	client.run_udp_broadcast(udp_server_port, msg)
 #endregion
 
@@ -147,18 +139,64 @@ func _on_client_message_recieved(message) -> void:
 			"NOTIFICATION_SERVER_CLOSING":
 				gui.remove_missing_server(message["ip"])
 			
+			# Room that you trying to create are bad
+			"NOTIFICATION_BAD_NEW_ROOM":
+				gui.create_new_room_bad_response(message["details"])
+			
+			# Server successfully added your Room
+			"NOTIFICATION_GOOD_NEW_ROOM":
+				gui.create_new_room_good_response(message["room_name"])
+			
 			# get all available rooms data
 			"SET_AVAILABLE_ROOMS":
-				gui.clear_room_panels()
-				
-				for room in message["value"]:
-					var server_ip = room["server_ip"]
-					var room_name = room["room_name"]
-					var password = room["password"]
-					var players_count = int(room["players_count"])
-					gui.add_found_room(server_ip, room_name, password, players_count)
+				_add_new_rooms(message)
 			
 			# remove Room from Browser and leave them
 			"NOTIFICATION_ROOM_CLOSED":
 				gui.remove_missing_room(message["server_ip"], message["room_name"])
+			
+			"NOTIFICATION_BAD_JOIN_ROOM":
+				gui.join_room_bad_response(message["details"])
+			
+			"NOTIFICATION_GOOD_JOIN_ROOM":
+				gui.join_room(message["room_name"])
 #endregion
+
+
+
+
+## ----- ACTIONS -----
+func _add_new_rooms(message) -> void:
+	for room in message["value"]:
+		var server_ip = room["server_ip"]
+		var room_name = room["room_name"]
+		var is_public = room["is_public"] 
+		var players_count = int(room["players_count"])
+		gui.add_found_room(server_ip, room_name, is_public, players_count)
+
+
+
+
+## ---------------------------------------------------------
+##      /$$$$$$$$  /$$$$$$   /$$$$$$$    /$$$$$$ 
+##     |__  $$__/ /$$__  $$ | $$__  $$  /$$__  $$
+##        | $$   | $$  \ $$ | $$  \ $$ | $$  \ $$
+##        | $$   | $$  | $$ | $$  | $$ | $$  | $$
+##        | $$   | $$  | $$ | $$  | $$ | $$  | $$
+##        | $$   | $$  | $$ | $$  | $$ | $$  | $$
+##        | $$   |  $$$$$$/ | $$$$$$$/ |  $$$$$$/
+##        |__/    \______/  |_______/   \______/
+## ---------------------------------------------------------
+## 
+## BUG's
+## 0.1. Cannot create new Room (wrong name) -> blink bug
+## 0.2. Cannot join the Room (wrong password) -> blink bug
+## 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
+## 
+## TODO's
+# 1. Ask Server is Room that i wanna create legal (unique name)
+# 2. Remove password from local scenes, let Server check is it correct
+## 3. Cleanup GamemodeMenu code (Separate menus and game code)
+## 
+## 
+## 

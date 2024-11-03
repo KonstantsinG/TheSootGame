@@ -21,6 +21,10 @@ func _process(_delta: float) -> void:
 			label.text = text
 
 
+func change_text(new_text : String):
+	label.text = new_text
+
+
 func _on_panel_mouse_entered() -> void:
 	material.set_shader_parameter("highlighted", true)
 

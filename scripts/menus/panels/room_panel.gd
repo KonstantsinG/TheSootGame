@@ -11,20 +11,20 @@ signal panel_pressed(target : Control)
 var server_ip : String
 var room_name : String
 var players_count : int
-var password : String
+var is_public : bool
 
 
-func set_data(_server_ip : String, _room_name : String, _players_count : int, _password : String) -> void:
+func set_data(_server_ip : String, _room_name : String, _players_count : int, _is_public : bool) -> void:
 	server_ip = _server_ip
 	room_name = _room_name
 	players_count = _players_count
-	password = _password
+	is_public = _is_public
 	
 	ip_label.text = server_ip
 	name_label.text = room_name
 	count_label.text = "Players count: " + str(players_count)
 	
-	if password == "":
+	if _is_public:
 		public_texture.visible = true
 		private_texture.visible = false
 	else:

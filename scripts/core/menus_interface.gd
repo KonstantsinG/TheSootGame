@@ -4,11 +4,8 @@ extends CanvasLayer
 # basic web signals
 signal create_new_server_pressed
 signal join_server_pressed(ip : String)
-signal join_room_pressed(server_ip : String, room_name : String)
 
-# room signals
-signal create_new_room_pressed(room_name : String, password : String)
-signal close_room_pressed(room_name : String)
+signal request_sended(request : MenuRequests, params : Dictionary)
 
 # broadcast signals
 signal servers_search_started
@@ -17,6 +14,13 @@ signal rooms_search_started
 # finalizing signals
 signal break_connection_pressed(reason: String)
 #endregion
+
+enum MenuRequests{
+	CREATE_NEW_ROOM,
+	CLOSE_ROOM,
+	JOIN_PUBLIC_ROOM,
+	JOIN_PRIVATE_ROOM
+}
 
 #region Variables
 # containers
@@ -147,6 +151,8 @@ func _open_games_browser() -> void:
 		
 		games_browser.join_room_pressed.connect(_on_games_browser_join_room_pressed)
 		games_browser.back_pressed.connect(_on_games_browser_back_pressed)
+	else:
+		games_browser.clear_panels()
 	
 	menus.add_child(games_browser)
 	
@@ -154,12 +160,50 @@ func _open_games_browser() -> void:
 	rooms_searching_timer.start(broadcast_requests_rate_sec)
 
 
-func _on_games_browser_join_room_pressed(server_ip : String, room_name : String) -> void:
+func _on_games_browser_join_room_pressed(server_ip : String, room_name : String, is_public : bool) -> void:
 	rooms_searching_timer.stop()
+	join_server_pressed.emit(server_ip)
+	await get_tree().create_timer(0.1).timeout
 	
-	join_room_pressed.emit(server_ip, room_name)
+	if is_public:
+		request_sended.emit(MenuRequests.JOIN_PUBLIC_ROOM, {"room_name" : room_name})
+	else:
+		_show_enter_password_popup(room_name)
+
+
+func _show_enter_password_popup(room_name : String) -> void:
+	if popups.get_child_count() > 0:
+		remove_popup()
 	
-	# TODO: gui enter Room
+	var popup = preload("res://scenes/menus/popups/enter_room_password_popup.tscn").instantiate()
+	popup.join_pressed.connect(_on_enter_password_popup_join_pressed)
+	popup.cancel_pressed.connect(_on_enter_password_popup_cancel_pressed)
+	popups.add_child(popup)
+	popup.room_name = room_name
+
+
+func _on_enter_password_popup_cancel_pressed() -> void:
+	remove_popup()
+	break_connection_pressed.emit("User decision")
+	rooms_searching_timer.start(broadcast_requests_rate_sec)
+
+
+func _on_enter_password_popup_join_pressed(room_name : String, password : String) -> void:
+	request_sended.emit(MenuRequests.JOIN_PRIVATE_ROOM, {"room_name" : room_name, "password" : password})
+	remove_popup()
+
+
+func join_room_bad_response(details : String) -> void:
+	show_popup_notification("Error", details) # ATTENTION BUG: Strange blink bug
+	break_connection_pressed.emit("Join Room error")
+	rooms_searching_timer.start(broadcast_requests_rate_sec)
+
+
+func join_room(room_name : String) -> void:
+	menus.remove_child(games_browser)
+	_open_room_lobby(false, room_name)
+	
+	# TODO: Request other Room members data
 
 
 func _on_games_browser_back_pressed() -> void:
@@ -173,22 +217,31 @@ func _on_rooms_searching_timer_timeout() -> void:
 	rooms_search_started.emit()
 
 
-func add_found_room(server_ip : String, room_name : String, password : String, players_count : int) -> void:
+func add_found_room(server_ip : String, room_name : String, is_public : bool, players_count : int) -> void:
 	if games_browser != null:
-		games_browser.add_room_panel(server_ip, room_name, players_count, password)
+		games_browser.add_room_panel(server_ip, room_name, players_count, is_public)
 
 
 func remove_missing_room(server_ip : String, room_name : String) -> void:
+	_quit_room_lobby(room_name)
+	_remove_room_from_games_browser(server_ip, room_name)
+
+
+func _quit_room_lobby(room_name : String) -> void:
 	var last_menu = menus.get_child(1)
 	
 	# if last menu is instance of RoomLobby
 	if last_menu.has_method("_on_start_ready_text_button_pressed"):
-		menus.remove_child(last_menu)
-		last_menu.queue_free()
-		
-		menus.add_child(gamemode_menu)
-		show_popup_notification("Notification", "Host closed the Room")
-	
+		if last_menu.room_name == room_name:
+			menus.remove_child(last_menu)
+			last_menu.queue_free()
+			
+			menus.add_child(gamemode_menu)
+			show_popup_notification("Notification", "Host closed the Room")
+			break_connection_pressed.emit("Host closed the Room")
+
+
+func _remove_room_from_games_browser(server_ip : String, room_name : String) -> void:
 	if games_browser != null:
 		games_browser.remove_room_panel(server_ip, room_name)
 #endregion
@@ -206,6 +259,7 @@ func _show_create_room_popup() -> void:
 
 
 func _on_create_room_popup_cancel_pressed() -> void:
+	servers_searching_timer.start(broadcast_requests_rate_sec)
 	break_connection_pressed.emit("User decision")
 	remove_popup()
 
@@ -213,9 +267,19 @@ func _on_create_room_popup_cancel_pressed() -> void:
 func _on_create_room_popup_create_room_pressed(room_name : String, room_pass : String) -> void:
 	remove_popup()
 	
-	# let Server know that you created a new Room
-	create_new_room_pressed.emit(room_name, room_pass)
+	# ask Server is Room that you trying to create valid
+	request_sended.emit(MenuRequests.CREATE_NEW_ROOM, {"room_name" : room_name, "password" : room_pass})
+
+
+func create_new_room_bad_response(details : String) -> void:
+	servers_searching_timer.start(broadcast_requests_rate_sec)
+	break_connection_pressed.emit("Wrong Room data")
 	
+	show_popup_notification("Error", details) # ATTENTION BUG: Strange blink bug
+
+
+func create_new_room_good_response(room_name : String) -> void:
+	menus.remove_child(server_menu)
 	_open_room_lobby(true, room_name)
 #endregion
 
@@ -229,7 +293,6 @@ func _open_room_lobby(as_owner : bool, room_name : String):
 	room_lobby.close_pressed.connect(_on_room_lobby_close_pressed)
 	room_lobby.disconnect_pressed.connect(_on_room_lobby_disconnect_pressed)
 	
-	menus.remove_child(server_menu)
 	menus.add_child(room_lobby)
 	
 	# NOTE: setup room
@@ -247,26 +310,23 @@ func _on_room_lobby_ready_pressed() -> void:
 	pass
 
 
+# INFO: for Room owner
 func _on_room_lobby_close_pressed(room_name : String) -> void:
 	menus.remove_child(room_lobby)
 	room_lobby.queue_free()
-	
-	close_room_pressed.emit(room_name)
-	break_connection_pressed.emit("User decision")
-	
 	menus.add_child(gamemode_menu)
+	
+	# INFO: Close Room, send to the Server message about it, wait for all Clients recieve this message and then close connection
+	request_sended.emit(MenuRequests.CLOSE_ROOM, {"room_name" : room_name})
+	await get_tree().create_timer(0.5).timeout # ATTENTION: Bad bug fix (idk how to deal with it...)
+	break_connection_pressed.emit("User decision")
 
 
+# INFO: for Room guest
 func _on_room_lobby_disconnect_pressed() -> void:
 	menus.remove_child(room_lobby)
 	room_lobby.queue_free()
+	menus.add_child(gamemode_menu)
 	
 	break_connection_pressed.emit("User decision")
-	
-	menus.add_child(gamemode_menu)
 #endregion
-
-
-func clear_room_panels() -> void:
-	if games_browser != null:
-		games_browser.clear_room_panels()
