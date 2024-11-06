@@ -14,6 +14,11 @@ func set_data(player_name : String, team : GameParams.TeamTypes, is_host : bool 
 	_set_team(team)
 
 
+func update_data(player_name : String, team : GameParams.TeamTypes) -> void:
+	name_label.text = player_name
+	_set_team(team)
+
+
 func _set_team(team : GameParams.TeamTypes) -> void:
 	var teams = {
 		GameParams.TeamTypes.RED : red_team,

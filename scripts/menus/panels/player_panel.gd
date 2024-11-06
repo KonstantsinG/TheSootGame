@@ -1,12 +1,6 @@
 extends Control
 
-class PlayerData:
-	var player_name : String
-	var team : GameParams.TeamTypes
-	
-	func _init(_player_name : String, _team : GameParams.TeamTypes) -> void:
-		player_name = _player_name
-		team = _team
+signal data_changed(player_name : String, team : GameParams.TeamTypes)
 
 @onready var name_text_edit = $Panel/NameTextEdit
 @onready var crown = $Panel/CrownTexture
@@ -18,10 +12,8 @@ class PlayerData:
 var selected_team : GameParams.TeamTypes = GameParams.TeamTypes.RED
 
 
-func get_player_data() -> PlayerData:
-	var pl_name = $Panel/NameTextEdit.text
-	var pl_team = selected_team
-	return PlayerData.new(pl_name, pl_team)
+func get_player_name() -> String:
+	return $Panel/NameTextEdit.text
 
 
 func toggle_crown(is_host : bool) -> void:
@@ -111,3 +103,9 @@ func _toggle_benners_panel_state(target : GameParams.TeamTypes) -> void:
 	targets.erase(target)
 	for t in targets.values():
 		t.material.set_shader_parameter("is_pale", true)
+	
+	data_changed.emit(get_player_name(), selected_team)
+
+
+func _on_name_text_edit_text_changed() -> void:
+	data_changed.emit(get_player_name(), selected_team)

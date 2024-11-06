@@ -7,6 +7,8 @@ extends Node
 @onready var server = $WebSocketServerWrapper
 @onready var gui = $Content/MenusInterface
 
+var responses_handler_state := GameParams.MessagesHandlerStates.MENU
+
 
 func _ready() -> void:
 	client.message_recieved.connect(_on_client_message_recieved)
@@ -98,11 +100,14 @@ func _on_request_sended(request_type, params : Dictionary) -> void:
 		gui.MenuRequests.CLOSE_ROOM:
 			params["head"] = "CLOSE_ROOM"
 		
-		gui.MenuRequests.JOIN_PUBLIC_ROOM:
-			params["head"] = "JOIN_PUBLIC_ROOM"
+		gui.MenuRequests.JOIN_ROOM:
+			params["head"] = "JOIN_ROOM"
 		
-		gui.MenuRequests.JOIN_PRIVATE_ROOM:
-			params["head"] = "JOIN_PRIVATE_ROOM"
+		gui.MenuRequests.GET_ROOM_MEMBERS:
+			params["head"] = "GET_ROOM_MEMBERS"
+		
+		gui.MenuRequests.UPDATE_PLAYER_DATA:
+			params["head"] = "UPDATE_PLAYER_DATA"
 	
 	client.send(params)
 #endregion
@@ -128,7 +133,21 @@ func _on_rooms_search_started() -> void:
 
 #region Client responses handler
 func _on_client_message_recieved(message) -> void:
-	print("CLIENT RECIEVED: ", message)
+	print("Client recieved: ", message)
+	
+	if responses_handler_state == GameParams.MessagesHandlerStates.MENU:
+		_process_menu_response(message)
+	elif responses_handler_state == GameParams.MessagesHandlerStates.GAME:
+		# NOTIMPLEMENTED
+		pass
+#endregion
+
+
+
+
+
+#region MENU SERVER RESPONSES HANDLER
+func _process_menu_response(message) -> void:
 	if message is Dictionary:
 		match message["head"]:
 			# response from UDP Server with TCP Server information
@@ -155,17 +174,31 @@ func _on_client_message_recieved(message) -> void:
 			"NOTIFICATION_ROOM_CLOSED":
 				gui.remove_missing_room(message["server_ip"], message["room_name"])
 			
+			# invalid password or too much players
 			"NOTIFICATION_BAD_JOIN_ROOM":
 				gui.join_room_bad_response(message["details"])
 			
+			# access to the Room was successfully granted
 			"NOTIFICATION_GOOD_JOIN_ROOM":
 				gui.join_room(message["room_name"])
-#endregion
+			
+			# let all Room members know that someone new is connected
+			"NOTIFICATION_NEW_ROOM_MEMBER":
+				gui.add_room_member(message["id"], message["player_name"], message["team"])
+			
+			# remove guest panel from RoomLobby if player is disconnected
+			"NOTIFICATION_PLAYER_DISCONNECTED":
+				gui.remove_room_member(message["id"])
+			
+			# get all Room members
+			"SET_ROOM_MEMBERS":
+				_add_room_members(message)
+			
+			# if any of the Room guests change its data -> keep it actual
+			"UPDATE_PLAYER_DATA":
+				gui.update_room_guest_data(message["id"], message["player_name"], message["team"])
 
 
-
-
-## ----- ACTIONS -----
 func _add_new_rooms(message) -> void:
 	for room in message["value"]:
 		var server_ip = room["server_ip"]
@@ -174,6 +207,15 @@ func _add_new_rooms(message) -> void:
 		var players_count = int(room["players_count"])
 		gui.add_found_room(server_ip, room_name, is_public, players_count)
 
+
+func _add_room_members(message) -> void:
+	for member in message["value"]:
+		var id = member["id"]
+		var player_name = member["player_name"]
+		var team = member["team"]
+		var is_host = member["is_host"]
+		gui.add_room_member(id, player_name, team, is_host)
+#endregion
 
 
 
@@ -189,14 +231,18 @@ func _add_new_rooms(message) -> void:
 ## ---------------------------------------------------------
 ## 
 ## BUG's
-## 0.1. Cannot create new Room (wrong name) -> blink bug
-## 0.2. Cannot join the Room (wrong password) -> blink bug
-## 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
+# 0.1. Cannot create new Room (wrong name) -> blink bug
+# 0.2. Cannot join the Room (wrong password) -> blink bug
+# 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
 ## 
 ## TODO's
 # 1. Ask Server is Room that i wanna create legal (unique name)
 # 2. Remove password from local scenes, let Server check is it correct
-## 3. Cleanup GamemodeMenu code (Separate menus and game code)
-## 
-## 
-## 
+# 3. Cleanup GamemodeMenu and ServerWrapper code (Separate menu and game messages)
+# 4. If Client disconnect form Server -> remove them from all Rooms
+# 5. Rise Client CLOSING_EVENT for disconnect them from Server and Room properly
+# 6. Remove GuestPanel from all Clients Lobbys if he disconnected
+# 7. Update GusetPanel data if Client change something in his Soot
+## 8. Implement visually and programmatically ready Player state
+## 9. Update players_count in RoomsBrowser if someone is connected
+##

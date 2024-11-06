@@ -19,7 +19,7 @@ region = Rect2(6, 275, 75, 57)
 
 [sub_resource type="LabelSettings" id="LabelSettings_xq48r"]
 font_size = 25
-font_color = Color(0.368637, 0.339695, 0.250065, 1)
+font_color = Color(0.31, 0.2852, 0.2108, 1)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dvkdq"]
 atlas = ExtResource("2_mtr17")
@@ -155,9 +155,9 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 76.0
-offset_top = -52.0
+offset_top = -45.5
 offset_right = -81.0
-offset_bottom = -17.0
+offset_bottom = -10.5
 grow_horizontal = 2
 grow_vertical = 0
 text = "Mr. Soot"

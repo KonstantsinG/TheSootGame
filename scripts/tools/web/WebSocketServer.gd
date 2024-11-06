@@ -268,6 +268,7 @@ func poll() -> void:
 		# if peer is not OPEN -> disconnect it
 		if p.get_ready_state() != WebSocketPeer.STATE_OPEN:
 			client_disconnected.emit(id)
+			disconnect_client(id)
 			to_remove.append(id)
 			continue
 		
@@ -280,6 +281,11 @@ func poll() -> void:
 	for r in to_remove:
 		peers.erase(r)
 	to_remove.clear()
+
+
+# INFO: override in descendant
+func disconnect_client(_peer_id : int) -> void:
+	pass
 
 
 # INFO: override in descendant

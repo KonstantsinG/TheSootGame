@@ -254,6 +254,7 @@ layout_mode = 2
 texture = SubResource("AtlasTexture_u1c7b")
 stretch_mode = 5
 
+[connection signal="text_changed" from="Panel/NameTextEdit" to="." method="_on_name_text_edit_text_changed"]
 [connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_gui_input"]
 [connection signal="mouse_entered" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_mouse_entered"]
 [connection signal="mouse_exited" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_mouse_exited"]

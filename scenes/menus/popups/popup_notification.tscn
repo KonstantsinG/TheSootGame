@@ -51,10 +51,10 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Color(1, 1, 1, 1)]
+"values": [Color(1, 1, 1, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_w0qas"]
+[sub_resource type="Animation" id="Animation_8x1aa"]
 resource_name = "fade_in"
 length = 0.2
 tracks/0/type = "value"
@@ -64,13 +64,13 @@ tracks/0/path = NodePath("PopupPanel:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1332),
+"times": PackedFloat32Array(0, 0.1998),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
 }
 
-[sub_resource type="Animation" id="Animation_ngcav"]
+[sub_resource type="Animation" id="Animation_xehc7"]
 resource_name = "fade_out"
 length = 0.2
 tracks/0/type = "value"
@@ -80,7 +80,7 @@ tracks/0/path = NodePath("PopupPanel:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1332),
+"times": PackedFloat32Array(0, 0.1998),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
@@ -89,8 +89,8 @@ tracks/0/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jhqmb"]
 _data = {
 "RESET": SubResource("Animation_435fb"),
-"fade_in": SubResource("Animation_w0qas"),
-"fade_out": SubResource("Animation_ngcav")
+"fade_in": SubResource("Animation_8x1aa"),
+"fade_out": SubResource("Animation_xehc7")
 }
 
 [node name="PopupNotification" type="Control"]
@@ -105,6 +105,7 @@ grow_vertical = 2
 script = ExtResource("1_c37e1")
 
 [node name="PopupPanel" type="Panel" parent="."]
+modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(600, 450)
 layout_mode = 1
 anchors_preset = 15

@@ -1,6 +1,6 @@
 extends Control
 
-signal popup_disappeared()
+signal popup_disappeared
 
 
 func set_data(title : String, message : String) -> void:

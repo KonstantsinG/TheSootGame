@@ -1,8 +1,6 @@
 extends WebSocketServer
 class_name WebSocketServerWrapper # high-level Server with requests handler
 
-const MAX_PLAYERS_IN_ROOM := 8
-
 #region enums
 # enum representing Server ip type
 enum ServerNetTypes{
@@ -13,15 +11,24 @@ enum ServerNetTypes{
 
 #region classes
 # class representing a Client additional data
-class ClientData:
+class PlayerData:
 	var id : int
-	var client_name : String
-	var team : GameParams.TeamTypes
-	var skin_data : String
+	var player_name : String = ""
+	var team : GameParams.TeamTypes = GameParams.TeamTypes.RED
+	var skin : String = ""
 	
-	func _init(_id : int, _client_name : String) -> void:
+	func _init(_id : int) -> void:
 		id = _id
-		client_name = _client_name
+	
+	
+	func serialize() -> Dictionary:
+		var data = {
+			"id" : id,
+			"player_name" : player_name,
+			"team" : team,
+			"skin" : skin
+		}
+		return data
 
 # class representing a Room
 class RoomData:
@@ -62,8 +69,10 @@ class RoomData:
 #endregion
 
 #region variables
-var clients_data : Array[ClientData] = []
+var players_data : Array[PlayerData] = []
 var rooms_data : Array[RoomData] = []
+
+var messages_handler_state := GameParams.MessagesHandlerStates.MENU
 #endregion
 
 
@@ -110,25 +119,11 @@ func process_udp_request(peer : PacketPeerUDP, message) -> void:
 # Dictionary -> response or notification
 # String -> request
 func process_message(peer_id : int, message) -> void:
-	if typeof(message) == TYPE_DICTIONARY:
-		match message["head"]:
-			# Client request for new Room creation
-			"CREATE_NEW_ROOM":
-				_create_new_room(peer_id, message)
-			
-			# close Room and let all CLiemts know about that
-			"CLOSE_ROOM":
-				_close_room(message)
-			
-			"JOIN_PUBLIC_ROOM":
-				_join_public_room(peer_id, message)
-			
-			"JOIN_PRIVATE_ROOM":
-				_join_private_room(peer_id, message)
-	
-	elif typeof(message) == TYPE_STRING:
-		match message:
-			pass
+	if messages_handler_state == GameParams.MessagesHandlerStates.MENU:
+		_process_menu_request(peer_id, message)
+	elif messages_handler_state == GameParams.MessagesHandlerStates.GAME:
+		# NOTIMPLEMENTED: Process Game messages
+		pass
 
 
 func finalize() -> void:
@@ -136,12 +131,26 @@ func finalize() -> void:
 	_close_all_rooms()
 	
 	rooms_data.clear()
+	players_data.clear()
+
+
+# called when the Server detects a closed TCP peer (internal copy of the client_disconnected signal)
+func disconnect_client(peer_id : int) -> void:
+	var room = null
+	for r in rooms_data:
+		for g in r.room_guests:
+			if g == peer_id:
+				room = r
+				break
+		
+		if room != null: break
+	
+	if room != null:
+		_disconnect_from_room(peer_id, room.room_name)
 
 
 
-
-
-## ----- ACTIONS -----
+## - - - - - ACTIONS - - - - -
 func _close_all_rooms() -> void:
 	var msg = {
 		"head" : "NOTIFICATION_ROOM_CLOSED",
@@ -154,6 +163,57 @@ func _close_all_rooms() -> void:
 		
 		for p in udp_peers:
 			p.put_packet(var_to_bytes(msg))
+
+
+
+
+
+#region MENU REQUESTS HANDLER
+func _process_menu_request(peer_id : int, message) -> void:
+	if typeof(message) == TYPE_DICTIONARY:
+		match message["head"]:
+			# Client request for new Room creation
+			"CREATE_NEW_ROOM":
+				_create_new_room(peer_id, message)
+			
+			# close Room and let all CLiemts know about that
+			"CLOSE_ROOM":
+				_close_room(message)
+			
+			"JOIN_ROOM":
+				_join_room(peer_id, message)
+			
+			"DISCONNECT_FROM_ROOM":
+				_disconnect_from_room(peer_id, message["room_name"])
+			
+			"GET_ROOM_MEMBERS":
+				_set_room_members(peer_id, message)
+			
+			"UPDATE_PLAYER_DATA":
+				_update_player_data(peer_id, message)
+
+
+func _get_room_by_name(room_name : String) -> RoomData:
+	var rooms = rooms_data.filter(func(r): return r.room_name == room_name)
+	if rooms.size() >= 1: return rooms.front()
+	else: return null
+
+
+func _get_player_by_id(peer_id : int) -> PlayerData:
+	var players = players_data.filter(func(p): return p.id == peer_id)
+	if players.size() >= 1: return players.front()
+	else: return null
+
+
+func _add_new_player(peer_id : int) -> PlayerData:
+	var player = _get_player_by_id(peer_id)
+	
+	if player != null:
+		return player
+	else:
+		var new_player = PlayerData.new(peer_id)
+		players_data.append(new_player)
+		return new_player
 
 
 func _create_new_room(peer_id : int, message) -> void:
@@ -176,11 +236,13 @@ func _create_new_room(peer_id : int, message) -> void:
 		"head" : "NOTIFICATION_GOOD_NEW_ROOM",
 		"room_name" : room_name
 	}
+	
 	send(peer_id, msg)
+	_add_new_player(peer_id)
 
 
 func _close_room(message) -> void:
-	var room = rooms_data.filter(func(r): return r.room_name == message["room_name"]).front()
+	var room = _get_room_by_name(message["room_name"])
 	
 	if room != null:
 		rooms_data.erase(room)
@@ -195,45 +257,26 @@ func _close_room(message) -> void:
 			p.put_packet(var_to_bytes(msg))
 
 
-func _join_public_room(peer_id : int, message) -> void:
-	var room = rooms_data.filter(func(r): return r.room_name == message["room_name"]).front()
+func _join_room(peer_id : int, message) -> void:
+	var room = _get_room_by_name(message["room_name"])
+	var err = true
 	var msg
 	
 	if room != null:
-		if room.players_count >= MAX_PLAYERS_IN_ROOM:
+		if room.players_count >= GameParams.MAX_PLAYERS_IN_ROOM:
 			msg = {
 				"head" : "NOTIFICATION_BAD_JOIN_ROOM",
 				"details" : "This room is full. Maximum number of players is 8."
 			}
-		else:
-			room.add_guest(peer_id)
-			
-			msg = {
-				"head" : "NOTIFICATION_GOOD_JOIN_ROOM",
-				"room_name" : message["room_name"]
-			}
-	
-	else:
-		msg = {
-				"head" : "NOTIFICATION_BAD_JOIN_ROOM",
-				"details" : "This room is unavailable. Something went wrong..."
-			}
-	
-	send(peer_id, msg)
-
-
-func _join_private_room(peer_id : int, message) -> void:
-	var room = rooms_data.filter(func(r): return r.room_name == message["room_name"]).front()
-	var msg
-	
-	if room != null:
-		if room.password != message["password"]:
+		
+		elif not room.is_public and room.password != message["password"]:
 			msg = {
 				"head" : "NOTIFICATION_BAD_JOIN_ROOM",
 				"details" : "Incorrect password"
 			}
+		
 		else:
-			room.add_guest(peer_id)
+			err = false
 			
 			msg = {
 				"head" : "NOTIFICATION_GOOD_JOIN_ROOM",
@@ -247,3 +290,84 @@ func _join_private_room(peer_id : int, message) -> void:
 			}
 	
 	send(peer_id, msg)
+	
+	if not err:
+		room.add_guest(peer_id)
+		var new_player = _add_new_player(peer_id)
+		_notify_new_room_member_connected(room, new_player)
+
+
+func _disconnect_from_room(peer_id : int, room_name : String) -> void:
+	var room = _get_room_by_name(room_name)
+	if room != null:
+		room.remove_guest(peer_id)
+		
+		var msg = {
+			"head" : "NOTIFICATION_PLAYER_DISCONNECTED",
+			"id" : peer_id
+		}
+		for g in _get_room_members(room_name):
+			send(g.id, msg)
+
+
+# INFO: Room host if always first
+func _get_room_members(room_name : String) -> Array[PlayerData]:
+	var data : Array[PlayerData] = []
+	var room = _get_room_by_name(room_name)
+	if room == null: return data
+	
+	var player = _get_player_by_id(room.room_owner)
+	if player != null: data.append(player)
+	
+	for g in room.room_guests:
+		player = _get_player_by_id(g)
+		if player != null: data.append(player)
+	
+	return data
+
+
+func _notify_new_room_member_connected(room : RoomData, player : PlayerData):
+	var msg = {"head" : "NOTIFICATION_NEW_ROOM_MEMBER"}
+	msg.merge(player.serialize())
+	
+	if room.room_owner != player.id:
+		send(room.room_owner, msg)
+	
+	for g in room.room_guests:
+		if g != player.id: send(g, msg)
+
+
+func _set_room_members(peer_id :  int, message) -> void:
+	var room_members = _get_room_members(message["room_name"])
+	var player_data
+	
+	var msg = {
+		"head" : "SET_ROOM_MEMBERS",
+		"value" : []
+	}
+	
+	for i in range(room_members.size()):
+		if room_members[i].id == peer_id: continue
+		player_data = room_members[i].serialize()
+		
+		if i == 0: player_data["is_host"] = true
+		else: player_data["is_host"] = false
+		
+		msg["value"].append(player_data)
+	
+	send(peer_id, msg)
+
+
+func _update_player_data(peer_id : int, message) -> void:
+	var player = _get_player_by_id(peer_id)
+	var room_members = _get_room_members(message["room_name"])
+	# INFO: we're updating only name and team params for now (skin in the future...)
+	if player != null:
+		player.player_name = message["player_name"]
+		player.team = message["team"]
+		
+		message["id"] = peer_id
+		for m in room_members:
+			if m.id == peer_id: continue
+			send(m.id, message)
+#endregion

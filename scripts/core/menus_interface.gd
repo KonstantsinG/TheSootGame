@@ -18,8 +18,9 @@ signal break_connection_pressed(reason: String)
 enum MenuRequests{
 	CREATE_NEW_ROOM,
 	CLOSE_ROOM,
-	JOIN_PUBLIC_ROOM,
-	JOIN_PRIVATE_ROOM
+	JOIN_ROOM,
+	GET_ROOM_MEMBERS,
+	UPDATE_PLAYER_DATA
 }
 
 #region Variables
@@ -59,9 +60,9 @@ func show_popup_notification(title : String, message : String) -> void:
 		remove_popup()
 	
 	var popup = preload("res://scenes/menus/popups/popup_notification.tscn").instantiate()
-	popup.set_data(title, message)
 	popup.popup_disappeared.connect(remove_popup)
 	popups.add_child(popup)
+	popup.set_data(title, message)
 
 
 func remove_popup() -> void:
@@ -111,14 +112,14 @@ func _on_server_menu_back_pressed() -> void:
 
 
 func _on_server_menu_join_pressed(ip : String) -> void:
-	_show_create_room_popup() # SECURITY CAUTION maybe not the best solution
+	_show_create_room_popup()
 	
 	servers_searching_timer.stop()
 	join_server_pressed.emit(ip)
 
 
 func _on_server_menu_create_new_pressed() -> void:
-	_show_create_room_popup() # SECURITY CAUTION maybe not the best solution
+	_show_create_room_popup()
 	
 	create_new_server_pressed.emit()
 	servers_searching_timer.stop()
@@ -166,7 +167,7 @@ func _on_games_browser_join_room_pressed(server_ip : String, room_name : String,
 	await get_tree().create_timer(0.1).timeout
 	
 	if is_public:
-		request_sended.emit(MenuRequests.JOIN_PUBLIC_ROOM, {"room_name" : room_name})
+		request_sended.emit(MenuRequests.JOIN_ROOM, {"room_name" : room_name})
 	else:
 		_show_enter_password_popup(room_name)
 
@@ -189,12 +190,12 @@ func _on_enter_password_popup_cancel_pressed() -> void:
 
 
 func _on_enter_password_popup_join_pressed(room_name : String, password : String) -> void:
-	request_sended.emit(MenuRequests.JOIN_PRIVATE_ROOM, {"room_name" : room_name, "password" : password})
+	request_sended.emit(MenuRequests.JOIN_ROOM, {"room_name" : room_name, "password" : password})
 	remove_popup()
 
 
 func join_room_bad_response(details : String) -> void:
-	show_popup_notification("Error", details) # ATTENTION BUG: Strange blink bug
+	show_popup_notification("Error", details)
 	break_connection_pressed.emit("Join Room error")
 	rooms_searching_timer.start(broadcast_requests_rate_sec)
 
@@ -203,7 +204,7 @@ func join_room(room_name : String) -> void:
 	menus.remove_child(games_browser)
 	_open_room_lobby(false, room_name)
 	
-	# TODO: Request other Room members data
+	request_sended.emit(MenuRequests.GET_ROOM_MEMBERS, {"room_name" : room_name})
 
 
 func _on_games_browser_back_pressed() -> void:
@@ -275,7 +276,7 @@ func create_new_room_bad_response(details : String) -> void:
 	servers_searching_timer.start(broadcast_requests_rate_sec)
 	break_connection_pressed.emit("Wrong Room data")
 	
-	show_popup_notification("Error", details) # ATTENTION BUG: Strange blink bug
+	show_popup_notification("Error", details)
 
 
 func create_new_room_good_response(room_name : String) -> void:
@@ -292,6 +293,7 @@ func _open_room_lobby(as_owner : bool, room_name : String):
 	room_lobby.ready_pressed.connect(_on_room_lobby_ready_pressed)
 	room_lobby.close_pressed.connect(_on_room_lobby_close_pressed)
 	room_lobby.disconnect_pressed.connect(_on_room_lobby_disconnect_pressed)
+	room_lobby.player_data_changed.connect(_on_room_lobby_player_data_changed)
 	
 	menus.add_child(room_lobby)
 	
@@ -323,10 +325,29 @@ func _on_room_lobby_close_pressed(room_name : String) -> void:
 
 
 # INFO: for Room guest
-func _on_room_lobby_disconnect_pressed() -> void:
+func _on_room_lobby_disconnect_pressed(_room_name : String) -> void:
 	menus.remove_child(room_lobby)
 	room_lobby.queue_free()
 	menus.add_child(gamemode_menu)
 	
 	break_connection_pressed.emit("User decision")
+
+
+func _on_room_lobby_player_data_changed(room_name : String, player_name : String, team : GameParams.TeamTypes) -> void:
+	request_sended.emit(MenuRequests.UPDATE_PLAYER_DATA, {"room_name" : room_name, "player_name" : player_name, "team" : team})
+
+
+func add_room_member(id : int, player_name : String, team : GameParams.TeamTypes, is_host : bool = false):
+	if room_lobby != null:
+		room_lobby.add_guest_panel(id, player_name, team, is_host)
+
+
+func remove_room_member(id : int) -> void:
+	if room_lobby != null:
+		room_lobby.remove_guest_panel(id)
+
+
+func update_room_guest_data(id : int, player_name : String, team : GameParams.TeamTypes) -> void:
+	if room_lobby != null:
+		room_lobby.update_guest_data(id, player_name, team)
 #endregion
