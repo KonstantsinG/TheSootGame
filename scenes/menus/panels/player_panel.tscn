@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cxpyh8ma0r26y"]
+[gd_scene load_steps=21 format=3 uid="uid://cxpyh8ma0r26y"]
 
 [ext_resource type="Script" path="res://scripts/menus/panels/player_panel.gd" id="1_dq7x4"]
 [ext_resource type="Texture2D" uid="uid://x5o827oam53" path="res://sprites/soot/SootAtlas.png" id="2_ym3ee"]
@@ -81,6 +81,10 @@ shader_parameter/is_bright = false
 [sub_resource type="AtlasTexture" id="AtlasTexture_u1c7b"]
 atlas = ExtResource("4_pec36")
 region = Rect2(856, 119, 76, 75)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mle13"]
+atlas = ExtResource("4_pec36")
+region = Rect2(548, 290, 98, 99)
 
 [node name="PlayerPanel" type="Control"]
 custom_minimum_size = Vector2(360, 405)
@@ -253,6 +257,20 @@ material = SubResource("ShaderMaterial_3ydbx")
 layout_mode = 2
 texture = SubResource("AtlasTexture_u1c7b")
 stretch_mode = 5
+
+[node name="CheckMarkTextureRect" type="TextureRect" parent="Panel"]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -73.0
+offset_top = 17.0
+offset_right = -8.0
+offset_bottom = 82.0
+grow_horizontal = 0
+texture = SubResource("AtlasTexture_mle13")
+expand_mode = 1
 
 [connection signal="text_changed" from="Panel/NameTextEdit" to="." method="_on_name_text_edit_text_changed"]
 [connection signal="gui_input" from="Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner" to="." method="_on_red_banner_gui_input"]

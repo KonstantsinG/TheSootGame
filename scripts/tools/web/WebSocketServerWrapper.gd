@@ -16,6 +16,7 @@ class PlayerData:
 	var player_name : String = ""
 	var team : GameParams.TeamTypes = GameParams.TeamTypes.RED
 	var skin : String = ""
+	var is_ready := false
 	
 	func _init(_id : int) -> void:
 		id = _id
@@ -38,6 +39,7 @@ class RoomData:
 	
 	var is_public : bool
 	var players_count : int = 1
+	var is_game_running := false
 	
 	var room_owner
 	var room_guests := []
@@ -191,6 +193,12 @@ func _process_menu_request(peer_id : int, message) -> void:
 			
 			"UPDATE_PLAYER_DATA":
 				_update_player_data(peer_id, message)
+			
+			"NOTIFICATION_GAME_COUNTDOWN_TOGGLED":
+				_game_countdown_toggled(message["room_name"], message["value"])
+			
+			"NOTIFICATION_GAME_STARTED":
+				_start_game(message["room_name"])
 
 
 func _get_room_by_name(room_name : String) -> RoomData:
@@ -311,13 +319,15 @@ func _disconnect_from_room(peer_id : int, room_name : String) -> void:
 
 
 # INFO: Room host if always first
-func _get_room_members(room_name : String) -> Array[PlayerData]:
+func _get_room_members(room_name : String, with_owner = true) -> Array[PlayerData]:
 	var data : Array[PlayerData] = []
 	var room = _get_room_by_name(room_name)
 	if room == null: return data
 	
-	var player = _get_player_by_id(room.room_owner)
-	if player != null: data.append(player)
+	var player
+	if with_owner:
+		player = _get_player_by_id(room.room_owner)
+		if player != null: data.append(player)
 	
 	for g in room.room_guests:
 		player = _get_player_by_id(g)
@@ -361,13 +371,41 @@ func _set_room_members(peer_id :  int, message) -> void:
 func _update_player_data(peer_id : int, message) -> void:
 	var player = _get_player_by_id(peer_id)
 	var room_members = _get_room_members(message["room_name"])
+	
 	# INFO: we're updating only name and team params for now (skin in the future...)
 	if player != null:
 		player.player_name = message["player_name"]
 		player.team = message["team"]
+		player.is_ready = message["is_ready"]
 		
 		message["id"] = peer_id
 		for m in room_members:
 			if m.id == peer_id: continue
 			send(m.id, message)
+
+
+func _game_countdown_toggled(room_name : String, value : bool) -> void:
+	var room = _get_room_by_name(room_name)
+	var msg = {
+		"head" : "NOTIFICATION_GAME_COUNTDOWN_TOGGLED",
+		"value" : value
+	}
+	
+	if room != null:
+		for g in room.room_guests:
+			send(g, msg)
+
+
+func _start_game(room_name : String) -> void:
+	var room = _get_room_by_name(room_name)
+	
+	if room != null:
+		var room_members = _get_room_members(room_name, false)
+		var msg = {"head" : "NOTIFICATION_GAME_STARTED"}
+		
+		for m in room_members:
+			if not m.is_ready: room.room_guests.erase(m)
+			else: send(m.id, msg)
+	
+	messages_handler_state = GameParams.MessagesHandlerStates.GAME
 #endregion

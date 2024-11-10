@@ -40,7 +40,7 @@ func take_coal() -> bool:
 	if holding_coal: return false
 	
 	holding_coal = true
-	var coal = preload("res://singleplayer_prototype/scenes/coal.tscn").instantiate()
+	var coal = preload("res://old_junk/singleplayer_prototype/scenes/coal.tscn").instantiate()
 	$CoalContainer.add_child(coal)
 	return true
 

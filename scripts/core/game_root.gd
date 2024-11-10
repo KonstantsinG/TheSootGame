@@ -23,6 +23,7 @@ func _ready() -> void:
 	
 	gui.break_connection_pressed.connect(_on_break_connection_pressed)
 	gui.request_sended.connect(_on_request_sended)
+	gui.game_started.connect(_on_game_started)
 
 
 #region Server functions
@@ -108,6 +109,9 @@ func _on_request_sended(request_type, params : Dictionary) -> void:
 		
 		gui.MenuRequests.UPDATE_PLAYER_DATA:
 			params["head"] = "UPDATE_PLAYER_DATA"
+		
+		gui.MenuRequests.GAME_COUNTDOWN_TOGGLED:
+			params["head"] = "NOTIFICATION_GAME_COUNTDOWN_TOGGLED"
 	
 	client.send(params)
 #endregion
@@ -128,6 +132,15 @@ func _on_rooms_search_started() -> void:
 	var msg = "GET_AVAILABLE_ROOMS"
 	
 	client.run_udp_broadcast(udp_server_port, msg)
+
+
+func _on_game_started(room_name : String) -> void:
+	# TODO: Close MenuInterface and open Game scene
+	
+	var msg = {"head" : "NOTIFICATION_GAME_STARTED", "room_name" : room_name}
+	client.send(msg)
+	
+	responses_handler_state = GameParams.MessagesHandlerStates.GAME
 #endregion
 
 
@@ -196,7 +209,15 @@ func _process_menu_response(message) -> void:
 			
 			# if any of the Room guests change its data -> keep it actual
 			"UPDATE_PLAYER_DATA":
-				gui.update_room_guest_data(message["id"], message["player_name"], message["team"])
+				gui.update_room_guest_data(message["id"], message["player_name"], message["team"], message["is_ready"])
+			
+			"NOTIFICATION_GAME_COUNTDOWN_TOGGLED":
+				gui.set_game_countdown(message["value"])
+			
+			"NOTIFICATION_GAME_STARTED":
+				# NOTIMPLEMENTED
+				print("Client started game")
+				pass
 
 
 func _add_new_rooms(message) -> void:
@@ -243,6 +264,10 @@ func _add_room_members(message) -> void:
 # 5. Rise Client CLOSING_EVENT for disconnect them from Server and Room properly
 # 6. Remove GuestPanel from all Clients Lobbys if he disconnected
 # 7. Update GusetPanel data if Client change something in his Soot
-## 8. Implement visually and programmatically ready Player state
+# 8. Implement visually and programmatically ready Player state
 ## 9. Update players_count in RoomsBrowser if someone is connected
+# 10. If Host started the Game and not all Guests pressed Ready -> start 5 sec Timer
+# 11. When all Guests pressed Ready -> Start the Game
+# 12. If someone doesn't press Ready -> exclude him from the Room and start the Game
+## 13. Exit GAME_REQUESTS handler state (Server and GameRoot)
 ##

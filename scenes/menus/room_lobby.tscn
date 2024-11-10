@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://bp7ldny30vjw1"]
+[gd_scene load_steps=13 format=3 uid="uid://bp7ldny30vjw1"]
 
 [ext_resource type="Script" path="res://scripts/menus/room_lobby.gd" id="1_7377i"]
 [ext_resource type="PackedScene" uid="uid://jsg3njon7m1i" path="res://scenes/gui/text_button.tscn" id="2_ea6y8"]
 [ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="3_fip8q"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="6_sgbdj"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f2pe0"]
 bg_color = Color(0.48, 0.45984, 0.3936, 0.443137)
@@ -33,6 +34,20 @@ corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pv2xx"]
+atlas = ExtResource("6_sgbdj")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_khxxf"]
+atlas = ExtResource("6_sgbdj")
+region = Rect2(851, 115, 85, 84)
+
+[sub_resource type="LabelSettings" id="LabelSettings_h0qeq"]
+font_size = 151
+font_color = Color(0.890196, 0.854902, 0.741176, 1)
+outline_size = 55
+outline_color = Color(0.3, 0.28275, 0.231, 1)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_owch1"]
 resource_local_to_scene = true
@@ -148,6 +163,63 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_js6uk")
 
+[node name="Countdown" type="Control" parent="HeadPanel"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BigShadow" type="ColorRect" parent="HeadPanel/Countdown"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.490196)
+
+[node name="ClockProgressBar" type="TextureProgressBar" parent="HeadPanel/Countdown"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -79.5
+offset_top = -79.5
+offset_right = 79.5
+offset_bottom = 79.5
+grow_horizontal = 2
+grow_vertical = 2
+fill_mode = 4
+nine_patch_stretch = true
+texture_under = SubResource("AtlasTexture_pv2xx")
+texture_progress = SubResource("AtlasTexture_khxxf")
+tint_under = Color(0.298039, 0.282353, 0.231373, 1)
+
+[node name="CountdownLabel" type="Label" parent="HeadPanel/Countdown"]
+layout_mode = 0
+offset_left = 798.0
+offset_top = 205.0
+offset_right = 884.0
+offset_bottom = 412.0
+text = "5"
+label_settings = SubResource("LabelSettings_h0qeq")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CountdownTimer" type="Timer" parent="HeadPanel/Countdown"]
+
+[node name="ProgressBarTimer" type="Timer" parent="HeadPanel/Countdown"]
+wait_time = 0.05
+
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 2
 offset_left = 1158.0
@@ -167,5 +239,7 @@ material = SubResource("ShaderMaterial_tsltn")
 layout_mode = 2
 text = "Start game"
 
+[connection signal="timeout" from="HeadPanel/Countdown/CountdownTimer" to="." method="_on_countdown_timer_timeout"]
+[connection signal="timeout" from="HeadPanel/Countdown/ProgressBarTimer" to="." method="_on_progress_bar_timer_timeout"]
 [connection signal="button_pressed" from="HBoxContainer/CloseDisconnectTextButton" to="." method="_on_close_disconnect_text_button_pressed"]
 [connection signal="button_pressed" from="HBoxContainer/StartReadyTextButton" to="." method="_on_start_ready_text_button_pressed"]

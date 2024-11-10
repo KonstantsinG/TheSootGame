@@ -1,15 +1,17 @@
 extends Control
 
-signal data_changed(player_name : String, team : GameParams.TeamTypes)
+signal data_changed(player_name : String, team : GameParams.TeamTypes, is_ready : bool)
 
 @onready var name_text_edit = $Panel/NameTextEdit
 @onready var crown = $Panel/CrownTexture
+@onready var check_mark = $Panel/CheckMarkTextureRect
 @onready var red_banner = $Panel/TeamPanel/NinePatchRect/HBoxContainer/RedBanner
 @onready var blue_banner = $Panel/TeamPanel/NinePatchRect/HBoxContainer/BlueBanner
 @onready var green_banner = $Panel/TeamPanel/NinePatchRect/HBoxContainer/GreenBanner
 @onready var yellow_banner = $Panel/TeamPanel/NinePatchRect/HBoxContainer/YellowBanner
 
 var selected_team : GameParams.TeamTypes = GameParams.TeamTypes.RED
+var is_ready := false
 
 
 func get_player_name() -> String:
@@ -18,6 +20,14 @@ func get_player_name() -> String:
 
 func toggle_crown(is_host : bool) -> void:
 	crown.visible = is_host
+
+
+func toggle_ready() -> bool:
+	is_ready = !is_ready
+	check_mark.visible = is_ready
+	data_changed.emit(get_player_name(), selected_team, is_ready)
+	
+	return is_ready
 
 
 func _on_red_banner_gui_input(event: InputEvent) -> void:
@@ -104,8 +114,8 @@ func _toggle_benners_panel_state(target : GameParams.TeamTypes) -> void:
 	for t in targets.values():
 		t.material.set_shader_parameter("is_pale", true)
 	
-	data_changed.emit(get_player_name(), selected_team)
+	data_changed.emit(get_player_name(), selected_team, is_ready)
 
 
 func _on_name_text_edit_text_changed() -> void:
-	data_changed.emit(get_player_name(), selected_team)
+	data_changed.emit(get_player_name(), selected_team, is_ready)

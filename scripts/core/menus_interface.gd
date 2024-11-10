@@ -6,6 +6,7 @@ signal create_new_server_pressed
 signal join_server_pressed(ip : String)
 
 signal request_sended(request : MenuRequests, params : Dictionary)
+signal game_started(room_name : String)
 
 # broadcast signals
 signal servers_search_started
@@ -20,7 +21,8 @@ enum MenuRequests{
 	CLOSE_ROOM,
 	JOIN_ROOM,
 	GET_ROOM_MEMBERS,
-	UPDATE_PLAYER_DATA
+	UPDATE_PLAYER_DATA,
+	GAME_COUNTDOWN_TOGGLED
 }
 
 #region Variables
@@ -290,7 +292,7 @@ func _open_room_lobby(as_owner : bool, room_name : String):
 	# INFO: every time creating new instance
 	room_lobby = preload("res://scenes/menus/room_lobby.tscn").instantiate()
 	room_lobby.start_pressed.connect(_on_room_lobby_start_pressed)
-	room_lobby.ready_pressed.connect(_on_room_lobby_ready_pressed)
+	room_lobby.game_started.connect(_on_room_lobby_game_started)
 	room_lobby.close_pressed.connect(_on_room_lobby_close_pressed)
 	room_lobby.disconnect_pressed.connect(_on_room_lobby_disconnect_pressed)
 	room_lobby.player_data_changed.connect(_on_room_lobby_player_data_changed)
@@ -302,14 +304,8 @@ func _open_room_lobby(as_owner : bool, room_name : String):
 	room_lobby.add_player_panel(as_owner)
 
 
-func _on_room_lobby_start_pressed() -> void:
-	# NOTIMPLEMENTED
-	pass
-
-
-func _on_room_lobby_ready_pressed() -> void:
-	# NOTIMPLEMENTED
-	pass
+func _on_room_lobby_start_pressed(room_name : String, is_ready : bool) -> void:
+	request_sended.emit(MenuRequests.GAME_COUNTDOWN_TOGGLED, {"room_name" : room_name, "value" : is_ready})
 
 
 # INFO: for Room owner
@@ -333,8 +329,20 @@ func _on_room_lobby_disconnect_pressed(_room_name : String) -> void:
 	break_connection_pressed.emit("User decision")
 
 
-func _on_room_lobby_player_data_changed(room_name : String, player_name : String, team : GameParams.TeamTypes) -> void:
-	request_sended.emit(MenuRequests.UPDATE_PLAYER_DATA, {"room_name" : room_name, "player_name" : player_name, "team" : team})
+func _on_room_lobby_player_data_changed(room_name : String, player_name : String, team : GameParams.TeamTypes, is_ready : bool) -> void:
+	var params = {
+		"room_name" : room_name,
+		"player_name" : player_name,
+		"team" : team,
+		"is_ready" : is_ready
+	}
+	request_sended.emit(MenuRequests.UPDATE_PLAYER_DATA, params)
+
+
+func _on_room_lobby_game_started(room_name : String) -> void:
+	game_started.emit(room_name)
+	
+	# TODO: Close MenuInterface and open game scene
 
 
 func add_room_member(id : int, player_name : String, team : GameParams.TeamTypes, is_host : bool = false):
@@ -347,7 +355,12 @@ func remove_room_member(id : int) -> void:
 		room_lobby.remove_guest_panel(id)
 
 
-func update_room_guest_data(id : int, player_name : String, team : GameParams.TeamTypes) -> void:
+func update_room_guest_data(id : int, player_name : String, team : GameParams.TeamTypes, is_ready : bool) -> void:
 	if room_lobby != null:
-		room_lobby.update_guest_data(id, player_name, team)
+		room_lobby.update_guest_data(id, player_name, team, is_ready)
+
+
+func set_game_countdown(value : bool) -> void:
+	if room_lobby != null:
+		room_lobby.set_game_countdown(value)
 #endregion
