@@ -271,3 +271,24 @@ func _add_room_members(message) -> void:
 # 12. If someone doesn't press Ready -> exclude him from the Room and start the Game
 ## 13. Exit GAME_REQUESTS handler state (Server and GameRoot)
 ##
+## TASK -> GAME FEATURES
+## INFO: DRAWING STUF
+# 1. Partial: body, eyes, legs, arms
+## 2. Animations: walking, running, pushing (4 dirs)
+## 3. Spawn Room (fix y_sort)
+##
+## INFO: GAME_GLOBALS
+## TEAMS_SCORE, HP, TIMER
+## 1. TEAM_SCORE -> if you roast coal, your team increase score by 3. Who have greatest number in the ENDGAME - wins.
+## 2. HP -> if RND_ITEM falls on you - you lose a bit HP. If it's 0 - you're dead, wait for respawn 10 sec.
+## 3. TIME -> defines GAME time. Goes form 350 to 0.
+##
+## INFO: GAME_ACTIONS
+## RND_ITEMS, PUSH, ENDGAME, COAL, CAVE, FURNACE
+## 1. RND_ITEM -> Grand drops it accidentally (some herbs and infusions for water). It causes DAMEGE if you'll be near
+## 2. PUSH -> Soot can push each other. It doesn't causes DAMAGE, but confuse you for a moment
+## 3. ENDGAME -> Emitted when TIMER ends. Chosing the Winner team.
+## 4. COAL -> Soot can take it from CAVE and move it to the FURNACE. Gives 3 points for the Team
+## 5. CAVE -> Spawn point for Soot. Also, COAL spawns here.
+## 6. FURNACE -> Soot bring the COAL here. Complete QTE for roast it successfully (if QTE fails - Soot became BURNED with 50% chance)
+##

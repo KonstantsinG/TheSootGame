@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://q41cy8h6p8e5"
-path="res://.godot/imported/e_key.png-5c6d0a27dd00dcef454b490202011a7e.ctex"
+uid="uid://d3akgpp4ga7tl"
+path="res://.godot/imported/SootAnimationsAtlas.png-0cf6f3a1064ef37663f7125f263df1ae.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://old_junk/singleplayer_prototype/sprites/e_key.png"
-dest_files=["res://.godot/imported/e_key.png-5c6d0a27dd00dcef454b490202011a7e.ctex"]
+source_file="res://sprites/soot/SootAnimationsAtlas.png"
+dest_files=["res://.godot/imported/SootAnimationsAtlas.png-0cf6f3a1064ef37663f7125f263df1ae.ctex"]
 
 [params]
 
