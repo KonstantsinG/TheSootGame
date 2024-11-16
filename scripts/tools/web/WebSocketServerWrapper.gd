@@ -124,8 +124,7 @@ func process_message(peer_id : int, message) -> void:
 	if messages_handler_state == GameParams.MessagesHandlerStates.MENU:
 		_process_menu_request(peer_id, message)
 	elif messages_handler_state == GameParams.MessagesHandlerStates.GAME:
-		# NOTIMPLEMENTED: Process Game messages
-		pass
+		_process_game_request(peer_id, message)
 
 
 func finalize() -> void:
@@ -167,6 +166,36 @@ func _close_all_rooms() -> void:
 			p.put_packet(var_to_bytes(msg))
 
 
+func _get_room_by_name(room_name : String) -> RoomData:
+	var rooms = rooms_data.filter(func(r): return r.room_name == room_name)
+	if rooms.size() >= 1: return rooms.front()
+	else: return null
+
+
+func _get_player_by_id(peer_id : int) -> PlayerData:
+	var players = players_data.filter(func(p): return p.id == peer_id)
+	if players.size() >= 1: return players.front()
+	else: return null
+
+
+# INFO: Room host if always first
+func _get_room_members(room_name : String, with_owner = true) -> Array[PlayerData]:
+	var data : Array[PlayerData] = []
+	var room = _get_room_by_name(room_name)
+	if room == null: return data
+	
+	var player
+	if with_owner:
+		player = _get_player_by_id(room.room_owner)
+		if player != null: data.append(player)
+	
+	for g in room.room_guests:
+		player = _get_player_by_id(g)
+		if player != null: data.append(player)
+	
+	return data
+
+
 
 
 
@@ -199,18 +228,8 @@ func _process_menu_request(peer_id : int, message) -> void:
 			
 			"NOTIFICATION_GAME_STARTED":
 				_start_game(message["room_name"])
-
-
-func _get_room_by_name(room_name : String) -> RoomData:
-	var rooms = rooms_data.filter(func(r): return r.room_name == room_name)
-	if rooms.size() >= 1: return rooms.front()
-	else: return null
-
-
-func _get_player_by_id(peer_id : int) -> PlayerData:
-	var players = players_data.filter(func(p): return p.id == peer_id)
-	if players.size() >= 1: return players.front()
-	else: return null
+			
+			_: _process_game_request(peer_id, message)
 
 
 func _add_new_player(peer_id : int) -> PlayerData:
@@ -318,24 +337,6 @@ func _disconnect_from_room(peer_id : int, room_name : String) -> void:
 			send(g.id, msg)
 
 
-# INFO: Room host if always first
-func _get_room_members(room_name : String, with_owner = true) -> Array[PlayerData]:
-	var data : Array[PlayerData] = []
-	var room = _get_room_by_name(room_name)
-	if room == null: return data
-	
-	var player
-	if with_owner:
-		player = _get_player_by_id(room.room_owner)
-		if player != null: data.append(player)
-	
-	for g in room.room_guests:
-		player = _get_player_by_id(g)
-		if player != null: data.append(player)
-	
-	return data
-
-
 func _notify_new_room_member_connected(room : RoomData, player : PlayerData):
 	var msg = {"head" : "NOTIFICATION_NEW_ROOM_MEMBER"}
 	msg.merge(player.serialize())
@@ -400,12 +401,53 @@ func _start_game(room_name : String) -> void:
 	var room = _get_room_by_name(room_name)
 	
 	if room != null:
-		var room_members = _get_room_members(room_name, false)
-		var msg = {"head" : "NOTIFICATION_GAME_STARTED"}
+		var room_members = _get_room_members(room_name)
+		var guests_data = []
+		var spawnpoint_counter = 0
+		var msg = {"head" : "NOTIFICATION_GAME_STARTED", "room_name" : room_name}
 		
 		for m in room_members:
-			if not m.is_ready: room.room_guests.erase(m)
-			else: send(m.id, msg)
+			if not m.is_ready:
+				room.remove_guest(m.id)
+				room_members.erase(m)
+				send(m.id, {"head" : "NOTIFICATION_EXCLUDED_FROM_ROOM"})
+			else:
+				var data = m.serialize()
+				data["spawnpoint"] = spawnpoint_counter
+				spawnpoint_counter += 1
+				guests_data.append(data)
+		
+		for m in room_members:
+			var local_guests_data = guests_data.duplicate()
+			var your_data = local_guests_data.filter(func(guest): return guest["id"] == m.id).front()
+			local_guests_data.erase(your_data)
+			msg["guests"] = local_guests_data
+			msg["you"] = your_data
+			
+			send(m.id, msg)
 	
 	messages_handler_state = GameParams.MessagesHandlerStates.GAME
+#endregion
+
+
+#region GAME REQUESTS HANDLER
+func _process_game_request(peer_id : int, message) -> void:
+	match message["head"]:
+		"NOTIFICATION_PLAYER_MOVED":
+			_update_player_position(message["room_name"], peer_id, message["position"])
+		
+		_: _process_menu_request(peer_id, message)
+
+
+func _update_player_position(room_name : String, peer_id : int, new_pos : Vector2) -> void:
+	var msg = {
+		"head" : "NOTIFICATION_PLAYER_MOVED",
+		"id" : peer_id,
+		"position" : new_pos
+	}
+	
+	for g in _get_room_members(room_name):
+		if g.id == peer_id : continue
+		
+		send(g.id, msg)
 #endregion

@@ -5,7 +5,10 @@ extends Node
 
 @onready var client = $WebSocketClient
 @onready var server = $WebSocketServerWrapper
-@onready var gui = $Content/MenusInterface
+
+@onready var content = $Content
+var gui = null
+var game_container = null
 
 var responses_handler_state := GameParams.MessagesHandlerStates.MENU
 
@@ -14,16 +17,7 @@ func _ready() -> void:
 	client.message_recieved.connect(_on_client_message_recieved)
 	client.connection_closed.connect(_on_client_connection_closed)
 	
-	
-	gui.create_new_server_pressed.connect(_on_create_new_server_pressed)
-	gui.join_server_pressed.connect(_on_join_server_pressed)
-	
-	gui.servers_search_started.connect(_on_servers_search_started)
-	gui.rooms_search_started.connect(_on_rooms_search_started)
-	
-	gui.break_connection_pressed.connect(_on_break_connection_pressed)
-	gui.request_sended.connect(_on_request_sended)
-	gui.game_started.connect(_on_game_started)
+	_load_gui()
 
 
 #region Server functions
@@ -93,33 +87,15 @@ func _on_break_connection_pressed(reason : String) -> void:
 
 
 #region Extra Server fuctionality
-func _on_request_sended(request_type, params : Dictionary) -> void:
-	match request_type:
-		gui.MenuRequests.CREATE_NEW_ROOM:
-			params["head"] = "CREATE_NEW_ROOM"
-		
-		gui.MenuRequests.CLOSE_ROOM:
-			params["head"] = "CLOSE_ROOM"
-		
-		gui.MenuRequests.JOIN_ROOM:
-			params["head"] = "JOIN_ROOM"
-		
-		gui.MenuRequests.GET_ROOM_MEMBERS:
-			params["head"] = "GET_ROOM_MEMBERS"
-		
-		gui.MenuRequests.UPDATE_PLAYER_DATA:
-			params["head"] = "UPDATE_PLAYER_DATA"
-		
-		gui.MenuRequests.GAME_COUNTDOWN_TOGGLED:
-			params["head"] = "NOTIFICATION_GAME_COUNTDOWN_TOGGLED"
-	
-	client.send(params)
+func _on_request_sended(request : Dictionary) -> void:
+	client.send(request)
 #endregion
 
 
 #region Client functions
 func _on_client_connection_closed() -> void:
-	gui.break_connection()
+	if gui != null:
+		gui.break_connection()
 
 
 func _on_servers_search_started() -> void:
@@ -134,25 +110,22 @@ func _on_rooms_search_started() -> void:
 	client.run_udp_broadcast(udp_server_port, msg)
 
 
+# start Game for Room owner
 func _on_game_started(room_name : String) -> void:
-	# TODO: Close MenuInterface and open Game scene
-	
 	var msg = {"head" : "NOTIFICATION_GAME_STARTED", "room_name" : room_name}
 	client.send(msg)
-	
-	responses_handler_state = GameParams.MessagesHandlerStates.GAME
 #endregion
 
 
 #region Client responses handler
 func _on_client_message_recieved(message) -> void:
-	print("Client recieved: ", message)
+	if message["head"] != "NOTIFICATION_PLAYER_MOVED":
+		print("Client recieved: ", message)
 	
 	if responses_handler_state == GameParams.MessagesHandlerStates.MENU:
 		_process_menu_response(message)
 	elif responses_handler_state == GameParams.MessagesHandlerStates.GAME:
-		# NOTIMPLEMENTED
-		pass
+		_process_game_response(message)
 #endregion
 
 
@@ -214,10 +187,11 @@ func _process_menu_response(message) -> void:
 			"NOTIFICATION_GAME_COUNTDOWN_TOGGLED":
 				gui.set_game_countdown(message["value"])
 			
+			"NOTIFICATION_EXCLUDED_FROM_ROOM":
+				_exclude_from_room()
+			
 			"NOTIFICATION_GAME_STARTED":
-				# NOTIMPLEMENTED
-				print("Client started game")
-				pass
+				_start_game(message["room_name"], message["you"], message["guests"])
 
 
 func _add_new_rooms(message) -> void:
@@ -236,10 +210,65 @@ func _add_room_members(message) -> void:
 		var team = member["team"]
 		var is_host = member["is_host"]
 		gui.add_room_member(id, player_name, team, is_host)
+
+
+func _start_game(room_name, main_player_data, guests_data) -> void:
+	print("Client started game")
+	responses_handler_state = GameParams.MessagesHandlerStates.GAME
+	
+	content.remove_child(gui)
+	gui.queue_free()
+	gui = null
+	
+	_load_game_container()
+	game_container.room_name = room_name
+	game_container.spawn_players(main_player_data, guests_data)
+
+
+func _exclude_from_room() -> void:
+	gui.exclude_from_room()
+	client.close()
+	client.close_udp()
+#endregion
+
+
+#region GAME SERVER RESPONSES HANDLER
+func _process_game_response(message) -> void:
+	match message["head"]:
+		"NOTIFICATION_PLAYER_MOVED":
+			game_container.update_player_position(message["id"], message["position"])
+#endregion
+
+
+#region ScenesLoaders
+func _load_gui() -> void:
+	if gui == null:
+		gui = preload("res://scenes/core/menus_interface.tscn").instantiate()
+		gui.create_new_server_pressed.connect(_on_create_new_server_pressed)
+		gui.join_server_pressed.connect(_on_join_server_pressed)
+		
+		gui.servers_search_started.connect(_on_servers_search_started)
+		gui.rooms_search_started.connect(_on_rooms_search_started)
+		
+		gui.break_connection_pressed.connect(_on_break_connection_pressed)
+		gui.request_sended.connect(_on_request_sended)
+		gui.game_started.connect(_on_game_started)
+	
+	content.add_child(gui)
+
+
+func _load_game_container() -> void:
+	if game_container == null:
+		game_container = preload("res://scenes/core/game_container.tscn").instantiate()
+		
+		game_container.request_sended.connect(_on_request_sended)
+	
+	content.add_child(game_container)
 #endregion
 
 
 
+#region NOTEPAD
 ## ---------------------------------------------------------
 ##      /$$$$$$$$  /$$$$$$   /$$$$$$$    /$$$$$$ 
 ##     |__  $$__/ /$$__  $$ | $$__  $$  /$$__  $$
@@ -251,10 +280,11 @@ func _add_room_members(message) -> void:
 ##        |__/    \______/  |_______/   \______/
 ## ---------------------------------------------------------
 ## 
-## BUG's
+## BUG's // WARNING's
 # 0.1. Cannot create new Room (wrong name) -> blink bug
 # 0.2. Cannot join the Room (wrong password) -> blink bug
 # 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
+# 0.4. StartGame -> finalize gui resources
 ## 
 ## TODO's
 # 1. Ask Server is Room that i wanna create legal (unique name)
@@ -265,12 +295,22 @@ func _add_room_members(message) -> void:
 # 6. Remove GuestPanel from all Clients Lobbys if he disconnected
 # 7. Update GusetPanel data if Client change something in his Soot
 # 8. Implement visually and programmatically ready Player state
-## 9. Update players_count in RoomsBrowser if someone is connected
+## 9. Update players_count in GamesBrowser if someone is connected
 # 10. If Host started the Game and not all Guests pressed Ready -> start 5 sec Timer
 # 11. When all Guests pressed Ready -> Start the Game
 # 12. If someone doesn't press Ready -> exclude him from the Room and start the Game
 ## 13. Exit GAME_REQUESTS handler state (Server and GameRoot)
-##
+# 14. If Game started and guest doesn't pressed ready, throw them into MainMenu
+## 15. If host closed the Game -> close it for all guests
+## 16. If only one Game closed -> keep others alive
+## 17. Add IN_GAME icon for RoomPanel in GamesBrowser (or just remove it)
+# 18 Syncronize players spawn positions
+## 19. RoomLobby: if someone pressed ready before you entered the Room -> you doesn't see that this player is ready
+
+
+## ----- 
+
+
 ## TASK -> GAME FEATURES
 ## INFO: DRAWING STUF
 # 1. Partial: body, eyes, legs, arms
@@ -292,3 +332,4 @@ func _add_room_members(message) -> void:
 ## 5. CAVE -> Spawn point for Soot. Also, COAL spawns here.
 ## 6. FURNACE -> Soot bring the COAL here. Complete QTE for roast it successfully (if QTE fails - Soot became BURNED with 50% chance)
 ##
+#endregion

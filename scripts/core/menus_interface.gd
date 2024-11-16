@@ -5,7 +5,7 @@ extends CanvasLayer
 signal create_new_server_pressed
 signal join_server_pressed(ip : String)
 
-signal request_sended(request : MenuRequests, params : Dictionary)
+signal request_sended(request : Dictionary)
 signal game_started(room_name : String)
 
 # broadcast signals
@@ -16,14 +16,6 @@ signal rooms_search_started
 signal break_connection_pressed(reason: String)
 #endregion
 
-enum MenuRequests{
-	CREATE_NEW_ROOM,
-	CLOSE_ROOM,
-	JOIN_ROOM,
-	GET_ROOM_MEMBERS,
-	UPDATE_PLAYER_DATA,
-	GAME_COUNTDOWN_TOGGLED
-}
 
 #region Variables
 # containers
@@ -169,7 +161,7 @@ func _on_games_browser_join_room_pressed(server_ip : String, room_name : String,
 	await get_tree().create_timer(0.1).timeout
 	
 	if is_public:
-		request_sended.emit(MenuRequests.JOIN_ROOM, {"room_name" : room_name})
+		request_sended.emit({"head" : "JOIN_ROOM", "room_name" : room_name})
 	else:
 		_show_enter_password_popup(room_name)
 
@@ -192,7 +184,7 @@ func _on_enter_password_popup_cancel_pressed() -> void:
 
 
 func _on_enter_password_popup_join_pressed(room_name : String, password : String) -> void:
-	request_sended.emit(MenuRequests.JOIN_ROOM, {"room_name" : room_name, "password" : password})
+	request_sended.emit({"head" : "JOIN_ROOM", "room_name" : room_name, "password" : password})
 	remove_popup()
 
 
@@ -206,7 +198,7 @@ func join_room(room_name : String) -> void:
 	menus.remove_child(games_browser)
 	_open_room_lobby(false, room_name)
 	
-	request_sended.emit(MenuRequests.GET_ROOM_MEMBERS, {"room_name" : room_name})
+	request_sended.emit({"head" : "GET_ROOM_MEMBERS", "room_name" : room_name})
 
 
 func _on_games_browser_back_pressed() -> void:
@@ -271,7 +263,7 @@ func _on_create_room_popup_create_room_pressed(room_name : String, room_pass : S
 	remove_popup()
 	
 	# ask Server is Room that you trying to create valid
-	request_sended.emit(MenuRequests.CREATE_NEW_ROOM, {"room_name" : room_name, "password" : room_pass})
+	request_sended.emit({"head" : "CREATE_NEW_ROOM", "room_name" : room_name, "password" : room_pass})
 
 
 func create_new_room_bad_response(details : String) -> void:
@@ -305,7 +297,7 @@ func _open_room_lobby(as_owner : bool, room_name : String):
 
 
 func _on_room_lobby_start_pressed(room_name : String, is_ready : bool) -> void:
-	request_sended.emit(MenuRequests.GAME_COUNTDOWN_TOGGLED, {"room_name" : room_name, "value" : is_ready})
+	request_sended.emit({"head" : "NOTIFICATION_GAME_COUNTDOWN_TOGGLED", "room_name" : room_name, "value" : is_ready})
 
 
 # INFO: for Room owner
@@ -315,7 +307,7 @@ func _on_room_lobby_close_pressed(room_name : String) -> void:
 	menus.add_child(gamemode_menu)
 	
 	# INFO: Close Room, send to the Server message about it, wait for all Clients recieve this message and then close connection
-	request_sended.emit(MenuRequests.CLOSE_ROOM, {"room_name" : room_name})
+	request_sended.emit({"head" : "CLOSE_ROOM", "room_name" : room_name})
 	await get_tree().create_timer(0.5).timeout # ATTENTION: Bad bug fix (idk how to deal with it...)
 	break_connection_pressed.emit("User decision")
 
@@ -330,13 +322,14 @@ func _on_room_lobby_disconnect_pressed(_room_name : String) -> void:
 
 
 func _on_room_lobby_player_data_changed(room_name : String, player_name : String, team : GameParams.TeamTypes, is_ready : bool) -> void:
-	var params = {
+	var msg = {
+		"head" : "UPDATE_PLAYER_DATA",
 		"room_name" : room_name,
 		"player_name" : player_name,
 		"team" : team,
 		"is_ready" : is_ready
 	}
-	request_sended.emit(MenuRequests.UPDATE_PLAYER_DATA, params)
+	request_sended.emit(msg)
 
 
 func _on_room_lobby_game_started(room_name : String) -> void:
@@ -363,4 +356,15 @@ func update_room_guest_data(id : int, player_name : String, team : GameParams.Te
 func set_game_countdown(value : bool) -> void:
 	if room_lobby != null:
 		room_lobby.set_game_countdown(value)
+
+
+func exclude_from_room() -> void:
+	var last_menu = menus.get_child(1)
+	
+	if last_menu != null:
+		menus.remove_child(last_menu)
+		last_menu.queue_free()
+		
+		menus.add_child(gamemode_menu)
+		show_popup_notification("Notification", "You have been excluded from the room")
 #endregion

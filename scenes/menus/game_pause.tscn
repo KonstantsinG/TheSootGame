@@ -1,0 +1,86 @@
+[gd_scene load_steps=4 format=3 uid="uid://bf0b1tphxsiti"]
+
+[ext_resource type="Script" path="res://scripts/menus/game_pause.gd" id="1_sjm1c"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_actbt"]
+bg_color = Color(0.78, 0.71448, 0.6396, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.555891, 0.484678, 0.404232, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_84ybr"]
+font_size = 85
+font_color = Color(0.80922, 0.747879, 0.679471, 1)
+outline_size = 35
+outline_color = Color(0.63021, 0.555747, 0.471844, 1)
+
+[node name="GamePause" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_sjm1c")
+
+[node name="Panel" type="Panel" parent="."]
+custom_minimum_size = Vector2(650, 500)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_actbt")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -255.0
+offset_top = 10.0
+offset_right = 255.0
+offset_bottom = 126.0
+grow_horizontal = 2
+text = "Pause"
+label_settings = SubResource("LabelSettings_84ybr")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = 134.0
+offset_right = -70.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Resume"
+
+[node name="BackButton" type="Button" parent="Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Back to menu"
+
+[connection signal="button_down" from="Panel/VBoxContainer/ResumeButton" to="." method="_on_resume_button_down"]
+[connection signal="button_down" from="Panel/VBoxContainer/BackButton" to="." method="_on_back_button_down"]
