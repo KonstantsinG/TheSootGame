@@ -4,6 +4,8 @@ signal panel_pressed(target : Control)
 
 @onready var public_texture = $Panel/PublicTexture
 @onready var private_texture = $Panel/PrivateTexture
+@onready var launched_texture = $Panel/LaunchedTexture
+
 @onready var ip_label = $Panel/Panel/HBoxContainer/IPLabel
 @onready var name_label = $Panel/Panel/HBoxContainer/NameLabel
 @onready var count_label = $Panel/Panel/HBoxContainer/PlayersCountLabel

@@ -5,6 +5,7 @@ signal resume_pressed
 
 
 func _on_resume_button_down() -> void:
+	visible = false
 	resume_pressed.emit()
 
 

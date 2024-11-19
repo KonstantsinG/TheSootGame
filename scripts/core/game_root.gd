@@ -83,6 +83,14 @@ func _on_break_connection_pressed(reason : String) -> void:
 	
 	client.close()
 	client.close_udp()
+
+
+func _try_break_connection() -> void:
+	if server.is_listening():
+		server.try_shutdown_server()
+	
+	client.close()
+	client.close_udp()
 #endregion
 
 
@@ -114,6 +122,21 @@ func _on_rooms_search_started() -> void:
 func _on_game_started(room_name : String) -> void:
 	var msg = {"head" : "NOTIFICATION_GAME_STARTED", "room_name" : room_name}
 	client.send(msg)
+#endregion
+
+
+#region GameContainer signals
+func _on_game_container_back_to_menu_pressed(room_name : String) -> void:
+	client.send({"head" : "QUIT_GAME", "room_name" : room_name})
+	
+	responses_handler_state = GameParams.MessagesHandlerStates.MENU
+	content.remove_child(game_container)
+	game_container.queue_free()
+	game_container = null
+	_load_gui()
+	
+	await get_tree().create_timer(0.2).timeout
+	_try_break_connection()
 #endregion
 
 
@@ -237,6 +260,28 @@ func _process_game_response(message) -> void:
 	match message["head"]:
 		"NOTIFICATION_PLAYER_MOVED":
 			game_container.update_player_position(message["id"], message["position"])
+		
+		"NOTIFICATION_PLAYER_DISCONNECTED":
+			game_container.remove_player(message["id"])
+		
+		"NOTIFICATION_SERVER_CLOSING":
+			_leave_room("Host closed the Server")
+		
+		"NOTIFICATION_ROOM_CLOSED":
+			if game_container.room_name == message["room_name"]:
+				_leave_room("Host closed the Game")
+
+
+func _leave_room(reason : String) -> void:
+	_try_break_connection()
+	responses_handler_state = GameParams.MessagesHandlerStates.MENU
+	
+	content.remove_child(game_container)
+	game_container.queue_free()
+	game_container = null
+	
+	_load_gui()
+	gui.show_popup_notification("Notification", reason)
 #endregion
 
 
@@ -262,6 +307,7 @@ func _load_game_container() -> void:
 		game_container = preload("res://scenes/core/game_container.tscn").instantiate()
 		
 		game_container.request_sended.connect(_on_request_sended)
+		game_container.back_to_menu_pressed.connect(_on_game_container_back_to_menu_pressed)
 	
 	content.add_child(game_container)
 #endregion
@@ -299,16 +345,31 @@ func _load_game_container() -> void:
 # 10. If Host started the Game and not all Guests pressed Ready -> start 5 sec Timer
 # 11. When all Guests pressed Ready -> Start the Game
 # 12. If someone doesn't press Ready -> exclude him from the Room and start the Game
-## 13. Exit GAME_REQUESTS handler state (Server and GameRoot)
+# 13. Exit GAME_REQUESTS handler state (Server and GameRoot)
 # 14. If Game started and guest doesn't pressed ready, throw them into MainMenu
-## 15. If host closed the Game -> close it for all guests
-## 16. If only one Game closed -> keep others alive
+# 15. If Host closed the Game -> close it for all Guests
+# 16. If only one Game closed -> keep others alive
 ## 17. Add IN_GAME icon for RoomPanel in GamesBrowser (or just remove it)
 # 18 Syncronize players spawn positions
-## 19. RoomLobby: if someone pressed ready before you entered the Room -> you doesn't see that this player is ready
+## 19. RoomLobby: if someone pressed ready before you entered the Room -> you doesn't see that this player is ready (you must)
+# 20. Add popup notification for Client when Host closed the Game
+## 21. RoomLobby: if Host activated StartGameTimer and someone new connected -> he doesn't see Timer on the screen
+# 22. If Host got crashed -> disconnect all Clients from the Game
+## 23. Add ServerStateDisplay to the gui
+## 24. GamePauseMenu: Switch default buttons to pretty ones
 
 
 ## ----- 
+
+
+## TASK -> ROADMAP
+## 1. BoilerRoom
+## 2. Coal
+## 3. Score and Timer
+## 4. Pushing and Lifes
+## 5. Bullets
+## 6. Endgame?
+##
 
 
 ## TASK -> GAME FEATURES

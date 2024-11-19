@@ -46,5 +46,14 @@ func update_player_position(player_id : int, new_position : Vector2) -> void:
 		guest.position = new_position
 
 
+func remove_player(id : int) -> void:
+	var player = _find_guest_by_id(id)
+	
+	if player != null:
+		$Entities.remove_child(player)
+		guests.erase(player)
+		player.queue_free()
+
+
 func _on_player_moved(new_pos : Vector2) -> void:
 	request_sended.emit({"head" : "NOTIFICATION_PLAYER_MOVED", "position" : new_pos})

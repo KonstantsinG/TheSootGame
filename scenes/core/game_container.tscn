@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://bfxmw41wyqsed"]
+[gd_scene load_steps=4 format=3 uid="uid://bfxmw41wyqsed"]
 
 [ext_resource type="Script" path="res://scripts/core/game_container.gd" id="1_7nyv6"]
 [ext_resource type="PackedScene" uid="uid://d2debf7vblnjk" path="res://scenes/game_locations/cave_room.tscn" id="1_xfhxv"]
+[ext_resource type="PackedScene" uid="uid://bf0b1tphxsiti" path="res://scenes/menus/game_pause.tscn" id="3_pjhf7"]
 
 [node name="GameContainer" type="Node"]
 script = ExtResource("1_7nyv6")
 
 [node name="CaveRoom" parent="." instance=ExtResource("1_xfhxv")]
+
+[node name="GamePause" parent="." instance=ExtResource("3_pjhf7")]
+visible = false

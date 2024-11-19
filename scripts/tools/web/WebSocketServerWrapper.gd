@@ -152,6 +152,12 @@ func disconnect_client(peer_id : int) -> void:
 
 
 ## - - - - - ACTIONS - - - - -
+func try_shutdown_server() -> void:
+	if rooms_data.size() == 0:
+		stop_udp_broadcasting()
+		stop()
+
+
 func _close_all_rooms() -> void:
 	var msg = {
 		"head" : "NOTIFICATION_ROOM_CLOSED",
@@ -209,7 +215,7 @@ func _process_menu_request(peer_id : int, message) -> void:
 			
 			# close Room and let all CLiemts know about that
 			"CLOSE_ROOM":
-				_close_room(message)
+				_close_room(message["room_name"])
 			
 			"JOIN_ROOM":
 				_join_room(peer_id, message)
@@ -268,8 +274,8 @@ func _create_new_room(peer_id : int, message) -> void:
 	_add_new_player(peer_id)
 
 
-func _close_room(message) -> void:
-	var room = _get_room_by_name(message["room_name"])
+func _close_room(room_name : String) -> void:
+	var room = _get_room_by_name(room_name)
 	
 	if room != null:
 		rooms_data.erase(room)
@@ -282,6 +288,8 @@ func _close_room(message) -> void:
 		
 		for p in udp_peers:
 			p.put_packet(var_to_bytes(msg))
+	
+	try_shutdown_server()
 
 
 func _join_room(peer_id : int, message) -> void:
@@ -436,7 +444,20 @@ func _process_game_request(peer_id : int, message) -> void:
 		"NOTIFICATION_PLAYER_MOVED":
 			_update_player_position(message["room_name"], peer_id, message["position"])
 		
+		"QUIT_GAME":
+			_quit_game(peer_id, message["room_name"])
+		
 		_: _process_menu_request(peer_id, message)
+
+
+func _quit_game(peer_id : int, room_name : String) -> void:
+	var room = _get_room_by_name(room_name)
+	
+	if room != null:
+		if room.room_owner == peer_id:
+			_close_room(room_name)
+		else:
+			_disconnect_from_room(peer_id, room_name)
 
 
 func _update_player_position(room_name : String, peer_id : int, new_pos : Vector2) -> void:

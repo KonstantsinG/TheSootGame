@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bkswaru22swxv"]
+[gd_scene load_steps=13 format=3 uid="uid://bkswaru22swxv"]
 
 [ext_resource type="Shader" path="res://resources/shaders/text_button.gdshader" id="1_dxqxm"]
 [ext_resource type="Script" path="res://scripts/menus/panels/room_panel.gd" id="2_5non7"]
@@ -21,6 +21,10 @@ corner_radius_top_left = 15
 corner_radius_top_right = 15
 corner_radius_bottom_right = 15
 corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w00cb"]
+atlas = ExtResource("3_s1jbf")
+region = Rect2(656, 291, 114, 114)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3ods1"]
 atlas = ExtResource("3_s1jbf")
@@ -76,6 +80,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_hy3ja")
+
+[node name="LaunchedTexture" type="TextureRect" parent="Panel"]
+visible = false
+modulate = Color(0.64, 0.6, 1, 1)
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 30.0
+offset_top = -40.0
+offset_right = 110.0
+offset_bottom = 40.0
+grow_vertical = 2
+texture = SubResource("AtlasTexture_w00cb")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="PrivateTexture" type="TextureRect" parent="Panel"]
 modulate = Color(0.82, 0.5904, 0.5904, 1)
