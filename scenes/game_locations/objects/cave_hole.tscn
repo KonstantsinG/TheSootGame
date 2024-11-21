@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://dq6q3st25g6et"]
+
+[ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="1_kjwa1"]
+[ext_resource type="Script" path="res://scripts/game_locations/objects/cave_hole.gd" id="1_qa4xs"]
+[ext_resource type="PackedScene" uid="uid://dq4l43l44rv5n" path="res://scenes/game_locations/objects/key_panel.tscn" id="3_s6u4t"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qouvw"]
+atlas = ExtResource("1_kjwa1")
+region = Rect2(605, 1213, 18, 85)
+
+[node name="CaveHole" type="Area2D"]
+scale = Vector2(0.75, 0.75)
+script = ExtResource("1_qa4xs")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = SubResource("AtlasTexture_qouvw")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+visible = false
+polygon = PackedVector2Array(-3, 36, 14, 36, 22, 2, 5, 2, 4, -30, -1, -40, -5, -30, -6, -14)
+
+[node name="KeyPanel" parent="." instance=ExtResource("3_s6u4t")]
+visible = false
+position = Vector2(-20, -65)
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

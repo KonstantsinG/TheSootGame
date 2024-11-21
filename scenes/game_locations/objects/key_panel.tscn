@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq4l43l44rv5n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ljw7s"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.779731, 0.813998, 0.753804, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_ua8gv"]
+font_size = 12
+
+[node name="KeyPanel" type="Node2D"]
+
+[node name="Panel" type="Panel" parent="."]
+offset_right = 17.0
+offset_bottom = 17.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ljw7s")
+
+[node name="Label" type="Label" parent="Panel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -4.5
+offset_top = -11.5
+offset_right = 4.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "E"
+label_settings = SubResource("LabelSettings_ua8gv")
+horizontal_alignment = 1
+vertical_alignment = 1

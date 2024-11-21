@@ -447,7 +447,20 @@ func _process_game_request(peer_id : int, message) -> void:
 		"QUIT_GAME":
 			_quit_game(peer_id, message["room_name"])
 		
+		"NOTIFICATION_PLAYER_EXIT_ROOM":
+			_exit_room(peer_id, message)
+		
 		_: _process_menu_request(peer_id, message)
+
+
+func _exit_room(peer_id : int, message) -> void:
+	var room = _get_room_by_name(message["room_name"])
+	
+	if room != null:
+		for g in _get_room_members(message["room_name"]):
+			if g.id == peer_id : continue
+			
+			send(g.id, message)
 
 
 func _quit_game(peer_id : int, room_name : String) -> void:

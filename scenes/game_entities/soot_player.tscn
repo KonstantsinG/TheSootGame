@@ -1,8 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://csygn7thpv4no"]
+[gd_scene load_steps=13 format=3 uid="uid://csygn7thpv4no"]
 
 [ext_resource type="Texture2D" uid="uid://d3akgpp4ga7tl" path="res://sprites/soot/SootAnimationsAtlas.png" id="1_g3kk3"]
 [ext_resource type="Script" path="res://scripts/game_entities/soot_player.gd" id="1_tfbbf"]
-[ext_resource type="Texture2D" uid="uid://ec7r8yl4x46k" path="res://sprites/icons/triangle_icon.png" id="2_rn3sn"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="2_y440g"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3hmop"]
+atlas = ExtResource("2_y440g")
+region = Rect2(943, 143, 44, 36)
 
 [sub_resource type="LabelSettings" id="LabelSettings_if046"]
 font_size = 40
@@ -111,14 +115,24 @@ radius = 26.0
 height = 120.0
 
 [node name="SootPlayer" type="CharacterBody2D"]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.075, 0.075)
 motion_mode = 1
 script = ExtResource("1_tfbbf")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(3, 3)
+limit_left = -500
+limit_top = -320
+limit_right = 1915
+limit_bottom = 1075
+limit_smoothed = true
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
 
 [node name="PlayerData" type="Node2D" parent="."]
 
 [node name="TeamMarkerSprite" type="Sprite2D" parent="PlayerData"]
-texture = ExtResource("2_rn3sn")
+texture = SubResource("AtlasTexture_3hmop")
 offset = Vector2(0, -141)
 
 [node name="NameLabel" type="Label" parent="PlayerData"]

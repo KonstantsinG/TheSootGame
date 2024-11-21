@@ -1,7 +1,7 @@
 extends Node
 
-@export var tcp_server_port : int = 8080
-@export var udp_server_port : int = 8081
+@export var tcp_server_port : int = 148
+@export var udp_server_port : int = 149
 
 @onready var client = $WebSocketClient
 @onready var server = $WebSocketServerWrapper
@@ -14,10 +14,26 @@ var responses_handler_state := GameParams.MessagesHandlerStates.MENU
 
 
 func _ready() -> void:
+	if is_port_available(tcp_server_port): print("TCP port ", tcp_server_port, " is available!")
+	else: print("TCP port ", tcp_server_port, " is unavailable...")
+	if is_port_available(udp_server_port): print("UDP port ", udp_server_port, " is available!")
+	else: print("UDP port ", udp_server_port, " is unavailable...")
+	
+	
 	client.message_recieved.connect(_on_client_message_recieved)
 	client.connection_closed.connect(_on_client_connection_closed)
 	
 	_load_gui()
+
+
+func is_port_available(port: int) -> bool:
+	var test_server = TCPServer.new()
+	var err = test_server.listen(port, "0.0.0.0")
+	
+	if err == OK:
+		test_server.stop()
+		return true
+	return false
 
 
 #region Server functions
@@ -270,6 +286,14 @@ func _process_game_response(message) -> void:
 		"NOTIFICATION_ROOM_CLOSED":
 			if game_container.room_name == message["room_name"]:
 				_leave_room("Host closed the Game")
+		
+		"NOTIFICATION_PLAYER_EXIT_ROOM":
+			_switch_room(message)
+
+
+func _switch_room(message) -> void:
+	if game_container != null:
+		game_container.switch_room(message["id"], message["destination"], message["hole_id"])
 
 
 func _leave_room(reason : String) -> void:
@@ -357,6 +381,8 @@ func _load_game_container() -> void:
 # 22. If Host got crashed -> disconnect all Clients from the Game
 ## 23. Add ServerStateDisplay to the gui
 ## 24. GamePauseMenu: Switch default buttons to pretty ones
+## 25. None-playable Soot position interpolation
+## 26. Fading transition while switching the Room
 
 
 ## ----- 

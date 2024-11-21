@@ -1,0 +1,270 @@
+[gd_scene load_steps=18 format=3 uid="uid://ccu1hagspypn7"]
+
+[ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="1_0pysj"]
+[ext_resource type="Script" path="res://scripts/game_locations/boiler_room.gd" id="1_w5j6c"]
+[ext_resource type="PackedScene" uid="uid://dvbafm7eh6pan" path="res://scenes/game_locations/objects/Hole.tscn" id="2_dpldl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y5h3i"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(40, 32, 1018, 1006)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5yntl"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(1160, 543, 504, 977)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rve04"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(1165, 52, 1046, 441)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ug3ee"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(122, 1367, 355, 376)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_24j4p"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(118, 1200, 381, 101)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vb38t"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(105, 1787, 1737, 319)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cf52b"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(1724, 578, 758, 154)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3g2oe"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(528, 1385, 564, 352)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uk3o3"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(1716, 757, 758, 676)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jyb41"]
+atlas = ExtResource("1_0pysj")
+region = Rect2(114, 2193, 1960, 105)
+
+[sub_resource type="Animation" id="Animation_qne8f"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HidingWall/LeftNearWallSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_q05wm"]
+resource_name = "wall_fading_in"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HidingWall/LeftNearWallSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ovde8"]
+resource_name = "wall_fading_out"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("HidingWall/LeftNearWallSprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_c26pi"]
+_data = {
+"RESET": SubResource("Animation_qne8f"),
+"wall_fading_in": SubResource("Animation_q05wm"),
+"wall_fading_out": SubResource("Animation_ovde8")
+}
+
+[node name="BoilerRoom" type="Node2D"]
+script = ExtResource("1_w5j6c")
+
+[node name="Bgs" type="Node2D" parent="."]
+
+[node name="FurnaceBgSprite" type="Sprite2D" parent="Bgs"]
+position = Vector2(-25, 596)
+texture = SubResource("AtlasTexture_y5h3i")
+
+[node name="RightWallSprite" type="Sprite2D" parent="Bgs"]
+position = Vector2(1669, 579)
+texture = SubResource("AtlasTexture_5yntl")
+
+[node name="BackWallSprite" type="Sprite2D" parent="Bgs"]
+position = Vector2(924, 338.5)
+texture = SubResource("AtlasTexture_rve04")
+
+[node name="RoomBorders" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RoomBorders"]
+visible = false
+polygon = PackedVector2Array(220, 752, 220, 768, -45, 770, -76, 775, -95, 780, -107, 785, -112, 790, -115, 795, -118, 801, -118, 805, -114, 810, -99, 817, -82, 822, 172.495, 822.854, 175, 843, 165, 870, 57, 1006, -16, 1005, 111, 860, -143, 857, -142, 823, -142, 795, -142, 772, -141, 748, -107, 748, -73, 749)
+
+[node name="TransitionPointsContainer" type="Node2D" parent="."]
+
+[node name="Marker2D1" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1499, 676)
+
+[node name="Marker2D2" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1527, 710)
+
+[node name="Marker2D3" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1555, 741)
+
+[node name="Marker2D4" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1583, 772)
+
+[node name="Marker2D5" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1611, 803)
+
+[node name="Marker2D6" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1640, 838)
+
+[node name="Marker2D7" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1668, 870)
+
+[node name="Marker2D8" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1693, 902)
+
+[node name="Marker2D9" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1723, 938)
+
+[node name="Marker2D10" type="Marker2D" parent="TransitionPointsContainer"]
+position = Vector2(1754, 973)
+
+[node name="CaveRoomEnter" type="StaticBody2D" parent="."]
+
+[node name="HolesWallSprite" type="Sprite2D" parent="CaveRoomEnter"]
+position = Vector2(1670, 799)
+texture = SubResource("AtlasTexture_ug3ee")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CaveRoomEnter"]
+visible = false
+polygon = PackedVector2Array(1499, 653, 1803, 1008, 1875, 1008, 1498, 605)
+
+[node name="Holes" type="Node2D" parent="CaveRoomEnter"]
+
+[node name="Hole1" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1518, 666)
+
+[node name="Hole2" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1545, 697)
+
+[node name="Hole3" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1572, 729)
+
+[node name="Hole4" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1599, 760)
+
+[node name="Hole5" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1626, 792)
+
+[node name="Hole6" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1653, 824)
+
+[node name="Hole7" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1681, 855)
+
+[node name="Hole8" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1709, 888)
+
+[node name="Hole9" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1739, 924)
+
+[node name="Hole10" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1770, 962)
+
+[node name="Hole11" parent="CaveRoomEnter/Holes" instance=ExtResource("2_dpldl")]
+position = Vector2(1802, 993)
+
+[node name="Trampoline" type="Area2D" parent="."]
+
+[node name="TrampolineSprite" type="Sprite2D" parent="Trampoline"]
+position = Vector2(75, 817)
+texture = SubResource("AtlasTexture_24j4p")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Trampoline"]
+visible = false
+polygon = PackedVector2Array(-45, 770, -93, 779, -108, 786, -117, 795, -118, 804, -109, 812, -95, 819)
+
+[node name="GroundSprite" type="Sprite2D" parent="."]
+position = Vector2(904, 820)
+texture = SubResource("AtlasTexture_vb38t")
+
+[node name="FarFloor" type="StaticBody2D" parent="."]
+
+[node name="FarFloorSprite" type="Sprite2D" parent="FarFloor"]
+position = Vector2(1126, 588)
+texture = SubResource("AtlasTexture_cf52b")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="FarFloor"]
+visible = false
+polygon = PackedVector2Array(1504, 611, 1504, 661, 751, 662, 751, 610)
+
+[node name="AdminPost" type="StaticBody2D" parent="."]
+
+[node name="AdimPostSprite" type="Sprite2D" parent="AdminPost"]
+position = Vector2(501, 594)
+texture = SubResource("AtlasTexture_3g2oe")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AdminPost"]
+visible = false
+polygon = PackedVector2Array(704, 705, 751, 661, 751, 610, 703, 656, 317, 656, 263, 708, 219, 707, 220, 768, 263, 768, 318, 706)
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="HidingWall" type="Area2D" parent="."]
+
+[node name="LeftNearWallSprite" type="Sprite2D" parent="HidingWall"]
+position = Vector2(-227, 743)
+texture = SubResource("AtlasTexture_uk3o3")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="HidingWall"]
+visible = false
+position = Vector2(-200.713, 21.2034)
+scale = Vector2(2.00995, 0.980443)
+polygon = PackedVector2Array(183.569, 820.582, 184.19, 756.453, 172.374, 756.453, 171.752, 820.582)
+
+[node name="ExitMarker" type="Marker2D" parent="HidingWall"]
+visible = false
+position = Vector2(147, 793.6)
+
+[node name="NearFloor" type="StaticBody2D" parent="."]
+
+[node name="NearFloorSprite" type="Sprite2D" parent="NearFloor"]
+position = Vector2(942, 1031)
+texture = SubResource("AtlasTexture_jyb41")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="NearFloor"]
+visible = false
+polygon = PackedVector2Array(-54, 1081, 1948, 1083, 1875, 1008, 20, 1006, 34, 978, 5, 1006)
+
+[node name="HidingWallAnimation" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_c26pi")
+}
+
+[connection signal="body_entered" from="HidingWall" to="." method="_on_hiding_wall_body_entered"]
+[connection signal="body_exited" from="HidingWall" to="." method="_on_hiding_wall_body_exited"]

@@ -1,17 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://d2debf7vblnjk"]
 
 [ext_resource type="Script" path="res://scripts/game_locations/cave_room.gd" id="1_fith1"]
-[ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/boiler_room/BoilerRoomAtlas.png" id="1_wwh7g"]
+[ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="1_wwh7g"]
+[ext_resource type="PackedScene" uid="uid://dq6q3st25g6et" path="res://scenes/game_locations/objects/cave_hole.tscn" id="3_vadej"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kp24h"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwa1c"]
 atlas = ExtResource("1_wwh7g")
-region = Rect2(2535, 67, 1147, 624)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_dvaxm"]
-size = Vector2(35, 682.886)
+region = Rect2(2502, 31, 1871, 1011)
 
 [node name="CaveRoom" type="Node2D"]
-y_sort_enabled = true
 position = Vector2(0, 50)
 script = ExtResource("1_fith1")
 
@@ -28,65 +25,130 @@ grow_vertical = 2
 color = Color(0.0588235, 0.0509804, 0.0470588, 1)
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-193, -46)
-scale = Vector2(1.87184, 1.85577)
-texture = SubResource("AtlasTexture_kp24h")
-centered = false
+position = Vector2(972, 496)
+scale = Vector2(0.961188, 0.961188)
+texture = SubResource("AtlasTexture_qwa1c")
 
 [node name="SpawnPointsContainer" type="Node2D" parent="."]
 
 [node name="SpawnPoint_1" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(766, 349)
+position = Vector2(856, 420)
 
 [node name="SpawnPoint_2" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(779, 683)
+position = Vector2(855, 516)
 
 [node name="SpawnPoint_3" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(1000, 509)
+position = Vector2(893, 443)
 
 [node name="SpawnPoint_4" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(584, 517)
+position = Vector2(810, 494)
 
 [node name="SpawnPoint_5" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(571, 668)
+position = Vector2(929, 469)
 
 [node name="SpawnPoint_6" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(596, 361)
+position = Vector2(811, 441)
 
 [node name="SpawnPoint_7" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(790, 515)
+position = Vector2(856, 468)
 
 [node name="SpawnPoint_8" type="Marker2D" parent="SpawnPointsContainer"]
-position = Vector2(1009, 679)
+position = Vector2(894, 494)
 
-[node name="ExitArea" type="Area2D" parent="."]
-visible = false
+[node name="TransitionPointsContaner" type="Node2D" parent="."]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ExitArea"]
-position = Vector2(365, 527)
-rotation = 0.294584
-shape = SubResource("RectangleShape2D_dvaxm")
+[node name="Marker2D1" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(625, 272)
+
+[node name="Marker2D2" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(614, 312)
+
+[node name="Marker2D3" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(603, 352)
+
+[node name="Marker2D4" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(590, 398)
+
+[node name="Marker2D5" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(577, 448)
+
+[node name="Marker2D6" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(565, 496)
+
+[node name="Marker2D7" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(551, 546)
+
+[node name="Marker2D8" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(539, 594)
+
+[node name="Marker2D9" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(526, 642)
+
+[node name="Marker2D10" type="Marker2D" parent="TransitionPointsContaner"]
+position = Vector2(514, 686)
+
+[node name="Holes" type="Node2D" parent="."]
+
+[node name="CaveHole" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(605, 266)
+
+[node name="CaveHole2" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(595, 304)
+
+[node name="CaveHole3" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(583, 348)
+
+[node name="CaveHole4" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(570, 392)
+
+[node name="CaveHole5" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(557, 441)
+
+[node name="CaveHole6" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(543, 488)
+
+[node name="CaveHole7" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(530, 536)
+
+[node name="CaveHole8" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(517, 585)
+
+[node name="CaveHole9" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(504, 634)
+
+[node name="CaveHole10" parent="Holes" instance=ExtResource("3_vadej")]
+position = Vector2(490, 679)
 
 [node name="CoalArea" type="Area2D" parent="."]
 visible = false
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="CoalArea"]
+position = Vector2(263, 56)
+scale = Vector2(0.812379, 0.812379)
 polygon = PackedVector2Array(903, 229, 836, 235, 862, 281, 973, 311, 1005, 388, 1052, 423, 1107, 430, 1164, 500, 1136, 576, 1167, 632, 1278, 633, 1275, 720, 1416, 797, 1500, 790, 1357, 535, 1036, 231)
 
 [node name="Walls" type="StaticBody2D" parent="."]
 visible = false
 
 [node name="BottomWall" type="CollisionPolygon2D" parent="Walls"]
-polygon = PackedVector2Array(225, 782, 1528, 780, 1529, 878, 215, 881)
+position = Vector2(277.791, 302)
+scale = Vector2(0.729622, 0.555752)
+polygon = PackedVector2Array(225, 782, 1528, 780, 1529, 878, 225.061, 870.892)
 
 [node name="UpWall" type="CollisionPolygon2D" parent="Walls"]
+position = Vector2(327, 154)
+scale = Vector2(0.65583, 0.418272)
 polygon = PackedVector2Array(419, 244, 1082, 244, 1088, 148, 425, 158)
 
 [node name="LeftWall" type="CollisionPolygon2D" parent="Walls"]
-polygon = PackedVector2Array(457, 195, 273, 843, 174, 838, 378, 181)
+position = Vector2(190, -3)
+scale = Vector2(0.960689, 0.960691)
+polygon = PackedVector2Array(457, 195, 273, 843, 224.839, 843.143, 422.613, 194.652)
 
 [node name="RightWall" type="CollisionPolygon2D" parent="Walls"]
-polygon = PackedVector2Array(873, 212, 906, 263, 987, 266, 1027, 283, 1038, 311, 1070, 327, 1047, 349, 1052, 375, 1123, 370, 1148, 402, 1179, 424, 1188, 460, 1224, 487, 1225, 537, 1195, 551, 1198, 592, 1292, 597, 1344, 609, 1327, 645, 1347, 670, 1320, 688, 1342, 716, 1410, 701, 1431, 727, 1428, 755, 1383, 778, 1355, 766, 1266, 804, 1508, 818, 1661, 827, 1653.75, 462.097, 1649, 223, 1268.87, 217.612)
+position = Vector2(268, 56)
+scale = Vector2(0.804629, 0.804629)
+polygon = PackedVector2Array(884.879, 249.804, 919.678, 262.233, 987, 266, 1031.53, 279.632, 1038, 311, 1076.27, 324.373, 1045.2, 354.2, 1050.17, 379.057, 1088.7, 376.571, 1135.93, 375.328, 1140.9, 405.155, 1179, 424, 1188, 460, 1224, 487, 1227.89, 539.379, 1196.82, 560.507, 1193.1, 586.605, 1214.22, 601.519, 1278.85, 596.548, 1299.98, 616.433, 1344, 609, 1331.05, 657.446, 1342.23, 674.845, 1328.56, 702.187, 1336.02, 724.557, 1377.03, 732.014, 1411.83, 738.228, 1437.93, 770.541, 1411.83, 784.212, 1393.19, 794.154, 1373.3, 780.484, 1349.69, 782.969, 1331.05, 802.854, 1303.71, 801.611, 1266.42, 817.768, 1241.57, 796.64, 1210.5, 801.611, 1193.1, 822.739, 1158.3, 831.439, 1134.68, 823.982, 1113.56, 845.11, 1510.01, 836.41, 1661, 827, 1653.75, 462.097, 1649, 223, 1268.87, 217.612, 891.094, 221.22)
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true

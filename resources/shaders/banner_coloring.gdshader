@@ -10,7 +10,7 @@ uniform bool is_bright = false;
 void fragment() {
 	vec3 tex = texture(TEXTURE, UV).rgb;
 	COLOR.rgb = tex + vec3(red_value, green_value, blue_value);
-	
+
 	if (is_pale){
 		vec3 pale_value = vec3(0.4);
 		COLOR.rgb += pale_value;
