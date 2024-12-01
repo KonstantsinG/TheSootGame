@@ -13,6 +13,9 @@ var room_name := ""
 func _ready() -> void:
 	boiler_room = preload("res://scenes/game_locations/boiler_room.tscn").instantiate()
 	
+	boiler_room.request_sended.connect(_on_request_sended)
+	boiler_room.room_exited.connect(_on_boiler_room_exited)
+	
 	cave_room.request_sended.connect(_on_request_sended)
 	cave_room.room_exited.connect(_on_cave_room_exited)
 	
@@ -30,7 +33,8 @@ func switch_room(player_id : int, destination : String, hole_id : int) -> void:
 		boiler_room.spawn_player(player, hole_id, false)
 	
 	elif destination == "CAVE_ROOM":
-		# NOTIMPLEMENTED
+		var player = boiler_room.leave_room(player_id)
+		cave_room.spawn_player(player, hole_id, false)
 		pass
 
 
@@ -48,6 +52,14 @@ func remove_player(id : int) -> void:
 	boiler_room.remove_player(id)
 
 
+func give_coal(id : int, type : int) -> void:
+	cave_room.give_coal(id, type)
+
+
+func remove_coal(id : int) -> void:
+	boiler_room.remove_coal(id)
+
+
 func _on_request_sended(request : Dictionary) -> void:
 	request["room_name"] = room_name
 	request_sended.emit(request)
@@ -61,3 +73,9 @@ func _on_cave_room_exited(player : CharacterBody2D, hole_id : int) -> void:
 	remove_child(cave_room)
 	add_child(boiler_room)
 	boiler_room.spawn_player(player, hole_id, true)
+
+
+func _on_boiler_room_exited(player : CharacterBody2D, hole_id : int) -> void:
+	remove_child(boiler_room)
+	add_child(cave_room)
+	cave_room.spawn_player(player, hole_id, true)

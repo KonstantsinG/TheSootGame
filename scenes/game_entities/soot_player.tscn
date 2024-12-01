@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://csygn7thpv4no"]
+[gd_scene load_steps=14 format=3 uid="uid://csygn7thpv4no"]
 
 [ext_resource type="Texture2D" uid="uid://d3akgpp4ga7tl" path="res://sprites/soot/SootAnimationsAtlas.png" id="1_g3kk3"]
 [ext_resource type="Script" path="res://scripts/game_entities/soot_player.gd" id="1_tfbbf"]
+[ext_resource type="PackedScene" uid="uid://dq4l43l44rv5n" path="res://scenes/game_locations/objects/key_panel.tscn" id="2_lbvsf"]
 [ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="2_y440g"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_3hmop"]
@@ -118,6 +119,7 @@ height = 120.0
 scale = Vector2(0.075, 0.075)
 motion_mode = 1
 script = ExtResource("1_tfbbf")
+position_interpolation_smooth = 0.065
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(3, 3)
@@ -128,6 +130,16 @@ limit_bottom = 1075
 limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 7.0
+
+[node name="CoalContainer" type="Node2D" parent="."]
+position = Vector2(0, -226.667)
+
+[node name="ActionContainer" type="Node2D" parent="."]
+position = Vector2(-40, -320)
+
+[node name="KeyPanel" parent="ActionContainer" instance=ExtResource("2_lbvsf")]
+visible = false
+scale = Vector2(4.48, 4.48)
 
 [node name="PlayerData" type="Node2D" parent="."]
 
@@ -167,3 +179,9 @@ libraries = {
 position = Vector2(0, 188)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_4mecc")
+
+[node name="MovementTimer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 0.1
+one_shot = true
+autostart = true

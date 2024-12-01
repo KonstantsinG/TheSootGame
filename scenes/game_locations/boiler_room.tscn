@@ -266,5 +266,7 @@ libraries = {
 "": SubResource("AnimationLibrary_c26pi")
 }
 
+[connection signal="body_entered" from="Trampoline" to="." method="_on_trampoline_body_entered"]
+[connection signal="body_exited" from="Trampoline" to="." method="_on_trampoline_body_exited"]
 [connection signal="body_entered" from="HidingWall" to="." method="_on_hiding_wall_body_entered"]
 [connection signal="body_exited" from="HidingWall" to="." method="_on_hiding_wall_body_exited"]

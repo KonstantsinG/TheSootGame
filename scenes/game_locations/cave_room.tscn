@@ -152,3 +152,6 @@ polygon = PackedVector2Array(884.879, 249.804, 919.678, 262.233, 987, 266, 1031.
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true
+
+[connection signal="body_entered" from="CoalArea" to="." method="_on_coal_area_body_entered"]
+[connection signal="body_exited" from="CoalArea" to="." method="_on_coal_area_body_exited"]

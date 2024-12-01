@@ -18,5 +18,7 @@ func _on_body_exited(body: Node2D) -> void:
 	if body.get_class() != "CharacterBody2D":
 		return
 	else:
+		if not body.controlable: return
+		
 		$KeyPanel.visible = false
 		hole_exited.emit(body as CharacterBody2D, self)

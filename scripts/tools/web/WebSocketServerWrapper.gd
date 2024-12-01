@@ -450,6 +450,12 @@ func _process_game_request(peer_id : int, message) -> void:
 		"NOTIFICATION_PLAYER_EXIT_ROOM":
 			_exit_room(peer_id, message)
 		
+		"NOTIFICATION_COAL_TAKEN":
+			_notify_coal_taken(peer_id, message)
+		
+		"NOTIFICATION_COAL_DROPPED":
+			_notify_coal_dropped(peer_id, message)
+		
 		_: _process_menu_request(peer_id, message)
 
 
@@ -484,4 +490,18 @@ func _update_player_position(room_name : String, peer_id : int, new_pos : Vector
 		if g.id == peer_id : continue
 		
 		send(g.id, msg)
+
+
+func _notify_coal_taken(peer_id : int, message) -> void:
+	for g in _get_room_members(message["room_name"]):
+		if g.id == peer_id : continue
+		
+		send(g.id, message)
+
+
+func _notify_coal_dropped(peer_id : int, message) -> void:
+	for g in _get_room_members(message["room_name"]):
+		if g.id == peer_id : continue
+		
+		send(g.id, message)
 #endregion

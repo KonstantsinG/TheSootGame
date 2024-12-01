@@ -1,10 +1,16 @@
 extends Node2D
 
+signal request_sended(request : Dictionary)
+signal room_exited(player : CharacterBody2D, hole_id : int)
+
 @onready var hiding_wall_animaton = $HidingWallAnimation
 @onready var exit_marker = $HidingWall/ExitMarker
+@onready var holes_container = $CaveRoomEnter/Holes
 
 var transition_points := []
 var hiding_wall_visible = true
+var entered_hole = null
+var entered_trampoline = false
 
 var main_player = null
 var guests = []
@@ -12,10 +18,70 @@ var guests = []
 
 func _ready() -> void:
 	_take_transition_points()
+	_connect_holes()
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("action"):
+		if entered_hole != null:
+			_remove_player_from_room()
+		elif entered_trampoline:
+			_drop_coal()
 
 
 func _take_transition_points() -> void:
 	transition_points.append_array($TransitionPointsContainer.get_children())
+
+
+func _connect_holes() -> void:
+	for h in holes_container.get_children():
+		h.hole_entered.connect(_on_body_hole_entered)
+		h.hole_exited.connect(_on_body_hole_exited)
+
+
+func _find_guest_by_id(id : int) -> Variant:
+	for g in guests:
+		if g.id == id: return g
+	
+	return null
+
+
+func _drop_coal() -> void:
+	main_player.drop_coal()
+	
+	#NOTIMPLEMENTED: DropCoal animation
+	#NOTIMPLEMENTED: Increase TeamScore
+	
+	var msg = {"head" : "NOTIFICATION_COAL_DROPPED", "id" : main_player.id}
+	request_sended.emit(msg)
+
+
+func _remove_player_from_room() -> void:
+	var hole_id = holes_container.get_children().find(entered_hole)
+	var msg = {
+		"head" : "NOTIFICATION_PLAYER_EXIT_ROOM",
+		"destination" : "CAVE_ROOM",
+		"hole_id" : hole_id,
+		"id" : main_player.id
+	}
+	
+	entered_hole = null
+	main_player.camera.position_smoothing_enabled = false
+	$Entities.remove_child(main_player)
+	
+	request_sended.emit(msg)
+	room_exited.emit(main_player, hole_id)
+
+
+func leave_room(id : int) -> CharacterBody2D:
+	var player = _find_guest_by_id(id)
+	
+	if player != null:
+		$Entities.remove_child(player)
+		guests.erase(player)
+		return player
+	else:
+		return null
 
 
 func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool) -> void:
@@ -29,13 +95,14 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 		if is_node_ready(): await get_tree().create_timer(0.1).timeout
 		main_player.camera.position_smoothing_enabled = true
 	else:
+		player.target_position = player.position
 		guests.append(player)
 
 
 func update_player_position(id : int, new_pos : Vector2) -> void:
 	for p in $Entities.get_children():
 		if p.id == id:
-			p.position = new_pos
+			p.target_position = new_pos
 
 
 func remove_player(id : int) -> void:
@@ -49,6 +116,13 @@ func remove_player(id : int) -> void:
 		$Entities.remove_child(main_player)
 		main_player.queue_free()
 		main_player = null
+
+
+func remove_coal(id : int) -> void:
+	var player = _find_guest_by_id(id)
+	
+	if player != null:
+		player.drop_coal()
 
 
 func _on_hiding_wall_body_entered(body: Node2D) -> void:
@@ -73,3 +147,30 @@ func _on_hiding_wall_body_exited(body: Node2D) -> void:
 	elif hiding_wall_visible and body.position.direction_to(exit_marker.position).x > 0:
 		hiding_wall_animaton.play("wall_fading_out")
 		hiding_wall_visible = !hiding_wall_visible
+
+
+func _on_body_hole_entered(body : CharacterBody2D, hole : Area2D) -> void:
+	if body != main_player: return
+	
+	entered_hole = hole
+
+
+func _on_body_hole_exited(body : CharacterBody2D, _hole : Area2D) -> void:
+	if body != main_player: return
+	
+	entered_hole = null
+
+
+func _on_trampoline_body_entered(body: Node2D) -> void:
+	if body != main_player: return
+	
+	if main_player.coal != null:
+		main_player.toggle_action_panel(true)
+	entered_trampoline = true
+
+
+func _on_trampoline_body_exited(body: Node2D) -> void:
+	if body != main_player: return
+	
+	main_player.toggle_action_panel(false)
+	entered_trampoline = false

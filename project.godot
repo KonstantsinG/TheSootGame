@@ -15,8 +15,10 @@ config/version="0.1.1"
 config/tags=PackedStringArray("handdrawn", "multiplayer")
 run/main_scene="res://scenes/core/game_root.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+boot_splash/bg_color=Color(0.203439, 0.179651, 0.150572, 1)
+boot_splash/show_image=false
 config/icon="res://sprites/icons/soot_icon.png"
-config/windows_native_icon="res://sprites/icons/soot_icon.ico"
+config/windows_native_icon="res://soot_icon.ico"
 
 [autoload]
 

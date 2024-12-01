@@ -28,9 +28,50 @@ func _ready() -> void:
 	set_process(false)
 
 
-func get_ip() -> String:
-	IP.clear_cache()
-	return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4)
+func get_ip(primary : bool = true) -> String:
+	if primary:
+		return get_primary_local_ip()
+	else:
+		IP.clear_cache()
+		return IP.resolve_hostname(str(OS.get_environment("COMPUTERNAME")), IP.TYPE_IPV4)
+
+
+func get_primary_local_ip() -> String:
+	var addresses = IP.get_local_addresses()
+	var virtual_prefixes = ["192.168.56.", "192.168.99."]
+	var valid_addresses = []
+	
+	for address in addresses:
+		if address.begins_with("127.") or address.contains(":"):
+			continue
+		
+		var is_virtual = false
+		for prefix in virtual_prefixes:
+			if address.begins_with(prefix):
+				is_virtual = true
+				break
+		
+		if not is_virtual:
+			valid_addresses.append(address)
+	
+	if valid_addresses.size() == 1:
+		return valid_addresses[0]
+	
+	for address in valid_addresses:
+		if address.begins_with("172."):
+			var second_octet = address.split(".")[1].to_int()
+			if second_octet >= 16 and second_octet <= 31:
+				return address
+	
+	for address in valid_addresses:
+		if address.begins_with("192.168."):
+			return address
+	
+	for address in valid_addresses:
+		if address.begins_with("10."):
+			return address
+	
+	return "127.0.0.1"
 
 
 func get_client_data() -> ClientData:

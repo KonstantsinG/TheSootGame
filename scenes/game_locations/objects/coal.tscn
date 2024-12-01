@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=3 uid="uid://cukodw4pbbwac"]
+
+[ext_resource type="Texture2D" uid="uid://nb2x3fy1e5rh" path="res://sprites/locations/objects/CoalAtlas.png" id="1_fvgj2"]
+[ext_resource type="Script" path="res://scripts/game_locations/objects/coal.gd" id="1_sxarx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p3x2y"]
+resource_local_to_scene = true
+atlas = ExtResource("1_fvgj2")
+region = Rect2(22, 56, 158, 172)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_43tqu"]
+atlas = ExtResource("1_fvgj2")
+region = Rect2(228, 57, 149, 171)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eyiad"]
+atlas = ExtResource("1_fvgj2")
+region = Rect2(419, 55, 167, 175)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fajwd"]
+atlas = ExtResource("1_fvgj2")
+region = Rect2(620, 59, 163, 169)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsw3e"]
+atlas = ExtResource("1_fvgj2")
+region = Rect2(816, 66, 170, 154)
+
+[node name="Coal" type="Node2D"]
+scale = Vector2(0.3, 0.3)
+script = ExtResource("1_sxarx")
+
+[node name="Type1" type="StaticBody2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Type1"]
+texture = SubResource("AtlasTexture_p3x2y")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type1"]
+polygon = PackedVector2Array(13, 44, -22, 45, -45, 55, -35, 79, 38, 77, 48, 64, 40, 51)
+disabled = true
+
+[node name="Type2" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Type2"]
+texture = SubResource("AtlasTexture_43tqu")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type2"]
+polygon = PackedVector2Array(-26, 31, -58, 46, -48, 75, -22, 80, 46, 65, 56, 46, 34, 34)
+disabled = true
+
+[node name="Type3" type="StaticBody2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Type3"]
+texture = SubResource("AtlasTexture_eyiad")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type3"]
+polygon = PackedVector2Array(-60, 50, -34, 65, -15, 80, 26, 84, 52, 73, 64, 48, 46, 35, 8, 25, -26, 29, -52, 38)
+disabled = true
+
+[node name="Type4" type="StaticBody2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Type4"]
+texture = SubResource("AtlasTexture_fajwd")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type4"]
+polygon = PackedVector2Array(-29, 74, 1, 79, 75, 47, 78, 36, 65, 29, 13, 25, -38, 32, -51, 43)
+disabled = true
+
+[node name="Type5" type="StaticBody2D" parent="."]
+visible = false
+
+[node name="Sprite2D" type="Sprite2D" parent="Type5"]
+texture = SubResource("AtlasTexture_qsw3e")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type5"]
+polygon = PackedVector2Array(-80, 47, -65, 63, -47, 60, -17, 72, 51, 67, 81, 34, 69, 26, -4, 22, -70, 30)
+disabled = true

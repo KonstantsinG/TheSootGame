@@ -14,26 +14,10 @@ var responses_handler_state := GameParams.MessagesHandlerStates.MENU
 
 
 func _ready() -> void:
-	if is_port_available(tcp_server_port): print("TCP port ", tcp_server_port, " is available!")
-	else: print("TCP port ", tcp_server_port, " is unavailable...")
-	if is_port_available(udp_server_port): print("UDP port ", udp_server_port, " is available!")
-	else: print("UDP port ", udp_server_port, " is unavailable...")
-	
-	
 	client.message_recieved.connect(_on_client_message_recieved)
 	client.connection_closed.connect(_on_client_connection_closed)
 	
 	_load_gui()
-
-
-func is_port_available(port: int) -> bool:
-	var test_server = TCPServer.new()
-	var err = test_server.listen(port, "0.0.0.0")
-	
-	if err == OK:
-		test_server.stop()
-		return true
-	return false
 
 
 #region Server functions
@@ -131,7 +115,8 @@ func _on_servers_search_started() -> void:
 func _on_rooms_search_started() -> void:
 	var msg = "GET_AVAILABLE_ROOMS"
 	
-	client.run_udp_broadcast(udp_server_port, msg)
+	var err = client.run_udp_broadcast(udp_server_port, msg)
+	if err != OK: print("Somewhat I cannot start UDP-Client... code: " + str(err))
 
 
 # start Game for Room owner
@@ -289,6 +274,12 @@ func _process_game_response(message) -> void:
 		
 		"NOTIFICATION_PLAYER_EXIT_ROOM":
 			_switch_room(message)
+		
+		"NOTIFICATION_COAL_TAKEN":
+			game_container.give_coal(message["id"], message["type"])
+		
+		"NOTIFICATION_COAL_DROPPED":
+			game_container.remove_coal(message["id"])
 
 
 func _switch_room(message) -> void:
@@ -355,6 +346,8 @@ func _load_game_container() -> void:
 # 0.2. Cannot join the Room (wrong password) -> blink bug
 # 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
 # 0.4. StartGame -> finalize gui resources
+# 1.1 Fix TCP-connection on Vm
+## 1.2 Fix UDP-broadcasting/listening on Vm
 ## 
 ## TODO's
 # 1. Ask Server is Room that i wanna create legal (unique name)
@@ -381,9 +374,18 @@ func _load_game_container() -> void:
 # 22. If Host got crashed -> disconnect all Clients from the Game
 ## 23. Add ServerStateDisplay to the gui
 ## 24. GamePauseMenu: Switch default buttons to pretty ones
-## 25. None-playable Soot position interpolation
-## 26. Fading transition while switching the Room
-
+# 25. None-playable Soot position interpolation
+## 26. Fading transition while switching the Room -IMPORTANT
+# 27. Cave -> Boiler Room backward pass
+# 28. Implement collecting Coal
+# 29. Implement burning Coal and getting Score
+## 30. Add Score GUI panel
+## 31. Implement Soot pushing
+## 32. Implement Coal barricades
+## 33. Add GameTimer and EndgameState
+## 34. Add EndgameScreen
+## 35. Fix Guests Soot teleportation when entering new Room -IMPORTANT
+## 36. Add Burning Coal animation
 
 ## ----- 
 

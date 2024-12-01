@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://dvbafm7eh6pan"]
+[gd_scene load_steps=5 format=3 uid="uid://dvbafm7eh6pan"]
 
 [ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="1_d8jvk"]
 [ext_resource type="Script" path="res://scripts/game_locations/objects/hole.gd" id="1_w3vl7"]
+[ext_resource type="PackedScene" uid="uid://dq4l43l44rv5n" path="res://scenes/game_locations/objects/key_panel.tscn" id="3_dv7ww"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2r5vh"]
 atlas = ExtResource("1_d8jvk")
@@ -15,6 +16,12 @@ texture = SubResource("AtlasTexture_2r5vh")
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
 visible = false
-polygon = PackedVector2Array(-6, 5, -6, -17, -3, -22, 0, -24, 3, -21, 6, -14, 6, 18)
+polygon = PackedVector2Array(-14, 5, -6, 5, -6, -17, -3, -22, 0, -24, 3, -21, 6, -14, 6, 18, -3, 19)
+
+[node name="KeyPanel" parent="." instance=ExtResource("3_dv7ww")]
+visible = false
+position = Vector2(-6, -48)
+scale = Vector2(0.8, 0.8)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]
