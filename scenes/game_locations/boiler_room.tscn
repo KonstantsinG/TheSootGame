@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://ccu1hagspypn7"]
+[gd_scene load_steps=20 format=3 uid="uid://ccu1hagspypn7"]
 
 [ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="1_0pysj"]
 [ext_resource type="Script" path="res://scripts/game_locations/boiler_room.gd" id="1_w5j6c"]
@@ -58,6 +58,18 @@ tracks/0/keys = {
 "update": 0,
 "values": [Color(1, 1, 1, 1)]
 }
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath(".:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
 
 [sub_resource type="Animation" id="Animation_q05wm"]
 resource_name = "wall_fading_in"
@@ -91,9 +103,43 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_xglp8"]
+resource_name = "room_fade_out"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_qdirj"]
+resource_name = "room_fade_in"
+length = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1998),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(1, 1, 1, 1)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_c26pi"]
 _data = {
 "RESET": SubResource("Animation_qne8f"),
+"room_fade_in": SubResource("Animation_qdirj"),
+"room_fade_out": SubResource("Animation_xglp8"),
 "wall_fading_in": SubResource("Animation_q05wm"),
 "wall_fading_out": SubResource("Animation_ovde8")
 }
@@ -261,7 +307,7 @@ texture = SubResource("AtlasTexture_jyb41")
 visible = false
 polygon = PackedVector2Array(-54, 1081, 1948, 1083, 1875, 1008, 20, 1006, 34, 978, 5, 1006)
 
-[node name="HidingWallAnimation" type="AnimationPlayer" parent="."]
+[node name="RoomAnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_c26pi")
 }

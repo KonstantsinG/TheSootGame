@@ -10,6 +10,7 @@ var guests = []
 
 var entered_hole = null
 var enter_coal_area = false
+var active = true
 
 
 func _ready() -> void:
@@ -58,6 +59,10 @@ func _remove_player_from_room() -> void:
 		"id" : main_player.id
 	}
 	
+	$AnimationPlayer.play("room_fade_out")
+	await $AnimationPlayer.animation_finished
+	
+	active = false
 	entered_hole = null
 	main_player.camera.position_smoothing_enabled = false
 	$Entities.remove_child(main_player)
@@ -74,6 +79,7 @@ func _find_guest_by_id(id : int) -> Variant:
 
 
 func spawn_players(_you, _guests : Array) -> void:
+	active = true
 	main_player = preload("res://scenes/game_entities/soot_player.tscn").instantiate()
 	var place = spawn_points[_you["spawnpoint"]]
 	$Entities.add_child(main_player)
@@ -104,6 +110,10 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 	player.position = transition_points[hole_id].position
 	
 	if is_main_player:
+		$AnimationPlayer.play("room_fade_in")
+		await $AnimationPlayer.animation_finished
+		
+		active = true
 		main_player = player
 		if is_node_ready(): await get_tree().create_timer(0.1).timeout
 		main_player.camera.position_smoothing_enabled = true
@@ -115,7 +125,11 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 func update_player_position(player_id : int, new_position : Vector2) -> void:
 	var guest = _find_guest_by_id(player_id)
 	if guest != null:
-		guest.target_position = new_position
+		if active:
+			guest.target_position = new_position
+		else:
+			guest.target_position = new_position
+			guest.position = new_position
 
 
 func remove_player(id : int) -> void:

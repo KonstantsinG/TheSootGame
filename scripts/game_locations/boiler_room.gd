@@ -3,7 +3,7 @@ extends Node2D
 signal request_sended(request : Dictionary)
 signal room_exited(player : CharacterBody2D, hole_id : int)
 
-@onready var hiding_wall_animaton = $HidingWallAnimation
+@onready var animation_player = $RoomAnimationPlayer
 @onready var exit_marker = $HidingWall/ExitMarker
 @onready var holes_container = $CaveRoomEnter/Holes
 
@@ -11,12 +11,16 @@ var transition_points := []
 var hiding_wall_visible = true
 var entered_hole = null
 var entered_trampoline = false
+var active = false
 
 var main_player = null
 var guests = []
 
 
 func _ready() -> void:
+	# fix first transition jittering
+	modulate = Color.BLACK
+	
 	_take_transition_points()
 	_connect_holes()
 
@@ -65,6 +69,10 @@ func _remove_player_from_room() -> void:
 		"id" : main_player.id
 	}
 	
+	animation_player.play("room_fade_out")
+	await animation_player.animation_finished
+	
+	active = false
 	entered_hole = null
 	main_player.camera.position_smoothing_enabled = false
 	$Entities.remove_child(main_player)
@@ -91,6 +99,10 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 	player.position = transition_points[hole_id].position
 	
 	if is_main_player:
+		animation_player.play("room_fade_in")
+		await animation_player.animation_finished
+		
+		active = true
 		main_player = player
 		if is_node_ready(): await get_tree().create_timer(0.1).timeout
 		main_player.camera.position_smoothing_enabled = true
@@ -102,7 +114,11 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 func update_player_position(id : int, new_pos : Vector2) -> void:
 	for p in $Entities.get_children():
 		if p.id == id:
-			p.target_position = new_pos
+			if active:
+				p.target_position = new_pos
+			else:
+				p.target_position = new_pos
+				p.position = new_pos
 
 
 func remove_player(id : int) -> void:
@@ -130,9 +146,9 @@ func _on_hiding_wall_body_entered(body: Node2D) -> void:
 	elif not body.controlable: return
 	
 	if hiding_wall_visible:
-		hiding_wall_animaton.play("wall_fading_out")
+		animation_player.play("wall_fading_out")
 	else:
-		hiding_wall_animaton.play("wall_fading_in")
+		animation_player.play("wall_fading_in")
 	
 	hiding_wall_visible = !hiding_wall_visible
 
@@ -142,10 +158,10 @@ func _on_hiding_wall_body_exited(body: Node2D) -> void:
 	elif not body.controlable: return
 	
 	if not hiding_wall_visible and body.position.direction_to(exit_marker.position).x < 0:
-		hiding_wall_animaton.play("wall_fading_in")
+		animation_player.play("wall_fading_in")
 		hiding_wall_visible = !hiding_wall_visible
 	elif hiding_wall_visible and body.position.direction_to(exit_marker.position).x > 0:
-		hiding_wall_animaton.play("wall_fading_out")
+		animation_player.play("wall_fading_out")
 		hiding_wall_visible = !hiding_wall_visible
 
 

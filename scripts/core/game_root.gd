@@ -375,7 +375,7 @@ func _load_game_container() -> void:
 ## 23. Add ServerStateDisplay to the gui
 ## 24. GamePauseMenu: Switch default buttons to pretty ones
 # 25. None-playable Soot position interpolation
-## 26. Fading transition while switching the Room -IMPORTANT
+# 26. Fading transition while switching the Room
 # 27. Cave -> Boiler Room backward pass
 # 28. Implement collecting Coal
 # 29. Implement burning Coal and getting Score
@@ -384,7 +384,7 @@ func _load_game_container() -> void:
 ## 32. Implement Coal barricades
 ## 33. Add GameTimer and EndgameState
 ## 34. Add EndgameScreen
-## 35. Fix Guests Soot teleportation when entering new Room -IMPORTANT
+# 35. Fix Guests Soot teleportation when entering new Room
 ## 36. Add Burning Coal animation
 
 ## ----- 
