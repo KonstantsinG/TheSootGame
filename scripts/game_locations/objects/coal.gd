@@ -1,5 +1,8 @@
 extends Node2D
 
+const MAX_COST := 10
+const MIN_COST := 1
+
 @onready var default_view = $Type2
 @onready var types = [
 	$Type1, $Type2, $Type3, $Type4, $Type5
@@ -39,3 +42,8 @@ func set_type(coal_type : int) -> void:
 
 func get_type() -> int:
 	return types.find(type)
+
+
+func get_cost() -> int:
+	var time_norm = $CostTimer.time_left / float(60)
+	return lerp(MIN_COST, MAX_COST, time_norm)

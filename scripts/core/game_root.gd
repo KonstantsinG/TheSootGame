@@ -279,7 +279,7 @@ func _process_game_response(message) -> void:
 			game_container.give_coal(message["id"], message["type"])
 		
 		"NOTIFICATION_COAL_DROPPED":
-			game_container.remove_coal(message["id"])
+			game_container.burn_coal(message["id"], message["team"], message["score"])
 
 
 func _switch_room(message) -> void:
@@ -347,7 +347,7 @@ func _load_game_container() -> void:
 # 0.3. If: create two rooms and break root one -> descendant doesn't disappear in browser
 # 0.4. StartGame -> finalize gui resources
 # 1.1 Fix TCP-connection on Vm
-## 1.2 Fix UDP-broadcasting/listening on Vm
+## 1.2 Fix UDP-broadcasting/listening on Vm -IMPORTANT
 ## 
 ## TODO's
 # 1. Ask Server is Room that i wanna create legal (unique name)
@@ -379,13 +379,15 @@ func _load_game_container() -> void:
 # 27. Cave -> Boiler Room backward pass
 # 28. Implement collecting Coal
 # 29. Implement burning Coal and getting Score
-## 30. Add Score GUI panel
+# 30. Add Score HUD panel
 ## 31. Implement Soot pushing
-## 32. Implement Coal barricades
-## 33. Add GameTimer and EndgameState
-## 34. Add EndgameScreen
+## 32. Implement Coal barricades -IMPORTANT
+## 33. Add GameTimer and EndgameState -IMPORTANT
+## 34. Add EndgameScreen -IMPORTANT
 # 35. Fix Guests Soot teleportation when entering new Room
 ## 36. Add Burning Coal animation
+# 37. Fix GamePauseMenu and PlayerCamera conflict
+## 38. Add Obsticles/Bullets in BoilerRoom for Soot
 
 ## ----- 
 

@@ -1,0 +1,259 @@
+[gd_scene load_steps=20 format=3 uid="uid://bu8y5t3yhg4hi"]
+
+[ext_resource type="Script" path="res://scripts/menus/game_hud.gd" id="1_8pqtg"]
+[ext_resource type="Texture2D" uid="uid://brs687sqfnu1q" path="res://sprites/locations/GameLocationsAtlas.png" id="2_x5oa0"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="3_f7gbn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qn588"]
+bg_color = Color(0.23, 0.1334, 0.1012, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5gqa7"]
+atlas = ExtResource("2_x5oa0")
+region = Rect2(629, 1610, 374, 61)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_huqxh"]
+texture = SubResource("AtlasTexture_5gqa7")
+
+[sub_resource type="LabelSettings" id="LabelSettings_54754"]
+font_size = 35
+font_color = Color(0.846468, 0.730755, 0.682397, 1)
+outline_size = 25
+outline_color = Color(0.263057, 0.175245, 0.123716, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_inodu"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ms3y5"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ahsw8"]
+font_size = 30
+font_color = Color(0.843137, 0.72549, 0.678431, 1)
+outline_size = 15
+outline_color = Color(0.262745, 0.176471, 0.12549, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2d2j"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2jjrf"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="LabelSettings" id="LabelSettings_yxljf"]
+font_size = 30
+font_color = Color(0.7812, 0.80276, 0.84, 1)
+outline_size = 15
+outline_color = Color(0.32, 0.218667, 0.16, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xli3j"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ag6oc"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7elo8"]
+font_size = 30
+font_color = Color(0.78218, 0.84, 0.7812, 1)
+outline_size = 15
+outline_color = Color(0.32549, 0.227451, 0.168627, 1)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3lq7l"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_782vr"]
+atlas = ExtResource("3_f7gbn")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="LabelSettings" id="LabelSettings_7wa3y"]
+font_size = 30
+font_color = Color(0.84, 0.83608, 0.7812, 1)
+outline_size = 15
+outline_color = Color(0.32549, 0.227451, 0.168627, 1)
+
+[node name="GameHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_8pqtg")
+
+[node name="Panel2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.01
+anchor_top = 0.025
+anchor_right = 0.99
+anchor_bottom = 0.1
+offset_left = 16.8
+offset_top = -20.0
+offset_right = -14.8
+offset_bottom = -15.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qn588")
+
+[node name="Panel" type="Panel" parent="Panel2"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = -5.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxTexture_huqxh")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Panel2/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 7
+
+[node name="Control" type="Control" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(25, 0)
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="Panel2/Panel/HBoxContainer"]
+layout_mode = 2
+text = "Time left: 05:00"
+label_settings = SubResource("LabelSettings_54754")
+
+[node name="Control5" type="Control" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+
+[node name="RedTextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer"]
+self_modulate = Color(1, 0.231373, 0.282353, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_inodu")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer/RedTextureRect"]
+self_modulate = Color(0.83, 0.1494, 0.1494, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 4.0
+offset_right = 34.8
+offset_bottom = 36.0
+texture = SubResource("AtlasTexture_ms3y5")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RedScoreLabel" type="Label" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "0
+"
+label_settings = SubResource("LabelSettings_ahsw8")
+
+[node name="Control2" type="Control" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="BlueTextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer"]
+self_modulate = Color(0.231373, 0.537255, 1, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_i2d2j")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer/BlueTextureRect"]
+self_modulate = Color(0.1332, 0.416373, 0.74, 1)
+layout_mode = 0
+offset_left = 3.79999
+offset_top = 5.0
+offset_right = 35.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_2jjrf")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BlueScoreLabel" type="Label" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_yxljf")
+
+[node name="Control3" type="Control" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="GreenTextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer"]
+self_modulate = Color(0.443137, 0.921569, 0.286275, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_xli3j")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer/GreenTextureRect"]
+self_modulate = Color(0.396078, 0.788235, 0.211765, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 5.0
+offset_right = 34.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_ag6oc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GreenScoreLabel" type="Label" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_7elo8")
+
+[node name="Control4" type="Control" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="YellowTextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer"]
+self_modulate = Color(0.976471, 1, 0.329412, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_3lq7l")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Panel2/Panel/HBoxContainer/YellowTextureRect"]
+self_modulate = Color(0.870588, 0.854902, 0.243137, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 5.0
+offset_right = 34.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_782vr")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="YellowScoreLabel" type="Label" parent="Panel2/Panel/HBoxContainer"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+text = "0"
+label_settings = SubResource("LabelSettings_7wa3y")

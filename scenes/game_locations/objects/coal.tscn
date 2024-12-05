@@ -76,3 +76,8 @@ texture = SubResource("AtlasTexture_qsw3e")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Type5"]
 polygon = PackedVector2Array(-80, 47, -65, 63, -47, 60, -17, 72, 51, 67, 81, 34, 69, 26, -4, 22, -70, 30)
 disabled = true
+
+[node name="CostTimer" type="Timer" parent="."]
+wait_time = 60.0
+one_shot = true
+autostart = true

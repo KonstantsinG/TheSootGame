@@ -6,10 +6,12 @@ signal player_moved(id : int, new_position : Vector2)
 @export var acceleration : float = 1.8
 @export var friction : float = 4.5
 @export var coal_weight_factor : float = 0.75
+@export var position_interpolation_smooth := 0.07
 
 @onready var team_marker = $PlayerData/TeamMarkerSprite
 @onready var name_label = $PlayerData/NameLabel
 @onready var camera = $Camera2D
+@onready var action_panel = $ActionContainer/KeyPanel
 
 var max_zoom = 4
 var min_zoom = 2
@@ -22,10 +24,8 @@ var controlable : bool = true:
 		camera.enabled = value
 
 var target_position := position
-@export var position_interpolation_smooth := 0.07
 var id := 0
-
-@onready var action_panel = $ActionContainer/KeyPanel
+var team := 0
 var coal = null
 
 
@@ -68,12 +68,16 @@ func give_coal(type : int):
 		coal.scale = Vector2(1.5, 1.5)
 
 
-func drop_coal() -> void:
+func drop_coal() -> int:
+	var score = 0
+	
 	if coal != null:
+		score = coal.get_cost()
 		toggle_action_panel(false)
 		$CoalContainer.remove_child(coal)
 	
 	coal = null
+	return score
 
 
 func set_data(_id : int, _name : String, _team : GameParams.TeamTypes) -> void:
@@ -92,6 +96,7 @@ func set_data(_id : int, _name : String, _team : GameParams.TeamTypes) -> void:
 	
 	name_label.text = _name
 	id = _id
+	team = _team
 
 
 func _physics_process(delta: float) -> void:

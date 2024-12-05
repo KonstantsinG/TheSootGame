@@ -2,6 +2,7 @@ extends Node2D
 
 signal request_sended(request : Dictionary)
 signal room_exited(player : CharacterBody2D, hole_id : int)
+signal score_increased(team : GameParams.TeamTypes, score : int)
 
 @onready var animation_player = $RoomAnimationPlayer
 @onready var exit_marker = $HidingWall/ExitMarker
@@ -51,12 +52,12 @@ func _find_guest_by_id(id : int) -> Variant:
 
 
 func _drop_coal() -> void:
-	main_player.drop_coal()
+	var score = main_player.drop_coal()
 	
 	#NOTIMPLEMENTED: DropCoal animation
-	#NOTIMPLEMENTED: Increase TeamScore
 	
-	var msg = {"head" : "NOTIFICATION_COAL_DROPPED", "id" : main_player.id}
+	var msg = {"head" : "NOTIFICATION_COAL_DROPPED", "id" : main_player.id, "team" : main_player.team, "score" : score}
+	score_increased.emit(main_player.team, score)
 	request_sended.emit(msg)
 
 

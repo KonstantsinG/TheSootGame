@@ -5,9 +5,11 @@ signal back_to_menu_pressed(room_name : String)
 
 @onready var cave_room = $CaveRoom
 @onready var boiler_room
-@onready var game_pause = $GamePause
+@onready var game_pause = $HUD/GamePause
+@onready var hud = $HUD/GameHUD
 
 var room_name := ""
+var scores := [0, 0, 0, 0]
 
 
 func _ready() -> void:
@@ -15,6 +17,7 @@ func _ready() -> void:
 	
 	boiler_room.request_sended.connect(_on_request_sended)
 	boiler_room.room_exited.connect(_on_boiler_room_exited)
+	boiler_room.score_increased.connect(_on_boiler_room_score_increased)
 	
 	cave_room.request_sended.connect(_on_request_sended)
 	cave_room.room_exited.connect(_on_cave_room_exited)
@@ -56,8 +59,13 @@ func give_coal(id : int, type : int) -> void:
 	cave_room.give_coal(id, type)
 
 
-func remove_coal(id : int) -> void:
-	boiler_room.remove_coal(id)
+func burn_coal(player_id : int, team : GameParams.TeamTypes, score : int) -> void:
+	boiler_room.remove_coal(player_id)
+	
+	var new_score = scores[team] + score
+	scores[team] = new_score
+	
+	hud.update_score(team, new_score)
 
 
 func _on_request_sended(request : Dictionary) -> void:
@@ -79,3 +87,14 @@ func _on_boiler_room_exited(player : CharacterBody2D, hole_id : int) -> void:
 	remove_child(boiler_room)
 	add_child(cave_room)
 	cave_room.spawn_player(player, hole_id, true)
+
+
+func _on_boiler_room_score_increased(team : GameParams.TeamTypes, score : int) -> void:
+	var new_score = scores[team] + score
+	scores[team] = new_score
+	
+	hud.update_score(team, new_score)
+
+
+func _on_hud_update_timer_timeout() -> void:
+	hud.update_time_left($GameTimer.time_left)
