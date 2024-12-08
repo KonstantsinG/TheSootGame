@@ -47,6 +47,10 @@ folder_colors={
 "res://sprites/": "teal"
 }
 
+[global_group]
+
+barricades="A group for coal barricades, because I can't detect them as StaticBodies"
+
 [input]
 
 move_up={

@@ -9,7 +9,7 @@ signal back_to_menu_pressed(room_name : String)
 @onready var hud = $HUD/GameHUD
 
 var room_name := ""
-var scores := [0, 0, 0, 0]
+var scores : Array[int] = [0, 0, 0, 0]
 
 
 func _ready() -> void:
@@ -55,8 +55,8 @@ func remove_player(id : int) -> void:
 	boiler_room.remove_player(id)
 
 
-func give_coal(id : int, type : int) -> void:
-	cave_room.give_coal(id, type)
+func give_coal(player_id : int, coal_id : int, type : int) -> void:
+	cave_room.give_coal(player_id, coal_id, type)
 
 
 func burn_coal(player_id : int, team : GameParams.TeamTypes, score : int) -> void:
@@ -66,6 +66,16 @@ func burn_coal(player_id : int, team : GameParams.TeamTypes, score : int) -> voi
 	scores[team] = new_score
 	
 	hud.update_score(team, new_score)
+
+
+func place_barricade(player_id : int, barricade_pos : Vector2) -> void:
+	cave_room.set_barricade(player_id, barricade_pos)
+	boiler_room.set_barricade(player_id, barricade_pos)
+
+
+func pick_up_coal(player_id : int, coal_id : int) -> void:
+	cave_room.pick_up_coal(player_id, coal_id)
+	boiler_room.pick_up_coal(player_id, coal_id)
 
 
 func _on_request_sended(request : Dictionary) -> void:
@@ -98,3 +108,15 @@ func _on_boiler_room_score_increased(team : GameParams.TeamTypes, score : int) -
 
 func _on_hud_update_timer_timeout() -> void:
 	hud.update_time_left($GameTimer.time_left)
+
+
+func _on_game_timer_timeout() -> void:
+	var msg = { "head" : "NOTIFICATION_GAME_FINISHED", "room_name" : room_name }
+	request_sended.emit(msg)
+	
+	if cave_room.active: cave_room.game_running = false
+	if boiler_room.active: boiler_room.game_running = false
+	
+	var endgame_menu = preload("res://scenes/menus/endgame_menu.tscn").instantiate()
+	$HUD.add_child(endgame_menu)
+	endgame_menu.set_places(scores)

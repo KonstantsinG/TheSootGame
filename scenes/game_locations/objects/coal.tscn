@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://cukodw4pbbwac"]
+[gd_scene load_steps=10 format=3 uid="uid://cukodw4pbbwac"]
 
 [ext_resource type="Texture2D" uid="uid://nb2x3fy1e5rh" path="res://sprites/locations/objects/CoalAtlas.png" id="1_fvgj2"]
 [ext_resource type="Script" path="res://scripts/game_locations/objects/coal.gd" id="1_sxarx"]
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="3_ft6qn"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_p3x2y"]
 resource_local_to_scene = true
@@ -24,12 +25,17 @@ region = Rect2(620, 59, 163, 169)
 atlas = ExtResource("1_fvgj2")
 region = Rect2(816, 66, 170, 154)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_n6r8m"]
+atlas = ExtResource("3_ft6qn")
+region = Rect2(856, 119, 76, 76)
+
 [node name="Coal" type="Node2D"]
 scale = Vector2(0.3, 0.3)
 script = ExtResource("1_sxarx")
 
-[node name="Type1" type="StaticBody2D" parent="."]
+[node name="Type1" type="StaticBody2D" parent="." groups=["barricades"]]
 visible = false
+position = Vector2(0, -60)
 
 [node name="Sprite2D" type="Sprite2D" parent="Type1"]
 texture = SubResource("AtlasTexture_p3x2y")
@@ -38,7 +44,8 @@ texture = SubResource("AtlasTexture_p3x2y")
 polygon = PackedVector2Array(13, 44, -22, 45, -45, 55, -35, 79, 38, 77, 48, 64, 40, 51)
 disabled = true
 
-[node name="Type2" type="StaticBody2D" parent="."]
+[node name="Type2" type="StaticBody2D" parent="." groups=["barricades"]]
+position = Vector2(0, -53.3333)
 
 [node name="Sprite2D" type="Sprite2D" parent="Type2"]
 texture = SubResource("AtlasTexture_43tqu")
@@ -47,8 +54,9 @@ texture = SubResource("AtlasTexture_43tqu")
 polygon = PackedVector2Array(-26, 31, -58, 46, -48, 75, -22, 80, 46, 65, 56, 46, 34, 34)
 disabled = true
 
-[node name="Type3" type="StaticBody2D" parent="."]
+[node name="Type3" type="StaticBody2D" parent="." groups=["barricades"]]
 visible = false
+position = Vector2(0, -53.3333)
 
 [node name="Sprite2D" type="Sprite2D" parent="Type3"]
 texture = SubResource("AtlasTexture_eyiad")
@@ -57,8 +65,9 @@ texture = SubResource("AtlasTexture_eyiad")
 polygon = PackedVector2Array(-60, 50, -34, 65, -15, 80, 26, 84, 52, 73, 64, 48, 46, 35, 8, 25, -26, 29, -52, 38)
 disabled = true
 
-[node name="Type4" type="StaticBody2D" parent="."]
+[node name="Type4" type="StaticBody2D" parent="." groups=["barricades"]]
 visible = false
+position = Vector2(0, -50)
 
 [node name="Sprite2D" type="Sprite2D" parent="Type4"]
 texture = SubResource("AtlasTexture_fajwd")
@@ -67,8 +76,9 @@ texture = SubResource("AtlasTexture_fajwd")
 polygon = PackedVector2Array(-29, 74, 1, 79, 75, 47, 78, 36, 65, 29, 13, 25, -38, 32, -51, 43)
 disabled = true
 
-[node name="Type5" type="StaticBody2D" parent="."]
+[node name="Type5" type="StaticBody2D" parent="." groups=["barricades"]]
 visible = false
+position = Vector2(0, -43.3333)
 
 [node name="Sprite2D" type="Sprite2D" parent="Type5"]
 texture = SubResource("AtlasTexture_qsw3e")
@@ -81,3 +91,17 @@ disabled = true
 wait_time = 60.0
 one_shot = true
 autostart = true
+
+[node name="BreakingProgressBar" type="TextureProgressBar" parent="."]
+offset_left = -40.0
+offset_top = -236.667
+offset_right = 36.0
+offset_bottom = -160.667
+max_value = 12.0
+fill_mode = 4
+texture_progress = SubResource("AtlasTexture_n6r8m")
+
+[node name="BreakingAnimationTimer" type="Timer" parent="."]
+wait_time = 0.25
+
+[connection signal="timeout" from="BreakingAnimationTimer" to="." method="_on_breaking_animation_timer_timeout"]

@@ -1,0 +1,392 @@
+[gd_scene load_steps=18 format=3 uid="uid://d0inr300xmesk"]
+
+[ext_resource type="Texture2D" uid="uid://c2ckcv0djx62" path="res://sprites/gui/MenuAtlas.png" id="1_d4ai2"]
+[ext_resource type="Script" path="res://scripts/menus/endgame_menu.gd" id="1_ehbfm"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o7g24"]
+bg_color = Color(0.78, 0.71448, 0.6396, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.555891, 0.484678, 0.404232, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="LabelSettings" id="LabelSettings_p3q0g"]
+font_size = 70
+font_color = Color(0.906021, 0.872221, 0.834815, 1)
+outline_size = 35
+outline_color = Color(0.580768, 0.508134, 0.426145, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ve610"]
+bg_color = Color(0.73818, 0.666559, 0.586291, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.580392, 0.509804, 0.427451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ielcm"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_luatc"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hll1i"]
+font_size = 35
+font_color = Color(0.894737, 0.853293, 0.81175, 1)
+outline_size = 15
+outline_color = Color(0.489583, 0.417543, 0.343591, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ahqo4"]
+bg_color = Color(0.737255, 0.666667, 0.584314, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.580392, 0.509804, 0.427451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4tft5"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbyno"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_efwqe"]
+bg_color = Color(0.73818, 0.666559, 0.586291, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.580392, 0.509804, 0.427451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_np7v4"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q0mct"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_og6yj"]
+bg_color = Color(0.73818, 0.666559, 0.586291, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.580392, 0.509804, 0.427451, 1)
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w8rkt"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pmoix"]
+atlas = ExtResource("1_d4ai2")
+region = Rect2(856, 119, 76, 76)
+
+[node name="EndgameMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ehbfm")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.392157)
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Control"]
+custom_minimum_size = Vector2(750, 650)
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -375.0
+offset_top = -325.0
+offset_right = 335.0
+offset_bottom = 285.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_o7g24")
+
+[node name="Label" type="Label" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -255.0
+offset_top = 10.0
+offset_right = 255.0
+offset_bottom = 126.0
+grow_horizontal = 2
+text = "Red team Won!"
+label_settings = SubResource("LabelSettings_p3q0g")
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 70.0
+offset_top = 134.0
+offset_right = -70.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 25
+alignment = 1
+
+[node name="RedPanel" type="Panel" parent="Control/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ve610")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer/RedPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer/RedPanel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="RedTextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/RedPanel/HBoxContainer"]
+self_modulate = Color(1, 0.231373, 0.282353, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_ielcm")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/RedPanel/HBoxContainer/RedTextureRect"]
+self_modulate = Color(0.83, 0.1494, 0.1494, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 4.0
+offset_right = 34.8
+offset_bottom = 36.0
+texture = SubResource("AtlasTexture_luatc")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control3" type="Control" parent="Control/Panel/VBoxContainer/RedPanel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Control/Panel/VBoxContainer/RedPanel/HBoxContainer"]
+layout_mode = 2
+text = "Red team: 36"
+label_settings = SubResource("LabelSettings_hll1i")
+
+[node name="BluePanel" type="Panel" parent="Control/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ahqo4")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer/BluePanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer/BluePanel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="BlueTextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/BluePanel/HBoxContainer"]
+self_modulate = Color(0.231373, 0.537255, 1, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_4tft5")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/BluePanel/HBoxContainer/BlueTextureRect"]
+self_modulate = Color(0.1332, 0.416373, 0.74, 1)
+layout_mode = 0
+offset_left = 3.79999
+offset_top = 5.0
+offset_right = 35.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_gbyno")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control2" type="Control" parent="Control/Panel/VBoxContainer/BluePanel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Control/Panel/VBoxContainer/BluePanel/HBoxContainer"]
+layout_mode = 2
+text = "Blue team: 21"
+label_settings = SubResource("LabelSettings_hll1i")
+
+[node name="GreenPanel" type="Panel" parent="Control/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_efwqe")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer/GreenPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer/GreenPanel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="GreenTextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/GreenPanel/HBoxContainer"]
+self_modulate = Color(0.443137, 0.921569, 0.286275, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_np7v4")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/GreenPanel/HBoxContainer/GreenTextureRect"]
+self_modulate = Color(0.396078, 0.788235, 0.211765, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 5.0
+offset_right = 34.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_q0mct")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control2" type="Control" parent="Control/Panel/VBoxContainer/GreenPanel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Control/Panel/VBoxContainer/GreenPanel/HBoxContainer"]
+layout_mode = 2
+text = "Green team: 18"
+label_settings = SubResource("LabelSettings_hll1i")
+
+[node name="YellowPanel" type="Panel" parent="Control/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_og6yj")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer/YellowPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer/YellowPanel/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="YellowTextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/YellowPanel/HBoxContainer"]
+self_modulate = Color(0.976471, 1, 0.329412, 1)
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = SubResource("AtlasTexture_w8rkt")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="TextureRect" type="TextureRect" parent="Control/Panel/VBoxContainer/YellowPanel/HBoxContainer/YellowTextureRect"]
+self_modulate = Color(0.870588, 0.854902, 0.243137, 1)
+layout_mode = 0
+offset_left = 4.79999
+offset_top = 5.0
+offset_right = 34.8
+offset_bottom = 35.0
+texture = SubResource("AtlasTexture_pmoix")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Control2" type="Control" parent="Control/Panel/VBoxContainer/YellowPanel/HBoxContainer"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="Control/Panel/VBoxContainer/YellowPanel/HBoxContainer"]
+layout_mode = 2
+text = "Yellow team: 3"
+label_settings = SubResource("LabelSettings_hll1i")
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Control/Panel/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="ReplayButton" type="Button" parent="Control/Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Replay"
+
+[node name="Control" type="Control" parent="Control/Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(15, 0)
+layout_mode = 2
+
+[node name="BackButton" type="Button" parent="Control/Panel/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(250, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 25
+text = "Back to menu"

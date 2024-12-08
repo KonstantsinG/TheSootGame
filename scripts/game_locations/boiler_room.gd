@@ -17,6 +17,11 @@ var active = false
 var main_player = null
 var guests = []
 
+var game_running = true :
+	set(value):
+		game_running = value
+		get_tree().paused = !value
+
 
 func _ready() -> void:
 	# fix first transition jittering
@@ -32,6 +37,9 @@ func _input(event: InputEvent) -> void:
 			_remove_player_from_room()
 		elif entered_trampoline:
 			_drop_coal()
+	
+	elif event.is_action_pressed("attack"):
+		_place_barricade()
 
 
 func _take_transition_points() -> void:
@@ -51,12 +59,36 @@ func _find_guest_by_id(id : int) -> Variant:
 	return null
 
 
+func _find_coal_by_id(id : int) -> Variant:
+	for c in $Entities.get_children():
+		if c is CharacterBody2D: continue
+		
+		if c.id == id: return c
+	
+	return null
+
+
+func _place_barricade() -> void:
+	var barricade = main_player.place_barricade()
+	if barricade != null:
+		$Entities.add_child(barricade)
+		barricade.scale = Vector2(0.15, 0.15)
+		barricade.position = main_player.position
+		
+		var msg = {
+			"head" : "NOTIFICATION_BARRICADE_PLACED",
+			"player_id" : main_player.id,
+			"position" : main_player.position
+		}
+		request_sended.emit(msg)
+
+
 func _drop_coal() -> void:
 	var score = main_player.drop_coal()
 	
 	#NOTIMPLEMENTED: DropCoal animation
 	
-	var msg = {"head" : "NOTIFICATION_COAL_DROPPED", "id" : main_player.id, "team" : main_player.team, "score" : score}
+	var msg = {"head" : "NOTIFICATION_COAL_DROPPED", "player_id" : main_player.id, "team" : main_player.team, "score" : score}
 	score_increased.emit(main_player.team, score)
 	request_sended.emit(msg)
 
@@ -67,7 +99,7 @@ func _remove_player_from_room() -> void:
 		"head" : "NOTIFICATION_PLAYER_EXIT_ROOM",
 		"destination" : "CAVE_ROOM",
 		"hole_id" : hole_id,
-		"id" : main_player.id
+		"player_id" : main_player.id
 	}
 	
 	animation_player.play("room_fade_out")
@@ -113,7 +145,7 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 
 
 func update_player_position(id : int, new_pos : Vector2) -> void:
-	for p in $Entities.get_children():
+	for p in guests:
 		if p.id == id:
 			if active:
 				p.target_position = new_pos
@@ -140,6 +172,25 @@ func remove_coal(id : int) -> void:
 	
 	if player != null:
 		player.drop_coal()
+
+
+func set_barricade(player_id : int, barricade_pos : Vector2) -> void:
+	var player = _find_guest_by_id(player_id)
+	
+	if player != null:
+		var barricade = player.place_barricade()
+		if barricade != null:
+			$Entities.add_child(barricade)
+			barricade.scale = Vector2(0.15, 0.15)
+			barricade.position = barricade_pos
+
+
+func pick_up_coal(player_id : int, coal_id : int) -> void:
+	var player = _find_guest_by_id(player_id)
+	var coal = _find_coal_by_id(coal_id)
+	
+	if player != null and coal != null:
+		player.pick_up_coal(coal)
 
 
 func _on_hiding_wall_body_entered(body: Node2D) -> void:

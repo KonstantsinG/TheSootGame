@@ -63,6 +63,7 @@ _data = {
 }
 
 [node name="CaveRoom" type="Node2D"]
+process_mode = 1
 position = Vector2(0, 50)
 script = ExtResource("1_fith1")
 

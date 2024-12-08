@@ -276,15 +276,21 @@ func _process_game_response(message) -> void:
 			_switch_room(message)
 		
 		"NOTIFICATION_COAL_TAKEN":
-			game_container.give_coal(message["id"], message["type"])
+			game_container.give_coal(message["player_id"], message["coal_id"], message["type"])
 		
 		"NOTIFICATION_COAL_DROPPED":
-			game_container.burn_coal(message["id"], message["team"], message["score"])
+			game_container.burn_coal(message["player_id"], message["team"], message["score"])
+		
+		"NOTIFICATION_BARRICADE_PLACED":
+			game_container.place_barricade(message["player_id"], message["position"])
+		
+		"NOTIFICATION_COAL_PICKED_UP":
+			game_container.pick_up_coal(message["player_id"], message["coal_id"])
 
 
 func _switch_room(message) -> void:
 	if game_container != null:
-		game_container.switch_room(message["id"], message["destination"], message["hole_id"])
+		game_container.switch_room(message["player_id"], message["destination"], message["hole_id"])
 
 
 func _leave_room(reason : String) -> void:
@@ -380,10 +386,10 @@ func _load_game_container() -> void:
 # 28. Implement collecting Coal
 # 29. Implement burning Coal and getting Score
 # 30. Add Score HUD panel
-## 31. Implement Soot pushing
+## 31. Implement Soot pushing -IMPORTANT
 ## 32. Implement Coal barricades -IMPORTANT
-## 33. Add GameTimer and EndgameState -IMPORTANT
-## 34. Add EndgameScreen -IMPORTANT
+# 33. Add GameTimer and EndgameState
+# 34. Add EndgameScreen
 # 35. Fix Guests Soot teleportation when entering new Room
 ## 36. Add Burning Coal animation
 # 37. Fix GamePauseMenu and PlayerCamera conflict

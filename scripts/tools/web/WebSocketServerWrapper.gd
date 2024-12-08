@@ -409,6 +409,7 @@ func _start_game(room_name : String) -> void:
 	var room = _get_room_by_name(room_name)
 	
 	if room != null:
+		room.is_game_running = true
 		var room_members = _get_room_members(room_name)
 		var guests_data = []
 		var spawnpoint_counter = 0
@@ -451,10 +452,19 @@ func _process_game_request(peer_id : int, message) -> void:
 			_exit_room(peer_id, message)
 		
 		"NOTIFICATION_COAL_TAKEN":
-			_notify_coal_taken(peer_id, message)
+			_push_notification(peer_id, message)
 		
 		"NOTIFICATION_COAL_DROPPED":
-			_notify_coal_dropped(peer_id, message)
+			_push_notification(peer_id, message)
+		
+		"NOTIFICATION_BARRICADE_PLACED":
+			_push_notification(peer_id, message)
+		
+		"NOTIFICATION_COAL_PICKED_UP":
+			_push_notification(peer_id, message)
+		
+		"NOTIFICATION_GAME_FINISHED":
+			_finish_game(message["room_name"])
 		
 		_: _process_menu_request(peer_id, message)
 
@@ -492,16 +502,16 @@ func _update_player_position(room_name : String, peer_id : int, new_pos : Vector
 		send(g.id, msg)
 
 
-func _notify_coal_taken(peer_id : int, message) -> void:
+func _push_notification(peer_id : int, message) -> void:
 	for g in _get_room_members(message["room_name"]):
 		if g.id == peer_id : continue
 		
 		send(g.id, message)
 
 
-func _notify_coal_dropped(peer_id : int, message) -> void:
-	for g in _get_room_members(message["room_name"]):
-		if g.id == peer_id : continue
-		
-		send(g.id, message)
+func _finish_game(room_name : String):
+	var room = _get_room_by_name(room_name)
+	
+	if room != null:
+		room.is_game_running = false
 #endregion

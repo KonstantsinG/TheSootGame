@@ -25,4 +25,5 @@ autostart = true
 [node name="HUDUpdateTimer" type="Timer" parent="."]
 autostart = true
 
+[connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
 [connection signal="timeout" from="HUDUpdateTimer" to="." method="_on_hud_update_timer_timeout"]

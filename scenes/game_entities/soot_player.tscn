@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://csygn7thpv4no"]
+[gd_scene load_steps=15 format=3 uid="uid://csygn7thpv4no"]
 
 [ext_resource type="Texture2D" uid="uid://d3akgpp4ga7tl" path="res://sprites/soot/SootAnimationsAtlas.png" id="1_g3kk3"]
 [ext_resource type="Script" path="res://scripts/game_entities/soot_player.gd" id="1_tfbbf"]
@@ -115,6 +115,10 @@ _data = {
 radius = 26.0
 height = 120.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_x2q1b"]
+radius = 106.667
+height = 293.333
+
 [node name="SootPlayer" type="CharacterBody2D"]
 scale = Vector2(0.075, 0.075)
 motion_mode = 1
@@ -132,16 +136,17 @@ position_smoothing_enabled = true
 position_smoothing_speed = 7.0
 
 [node name="CoalContainer" type="Node2D" parent="."]
-position = Vector2(0, -226.667)
+position = Vector2(0, -360)
 
 [node name="ActionContainer" type="Node2D" parent="."]
-position = Vector2(-40, -320)
+position = Vector2(-40, -506.667)
 
 [node name="KeyPanel" parent="ActionContainer" instance=ExtResource("2_lbvsf")]
 visible = false
 scale = Vector2(4.48, 4.48)
 
 [node name="PlayerData" type="Node2D" parent="."]
+position = Vector2(0, -186.667)
 
 [node name="TeamMarkerSprite" type="Sprite2D" parent="PlayerData"]
 texture = SubResource("AtlasTexture_3hmop")
@@ -157,6 +162,7 @@ label_settings = SubResource("LabelSettings_if046")
 horizontal_alignment = 1
 
 [node name="Sprites" type="Node2D" parent="."]
+position = Vector2(0, -186.667)
 
 [node name="LegsSprite" type="Sprite2D" parent="Sprites"]
 modulate = Color(0.60933, 0.60933, 0.60933, 1)
@@ -176,7 +182,7 @@ libraries = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 188)
+position = Vector2(0, 1.33334)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_4mecc")
 
@@ -185,3 +191,17 @@ process_callback = 0
 wait_time = 0.1
 one_shot = true
 autostart = true
+
+[node name="InteractingArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractingArea"]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_x2q1b")
+
+[node name="BreakingTimer" type="Timer" parent="."]
+wait_time = 3.25
+one_shot = true
+
+[connection signal="body_entered" from="InteractingArea" to="." method="_on_interacting_area_body_entered"]
+[connection signal="body_exited" from="InteractingArea" to="." method="_on_interacting_area_body_exited"]
+[connection signal="timeout" from="BreakingTimer" to="." method="_on_breaking_timer_timeout"]

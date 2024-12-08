@@ -145,6 +145,7 @@ _data = {
 }
 
 [node name="BoilerRoom" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_w5j6c")
 
 [node name="Bgs" type="Node2D" parent="."]

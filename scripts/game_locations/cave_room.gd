@@ -12,6 +12,11 @@ var entered_hole = null
 var enter_coal_area = false
 var active = true
 
+var game_running = true :
+	set(value):
+		game_running = value
+		get_tree().paused = !value
+
 
 func _ready() -> void:
 	_take_spawn_poins()
@@ -24,6 +29,9 @@ func _input(event: InputEvent) -> void:
 			_remove_player_from_room()
 		elif enter_coal_area:
 			_take_coal()
+	
+	elif event.is_action_pressed("attack"):
+		_place_barricade()
 
 
 func _take_spawn_poins() -> void:
@@ -42,12 +50,30 @@ func _connect_holes() -> void:
 
 func _take_coal() -> void:
 	main_player.take_coal()
+	var coal_id = main_player.coal.id
+	
 	var msg = {
 		"head" : "NOTIFICATION_COAL_TAKEN",
 		"type" : main_player.get_coal_type(),
-		"id" : main_player.id
+		"player_id" : main_player.id,
+		"coal_id" : coal_id
 	}
 	request_sended.emit(msg)
+
+
+func _place_barricade() -> void:
+	var barricade = main_player.place_barricade()
+	if barricade != null:
+		$Entities.add_child(barricade)
+		barricade.scale = Vector2(0.15, 0.15)
+		barricade.position = main_player.position
+		
+		var msg = {
+			"head" : "NOTIFICATION_BARRICADE_PLACED",
+			"player_id" : main_player.id,
+			"position" : main_player.position
+		}
+		request_sended.emit(msg)
 
 
 func _remove_player_from_room() -> void:
@@ -56,7 +82,7 @@ func _remove_player_from_room() -> void:
 		"head" : "NOTIFICATION_PLAYER_EXIT_ROOM",
 		"destination" : "BOILER_ROOM",
 		"hole_id" : hole_id,
-		"id" : main_player.id
+		"player_id" : main_player.id
 	}
 	
 	$AnimationPlayer.play("room_fade_out")
@@ -78,6 +104,15 @@ func _find_guest_by_id(id : int) -> Variant:
 	return null
 
 
+func _find_coal_by_id(id : int) -> Variant:
+	for c in $Entities.get_children():
+		if c is CharacterBody2D: continue
+		
+		if c.id == id: return c
+	
+	return null
+
+
 func spawn_players(_you, _guests : Array) -> void:
 	active = true
 	main_player = preload("res://scenes/game_entities/soot_player.tscn").instantiate()
@@ -86,7 +121,9 @@ func spawn_players(_you, _guests : Array) -> void:
 	main_player.camera.position_smoothing_enabled = false
 	main_player.set_data(_you["id"], _you["player_name"], _you["team"])
 	main_player.position = place.position
+	
 	main_player.player_moved.connect(_on_player_moved)
+	main_player.coal_picked_up.connect(_on_player_coal_picked_up)
 	
 	for g in _guests:
 		var player = preload("res://scenes/game_entities/soot_player.tscn").instantiate()
@@ -163,15 +200,43 @@ func hide_player(id : int) -> void:
 		player.visible = false
 
 
-func give_coal(id : int, type : int) -> void:
-	var player = _find_guest_by_id(id)
+func give_coal(player_id : int, coal_id : int, type : int) -> void:
+	var player = _find_guest_by_id(player_id)
 	
 	if player != null:
-		player.give_coal(type)
+		player.give_coal(coal_id, type)
+
+
+func set_barricade(player_id : int, barricade_pos : Vector2) -> void:
+	var player = _find_guest_by_id(player_id)
+	
+	if player != null:
+		var barricade = player.place_barricade()
+		if barricade != null:
+			$Entities.add_child(barricade)
+			barricade.scale = Vector2(0.15, 0.15)
+			barricade.position = barricade_pos
+
+
+func pick_up_coal(player_id : int, coal_id : int) -> void:
+	var player = _find_guest_by_id(player_id)
+	var coal = _find_coal_by_id(coal_id)
+	
+	if player != null and coal != null:
+		player.pick_up_coal(coal)
 
 
 func _on_player_moved(new_pos : Vector2) -> void:
 	request_sended.emit({"head" : "NOTIFICATION_PLAYER_MOVED", "position" : new_pos})
+
+
+func _on_player_coal_picked_up(coal_id : int) -> void:
+	var msg = {
+		"head" : "NOTIFICATION_COAL_PICKED_UP",
+		"player_id" : main_player.id,
+		"coal_id" : coal_id
+	}
+	request_sended.emit(msg)
 
 
 func _on_body_hole_entered(body : CharacterBody2D, hole : Area2D) -> void:

@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 signal player_moved(id : int, new_position : Vector2)
+signal coal_picked_up(coal_id : int)
 
 @export var speed : int = 13_000
 @export var acceleration : float = 1.8
@@ -28,6 +29,9 @@ var id := 0
 var team := 0
 var coal = null
 
+var facing_barricade = null
+var facing_soot = null
+
 
 func _ready() -> void:
 	$AnimationPlayer.play("idle")
@@ -40,6 +44,25 @@ func _input(event: InputEvent) -> void:
 	elif event.is_action_pressed("scroll_down"):
 		if camera.zoom.x > min_zoom:
 				camera.zoom -= zoom_step
+	
+	if event.is_action_pressed("attack"):
+		if facing_barricade != null:
+			facing_barricade.start_breaking()
+			$BreakingTimer.start()
+	elif event.is_action_released("attack"):
+		if facing_barricade != null:
+			facing_barricade.stop_breaking()
+			$BreakingTimer.stop()
+
+
+func place_barricade() -> Node2D:
+	if coal == null: return null
+	else:
+		$CoalContainer.remove_child(coal)
+		var barricade = coal
+		coal.to_barricade()
+		coal = null
+		return barricade
 
 
 func toggle_action_panel(_visible : bool) -> void:
@@ -57,15 +80,16 @@ func take_coal() -> void:
 	if coal == null:
 		coal = preload("res://scenes/game_locations/objects/coal.tscn").instantiate()
 		$CoalContainer.add_child(coal)
-		coal.scale = Vector2(1.5, 1.5)
+		coal.scale = Vector2(1.75, 1.75)
 
 
-func give_coal(type : int):
+func give_coal(coal_id : int, type : int):
 	if coal == null:
 		coal = preload("res://scenes/game_locations/objects/coal.tscn").instantiate()
 		$CoalContainer.add_child(coal)
 		coal.set_type(type)
-		coal.scale = Vector2(1.5, 1.5)
+		coal.id = coal_id
+		coal.scale = Vector2(1.75, 1.75)
 
 
 func drop_coal() -> int:
@@ -99,6 +123,17 @@ func set_data(_id : int, _name : String, _team : GameParams.TeamTypes) -> void:
 	team = _team
 
 
+func pick_up_coal(_coal) -> void:
+	_coal.to_collectible()
+	coal = _coal
+	
+	_coal.get_parent().remove_child(_coal)
+	_coal = null
+	$CoalContainer.add_child(coal)
+	coal.scale = Vector2(1.75, 1.75)
+	coal.position = Vector2.ZERO
+
+
 func _physics_process(delta: float) -> void:
 	if controlable:
 		_move_controlable(delta)
@@ -124,3 +159,28 @@ func _move_controlable(delta : float):
 
 func _move_uncontrolable():
 	position = position.lerp(target_position, position_interpolation_smooth)
+
+
+func _on_interacting_area_body_entered(body: Node2D) -> void:
+	if body == self or !controlable: return
+	
+	if body is CharacterBody2D:
+		facing_soot = body
+	elif body is StaticBody2D and body.is_in_group("barricades"):
+		facing_barricade = body.get_parent()
+
+
+func _on_interacting_area_body_exited(body: Node2D) -> void:
+	if !controlable: return
+	
+	if body == facing_soot:
+		facing_soot = null
+	elif body.get_parent() == facing_barricade:
+		facing_barricade.stop_breaking()
+		facing_barricade = null
+
+
+func _on_breaking_timer_timeout() -> void:
+	if facing_barricade != null:
+		pick_up_coal(facing_barricade)
+		coal_picked_up.emit(coal.id)
