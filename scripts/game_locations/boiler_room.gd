@@ -40,6 +40,10 @@ func _input(event: InputEvent) -> void:
 	
 	elif event.is_action_pressed("attack"):
 		_place_barricade()
+	
+	elif event.is_action_pressed("mouse_left_click"):
+		if main_player.facing_soot != null:
+			_push_soot()
 
 
 func _take_transition_points() -> void:
@@ -81,6 +85,18 @@ func _place_barricade() -> void:
 			"position" : main_player.position
 		}
 		request_sended.emit(msg)
+
+
+func _push_soot() -> void:
+	var direction = main_player.facing_soot.position.direction_to(get_global_mouse_position())
+	var msg = {
+		"head" : "NOTIFICATION_SOOT_PUSHED",
+		"player_id" : main_player.facing_soot.id,
+		"direction" : direction
+	}
+	request_sended.emit(msg)
+	
+	main_player.facing_soot = null
 
 
 func _drop_coal() -> void:

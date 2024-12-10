@@ -463,6 +463,9 @@ func _process_game_request(peer_id : int, message) -> void:
 		"NOTIFICATION_COAL_PICKED_UP":
 			_push_notification(peer_id, message)
 		
+		"NOTIFICATION_SOOT_PUSHED":
+			_notify_soot_pushed(message)
+		
 		"NOTIFICATION_GAME_FINISHED":
 			_finish_game(message["room_name"])
 		
@@ -514,4 +517,9 @@ func _finish_game(room_name : String):
 	
 	if room != null:
 		room.is_game_running = false
+
+
+func _notify_soot_pushed(message) -> void:
+	var soot_id = message["player_id"]
+	send(soot_id, message)
 #endregion

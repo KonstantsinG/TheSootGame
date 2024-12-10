@@ -286,6 +286,9 @@ func _process_game_response(message) -> void:
 		
 		"NOTIFICATION_COAL_PICKED_UP":
 			game_container.pick_up_coal(message["player_id"], message["coal_id"])
+		
+		"NOTIFICATION_SOOT_PUSHED":
+			game_container.push_soot(message["direction"])
 
 
 func _switch_room(message) -> void:
@@ -386,14 +389,17 @@ func _load_game_container() -> void:
 # 28. Implement collecting Coal
 # 29. Implement burning Coal and getting Score
 # 30. Add Score HUD panel
-## 31. Implement Soot pushing -IMPORTANT
-## 32. Implement Coal barricades -IMPORTANT
+# 31. Implement Soot pushing -IMPORTANT
+# 32. Implement Coal barricades (placing and taking)
 # 33. Add GameTimer and EndgameState
 # 34. Add EndgameScreen
 # 35. Fix Guests Soot teleportation when entering new Room
 ## 36. Add Burning Coal animation
 # 37. Fix GamePauseMenu and PlayerCamera conflict
-## 38. Add Obsticles/Bullets in BoilerRoom for Soot
+## 38. Add Obsticles/Bullets in BoilerRoom for Soot -TODO
+## 39. Fix Soot pushing (actually... idk how to deal with it)
+## 40. Soot health -> 
+
 
 ## ----- 
 

@@ -78,6 +78,11 @@ func pick_up_coal(player_id : int, coal_id : int) -> void:
 	boiler_room.pick_up_coal(player_id, coal_id)
 
 
+func push_soot(direction : Vector2) -> void:
+	if cave_room.active: cave_room.main_player.push(direction)
+	elif boiler_room.active: boiler_room.main_player.push(direction)
+
+
 func _on_request_sended(request : Dictionary) -> void:
 	request["room_name"] = room_name
 	request_sended.emit(request)

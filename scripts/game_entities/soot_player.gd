@@ -8,6 +8,7 @@ signal coal_picked_up(coal_id : int)
 @export var friction : float = 4.5
 @export var coal_weight_factor : float = 0.75
 @export var position_interpolation_smooth := 0.07
+@export var push_force : int = 250
 
 @onready var team_marker = $PlayerData/TeamMarkerSprite
 @onready var name_label = $PlayerData/NameLabel
@@ -45,14 +46,20 @@ func _input(event: InputEvent) -> void:
 		if camera.zoom.x > min_zoom:
 				camera.zoom -= zoom_step
 	
+	
 	if event.is_action_pressed("attack"):
-		if facing_barricade != null:
+		if facing_barricade != null and coal == null:
 			facing_barricade.start_breaking()
 			$BreakingTimer.start()
+	
 	elif event.is_action_released("attack"):
 		if facing_barricade != null:
 			facing_barricade.stop_breaking()
 			$BreakingTimer.stop()
+
+
+func push(direction : Vector2) -> void:
+	velocity += direction * push_force
 
 
 func place_barricade() -> Node2D:
