@@ -6,18 +6,26 @@ signal back_to_menu_pressed(room_name : String)
 @onready var cave_room = $CaveRoom
 @onready var boiler_room
 @onready var game_pause = $HUD/GamePause
+@onready var death_menu = null
 @onready var hud = $HUD/GameHUD
 
+var dead_player = null
+var dead_guests = []
 var room_name := ""
+var rnd_seed = 0
 var scores : Array[int] = [0, 0, 0, 0]
 
 
 func _ready() -> void:
 	boiler_room = preload("res://scenes/game_locations/boiler_room.tscn").instantiate()
+	# WARNING: very stragne fix... i don't like it.
+	add_child(boiler_room)
+	remove_child(boiler_room)
 	
 	boiler_room.request_sended.connect(_on_request_sended)
 	boiler_room.room_exited.connect(_on_boiler_room_exited)
 	boiler_room.score_increased.connect(_on_boiler_room_score_increased)
+	boiler_room.main_player_blown_up.connect(_on_boiler_room_main_player_blown_up)
 	
 	cave_room.request_sended.connect(_on_request_sended)
 	cave_room.room_exited.connect(_on_cave_room_exited)
@@ -39,6 +47,12 @@ func switch_room(player_id : int, destination : String, hole_id : int) -> void:
 		var player = boiler_room.leave_room(player_id)
 		cave_room.spawn_player(player, hole_id, false)
 		pass
+
+
+func set_seed(_seed : int) -> void:
+	rnd_seed = _seed
+	if boiler_room != null:
+		boiler_room.set_seed(_seed)
 
 
 func spawn_players(you, guests : Array) -> void:
@@ -83,6 +97,16 @@ func push_soot(direction : Vector2) -> void:
 	elif boiler_room.active: boiler_room.main_player.push(direction)
 
 
+func blown_up_player(player_id : int):
+	dead_guests.append(boiler_room.leave_room(player_id))
+
+
+func respawn_player(player_id : int) -> void:
+	var player = dead_guests.filter(func(g): return g.id == player_id).front()
+	dead_guests.erase(player)
+	cave_room.respawn_player(player)
+
+
 func _on_request_sended(request : Dictionary) -> void:
 	request["room_name"] = room_name
 	request_sended.emit(request)
@@ -96,12 +120,20 @@ func _on_cave_room_exited(player : CharacterBody2D, hole_id : int) -> void:
 	remove_child(cave_room)
 	add_child(boiler_room)
 	boiler_room.spawn_player(player, hole_id, true)
+	boiler_room.wake_up_rocks(1 - $RocksUpdateTimer.time_left)
 
 
 func _on_boiler_room_exited(player : CharacterBody2D, hole_id : int) -> void:
 	remove_child(boiler_room)
 	add_child(cave_room)
 	cave_room.spawn_player(player, hole_id, true)
+
+
+func _on_boiler_room_main_player_blown_up(player : CharacterBody2D) -> void:
+	dead_player = player
+	death_menu = preload("res://scenes/menus/death_menu.tscn").instantiate()
+	$HUD.add_child(death_menu)
+	$RespawnPlayerTimer.start()
 
 
 func _on_boiler_room_score_increased(team : GameParams.TeamTypes, score : int) -> void:
@@ -125,3 +157,29 @@ func _on_game_timer_timeout() -> void:
 	var endgame_menu = preload("res://scenes/menus/endgame_menu.tscn").instantiate()
 	$HUD.add_child(endgame_menu)
 	endgame_menu.set_places(scores)
+
+
+func _on_rocks_update_timer_timeout() -> void:
+	if boiler_room.active:
+		boiler_room.spawn_rock()
+	else:
+		boiler_room.spawn_sleeping_rock()
+
+
+func _on_respawn_player_timer_timeout() -> void:
+	if death_menu != null:
+		$HUD.remove_child(death_menu)
+		death_menu.queue_free()
+		boiler_room.fade_out()
+	
+	if dead_player != null:
+		var msg = {
+			"head" : "NOTIFICATION_PLAYER_RESPAWNED",
+			"player_id" : dead_player.id,
+			"room_name" : room_name
+		}
+		request_sended.emit(msg)
+		
+		remove_child(boiler_room)
+		add_child(cave_room)
+		cave_room.respawn_player(dead_player)

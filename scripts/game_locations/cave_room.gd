@@ -175,6 +175,25 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 		guests.append(player)
 
 
+func respawn_player(player : CharacterBody2D) -> void:
+	if player.controlable:
+		$AnimationPlayer.play("room_fade_in")
+		await $AnimationPlayer.animation_finished
+		active = true
+	
+	var spawn = $SpawnPointsContainer.get_child(0)
+	$Entities.add_child(player)
+	player.position = spawn.position
+	
+	if player.controlable:
+		main_player = player
+		if is_node_ready(): await get_tree().create_timer(0.1).timeout
+		main_player.camera.position_smoothing_enabled = true
+	else:
+		guests.append(player)
+		player.target_position = spawn.position
+
+
 func update_player_position(player_id : int, new_position : Vector2) -> void:
 	var guest = _find_guest_by_id(player_id)
 	if guest != null:

@@ -3,6 +3,7 @@ extends Node2D
 signal request_sended(request : Dictionary)
 signal room_exited(player : CharacterBody2D, hole_id : int)
 signal score_increased(team : GameParams.TeamTypes, score : int)
+signal main_player_blown_up(player : CharacterBody2D)
 
 @onready var animation_player = $RoomAnimationPlayer
 @onready var exit_marker = $HidingWall/ExitMarker
@@ -130,6 +131,11 @@ func _remove_player_from_room() -> void:
 	room_exited.emit(main_player, hole_id)
 
 
+func set_seed(_seed : int) -> void:
+	rnd_seed = _seed
+	seed(_seed)
+
+
 func leave_room(id : int) -> CharacterBody2D:
 	var player = _find_guest_by_id(id)
 	
@@ -153,6 +159,8 @@ func spawn_player(player : CharacterBody2D, hole_id : int, is_main_player : bool
 		
 		active = true
 		main_player = player
+		if not player.is_connected("blown_up", _on_main_player_blown_up):
+			player.blown_up.connect(_on_main_player_blown_up)
 		if is_node_ready(): await get_tree().create_timer(0.1).timeout
 		main_player.camera.position_smoothing_enabled = true
 	else:
@@ -209,6 +217,25 @@ func pick_up_coal(player_id : int, coal_id : int) -> void:
 		player.pick_up_coal(coal)
 
 
+func _on_main_player_blown_up(id : int) -> void:
+	var msg = {
+		"head" : "NOTIFICATION_PLAYER_BLOWN_UP",
+		"player_id" : id
+	}
+	
+	active = false
+	main_player.camera.position_smoothing_enabled = false
+	$Entities.remove_child(main_player)
+	
+	request_sended.emit(msg)
+	main_player_blown_up.emit(main_player)
+
+
+func fade_out() -> void:
+	animation_player.play("room_fade_out")
+	await animation_player.animation_finished
+
+
 func _on_hiding_wall_body_entered(body: Node2D) -> void:
 	if body.get_class() != "CharacterBody2D": return
 	elif not body.controlable: return
@@ -258,3 +285,39 @@ func _on_trampoline_body_exited(body: Node2D) -> void:
 	
 	main_player.toggle_action_panel(false)
 	entered_trampoline = false
+
+
+func spawn_rock() -> void:
+	var rock = preload("res://scenes/game_locations/objects/falling_rock.tscn").instantiate()
+	var pos = random_point_in_polygon(Vector2(350, 740), Vector2(1450, 730), Vector2(1650, 940), Vector2(150, 940))
+	$FallingRocks.add_child(rock)
+	rock.position = pos
+
+
+func spawn_sleeping_rock() -> void:
+	spawn_rock()
+	
+	if $FallingRocks.get_child_count() > 7:
+		var to_rem = $FallingRocks.get_child(0)
+		$FallingRocks.remove_child(to_rem)
+		to_rem.queue_free()
+
+
+func wake_up_rocks(time_offset : float) -> void:
+	var n = $FallingRocks.get_child_count()
+	for i in range(n):
+		$FallingRocks.get_child(i).resume_falling(time_offset, i, n - 1)
+
+
+var rnd_seed = 170
+
+func random_point_in_polygon(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2) -> Vector2:
+	var r1 = randf()
+	var r2 = randf()
+	
+	var random_point = (1 - r1) * (1 - r2) * p1 +\
+						r1 * (1 - r2) * p2 +\
+						r1 * r2 * p3 +\
+						(1 - r1) * r2 * p4
+	
+	return random_point

@@ -25,5 +25,14 @@ autostart = true
 [node name="HUDUpdateTimer" type="Timer" parent="."]
 autostart = true
 
+[node name="RocksUpdateTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="RespawnPlayerTimer" type="Timer" parent="."]
+wait_time = 20.0
+one_shot = true
+
 [connection signal="timeout" from="GameTimer" to="." method="_on_game_timer_timeout"]
 [connection signal="timeout" from="HUDUpdateTimer" to="." method="_on_hud_update_timer_timeout"]
+[connection signal="timeout" from="RocksUpdateTimer" to="." method="_on_rocks_update_timer_timeout"]
+[connection signal="timeout" from="RespawnPlayerTimer" to="." method="_on_respawn_player_timer_timeout"]

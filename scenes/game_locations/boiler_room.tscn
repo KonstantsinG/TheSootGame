@@ -150,6 +150,13 @@ script = ExtResource("1_w5j6c")
 
 [node name="Bgs" type="Node2D" parent="."]
 
+[node name="BGBG" type="ColorRect" parent="Bgs"]
+offset_left = -667.0
+offset_top = -91.0
+offset_right = 2011.0
+offset_bottom = 1125.0
+color = Color(0.128277, 0.0782293, 0.0682214, 1)
+
 [node name="FurnaceBgSprite" type="Sprite2D" parent="Bgs"]
 position = Vector2(-25, 596)
 texture = SubResource("AtlasTexture_y5h3i")
@@ -278,6 +285,8 @@ texture = SubResource("AtlasTexture_3g2oe")
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AdminPost"]
 visible = false
 polygon = PackedVector2Array(704, 705, 751, 661, 751, 610, 703, 656, 317, 656, 263, 708, 219, 707, 220, 768, 263, 768, 318, 706)
+
+[node name="FallingRocks" type="Node2D" parent="."]
 
 [node name="Entities" type="Node2D" parent="."]
 y_sort_enabled = true

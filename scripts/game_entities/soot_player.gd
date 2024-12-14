@@ -2,6 +2,7 @@ extends CharacterBody2D
 
 signal player_moved(id : int, new_position : Vector2)
 signal coal_picked_up(coal_id : int)
+signal blown_up(id : int)
 
 @export var speed : int = 13_000
 @export var acceleration : float = 1.8
@@ -56,6 +57,10 @@ func _input(event: InputEvent) -> void:
 		if facing_barricade != null:
 			facing_barricade.stop_breaking()
 			$BreakingTimer.stop()
+
+
+func kill() -> void:
+	blown_up.emit(id)
 
 
 func push(direction : Vector2) -> void:

@@ -215,7 +215,7 @@ func _process_menu_response(message) -> void:
 				_exclude_from_room()
 			
 			"NOTIFICATION_GAME_STARTED":
-				_start_game(message["room_name"], message["you"], message["guests"])
+				_start_game(message["room_name"], message["you"], message["guests"], message["seed"])
 
 
 func _add_new_rooms(message) -> void:
@@ -236,7 +236,7 @@ func _add_room_members(message) -> void:
 		gui.add_room_member(id, player_name, team, is_host)
 
 
-func _start_game(room_name, main_player_data, guests_data) -> void:
+func _start_game(room_name, main_player_data, guests_data, _seed) -> void:
 	print("Client started game")
 	responses_handler_state = GameParams.MessagesHandlerStates.GAME
 	
@@ -246,6 +246,7 @@ func _start_game(room_name, main_player_data, guests_data) -> void:
 	
 	_load_game_container()
 	game_container.room_name = room_name
+	game_container.set_seed(_seed)
 	game_container.spawn_players(main_player_data, guests_data)
 
 
@@ -289,6 +290,12 @@ func _process_game_response(message) -> void:
 		
 		"NOTIFICATION_SOOT_PUSHED":
 			game_container.push_soot(message["direction"])
+		
+		"NOTIFICATION_PLAYER_BLOWN_UP":
+			game_container.blown_up_player(message["player_id"])
+		
+		"NOTIFICATION_PLAYER_RESPAWNED":
+			game_container.respawn_player(message["player_id"])
 
 
 func _switch_room(message) -> void:
@@ -396,9 +403,8 @@ func _load_game_container() -> void:
 # 35. Fix Guests Soot teleportation when entering new Room
 ## 36. Add Burning Coal animation
 # 37. Fix GamePauseMenu and PlayerCamera conflict
-## 38. Add Obsticles/Bullets in BoilerRoom for Soot -TODO
+# 38. Add Obsticles/Bullets in BoilerRoom for Soot -TODO
 ## 39. Fix Soot pushing (actually... idk how to deal with it)
-## 40. Soot health -> 
 
 
 ## ----- 

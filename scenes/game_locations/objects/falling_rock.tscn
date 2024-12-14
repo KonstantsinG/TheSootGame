@@ -1,0 +1,51 @@
+[gd_scene load_steps=7 format=3 uid="uid://da08x0lhckrso"]
+
+[ext_resource type="Texture2D" uid="uid://7nx2cusqg4fh" path="res://sprites/locations/objects/fireRockSheet.png" id="1_1r1do"]
+[ext_resource type="Script" path="res://scripts/game_locations/objects/falling_rock.gd" id="1_gn146"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_igqod"]
+atlas = ExtResource("1_1r1do")
+region = Rect2(37, 361, 374, 95)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o3imf"]
+atlas = ExtResource("1_1r1do")
+region = Rect2(5, 5, 222, 291)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_trp1m"]
+atlas = ExtResource("1_1r1do")
+region = Rect2(230, 6, 263, 335)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_qkult"]
+radius = 7.0
+height = 54.0
+
+[node name="FallingRock" type="Node2D"]
+script = ExtResource("1_gn146")
+
+[node name="ShadowSprite" type="Sprite2D" parent="."]
+modulate = Color(0.61, 0.61, 0.61, 1)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_igqod")
+
+[node name="RockSprite" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(0, -1000)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_o3imf")
+
+[node name="ExplosionSprite" type="Sprite2D" parent="."]
+visible = false
+z_index = 4
+position = Vector2(0, -37)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("AtlasTexture_trp1m")
+
+[node name="DeadArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeadArea"]
+position = Vector2(0, 1)
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_qkult")
+disabled = true
+
+[connection signal="body_entered" from="DeadArea" to="." method="_on_dead_area_body_entered"]

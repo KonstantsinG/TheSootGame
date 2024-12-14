@@ -414,6 +414,7 @@ func _start_game(room_name : String) -> void:
 		var guests_data = []
 		var spawnpoint_counter = 0
 		var msg = {"head" : "NOTIFICATION_GAME_STARTED", "room_name" : room_name}
+		msg["seed"] = randi_range(2, 1 << 30)
 		
 		for m in room_members:
 			if not m.is_ready:
@@ -465,6 +466,12 @@ func _process_game_request(peer_id : int, message) -> void:
 		
 		"NOTIFICATION_SOOT_PUSHED":
 			_notify_soot_pushed(message)
+		
+		"NOTIFICATION_PLAYER_BLOWN_UP":
+			_push_notification(peer_id, message)
+		
+		"NOTIFICATION_PLAYER_RESPAWNED":
+			_push_notification(peer_id, message)
 		
 		"NOTIFICATION_GAME_FINISHED":
 			_finish_game(message["room_name"])
